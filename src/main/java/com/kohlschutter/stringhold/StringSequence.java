@@ -42,7 +42,7 @@ public class StringSequence extends StringHolder {
   /**
    * Constructs a new {@link StringSequence}, appending all given objects, as if
    * {@link #append(Object)} was called for each of them.
-   * 
+   *
    * @param objects The objects to append
    */
   public StringSequence(Object... objects) {
@@ -57,18 +57,18 @@ public class StringSequence extends StringHolder {
   private void addSequence(String o, int minLen) {
     uncache();
     sequence.add(o);
-    increaseLengths(minLen, minLen);
+    resizeBy(minLen, minLen);
   }
 
   private void addSequence(StringHolder o, int minLen, int expLen) {
     uncache();
     sequence.add(o);
-    increaseLengths(minLen, expLen);
+    resizeBy(minLen, expLen);
   }
 
   /**
    * Appends the given {@link String}, unless it is empty.
-   * 
+   *
    * @param s The string.
    */
   public final void append(String s) {
@@ -80,7 +80,7 @@ public class StringSequence extends StringHolder {
 
   /**
    * Appends the given {@link StringHolder}, unless it is known to be empty.
-   * 
+   *
    * @param s The string.
    */
   public final void append(StringHolder s) {
@@ -91,7 +91,7 @@ public class StringSequence extends StringHolder {
 
   /**
    * Appends the given {@link CharSequence}, unless it is known to be empty.
-   * 
+   *
    * @param s The string.
    */
   public final void append(CharSequence s) {
@@ -103,9 +103,9 @@ public class StringSequence extends StringHolder {
 
   /**
    * Appends the given object, unless it is known to be empty.
-   * 
+   *
    * The object
-   * 
+   *
    * @param s The string.
    */
   public final void append(Object s) {
@@ -121,7 +121,7 @@ public class StringSequence extends StringHolder {
   }
 
   @Override
-  public final int appendToAndReturnLength(Appendable out) throws IOException {
+  protected final int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
     int len = 0;
     for (Object obj : sequence) {
       if (obj instanceof StringHolder) {
@@ -141,7 +141,7 @@ public class StringSequence extends StringHolder {
   }
 
   @Override
-  public final int appendToAndReturnLength(StringBuilder out) {
+  protected final int appendToAndReturnLengthImpl(StringBuilder out) {
     out.ensureCapacity(out.length() + getMinimumLength());
 
     int len = 0;
@@ -163,7 +163,7 @@ public class StringSequence extends StringHolder {
   }
 
   @Override
-  public final int appendToAndReturnLength(StringBuffer out) {
+  protected final int appendToAndReturnLengthImpl(StringBuffer out) {
     out.ensureCapacity(out.length() + getMinimumLength());
 
     int len = 0;
@@ -191,7 +191,7 @@ public class StringSequence extends StringHolder {
    * @param flatList The list to append to.
    * @return The minimum for the estimated length.
    */
-  int appendToFlatList(List<Object> flatList) {
+  final int appendToFlatList(List<Object> flatList) {
     int len = 0;
     for (Object obj : sequence) {
       if (obj instanceof StringHolder) {
@@ -231,8 +231,6 @@ public class StringSequence extends StringHolder {
     }
 
     sequence = list;
-
-    updateLengths(len, 0);
 
     return s;
   }

@@ -21,7 +21,7 @@ import java.io.IOException;
 
 /**
  * Wraps another {@link Appendable}. Used to forcibly de-optimize code when testing.
- * 
+ *
  * @author Christian Kohlschütter
  */
 final class AppendableWrapper implements Appendable {
@@ -47,5 +47,10 @@ final class AppendableWrapper implements Appendable {
   public Appendable append(CharSequence csq) throws IOException {
     out.append(csq);
     return this;
+  }
+
+  @Override
+  public String toString() {
+    return out.toString();
   }
 }

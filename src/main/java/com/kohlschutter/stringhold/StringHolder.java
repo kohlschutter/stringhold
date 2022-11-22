@@ -20,6 +20,8 @@ package com.kohlschutter.stringhold;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -42,6 +44,7 @@ import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
  *
  * @author Christian Kohlschütter
  */
+@SuppressWarnings({"PMD.CyclomaticComplexity"})
 public abstract class StringHolder {
   String theString;
 
@@ -50,10 +53,13 @@ public abstract class StringHolder {
 
   private boolean trouble = false;
 
+  @SuppressFBWarnings("EI_EXPOSE_REP")
+  private StringHolderScope scope = null;
+
   /**
    * Constructs a {@link StringHolder} with the given minimum length, use {@code 0} if no minimum
    * length is known.
-   * 
+   *
    * @param minLength The minimum length, which must not be larger than the eventual actual length.
    */
   protected StringHolder(int minLength) {
@@ -63,7 +69,7 @@ public abstract class StringHolder {
   /**
    * Constructs a {@link StringHolder} with the given minimum length (use {@code 0} if no minimum
    * length is known), and expected length.
-   * 
+   *
    * @param minLength The minimum length, which must not be larger than the eventual actual length.
    * @param expectedLength The expected length, which may be larger than the eventual actual length
    */
@@ -168,7 +174,7 @@ public abstract class StringHolder {
    * Returns the current minimum length of the expected string length in this {@link StringHolder}.
    *
    * This is equivalent to {@link #length()} if {@link #isString()} is {@code true}.
-   * 
+   *
    * NOTE: When using this parameter for optimizations (e.g., to speed-up equality checks), make
    * sure to also check {@link #checkError()}. When that method returns {@code true}, the minimum
    * length can actually not be guaranteed.
@@ -201,21 +207,46 @@ public abstract class StringHolder {
    * @throws IllegalStateException if the value is negative, and {@link #checkError()} is
    *           {@code false}.
    */
-  public int updateLengths(int min, int expected) {
-    if (min < this.minLength) {
+  protected int resizeTo(int min, int expected) {
+    return resizeTo(min, expected, false);
+  }
+
+  private int resizeTo(int min, int expected, boolean fromToString) {
+    int oldMin = this.minLength;
+    int oldExpected = this.expectedLength;
+
+    if (min < oldMin) {
       if (checkError()) {
         // throw away our previous expectations upon error
         expected = (min = Math.max(0, min));
       } else {
-        throw new IllegalStateException("New minimum is smaller than current minimum");
+        if (fromToString) {
+          setError();
+          resizeTo(min, expected, false);
+          throw new IllegalStateException("Detected mispredicted minLength");
+        } else {
+          throw new IllegalStateException("New minimum is smaller than current minimum");
+        }
       }
     }
-    return (this.expectedLength = Math.max((this.minLength = min), expected));
+    int el = (this.expectedLength = Math.max((this.minLength = min), expected));
+
+    StringHolderScope sc = this.scope;
+    if (sc != null) {
+      try {
+        sc.resizeBy(this, this.minLength - oldMin, this.expectedLength - oldExpected);
+      } catch (RuntimeException | Error e) {
+        setError();
+        throw e;
+      }
+    }
+
+    return el;
   }
 
   /**
    * Increases the expected lengths (minimum and estimated) by the given values.
-   * 
+   *
    * Any value that overflows {@link Integer#MAX_VALUE} will be capped at that limit.
    *
    * @param minBy The minimum length increment, must not be negative (unless {@link #checkError()}
@@ -225,21 +256,31 @@ public abstract class StringHolder {
    * @throws IllegalArgumentException if minBy is negative and {@link #checkError()} is
    *           {@code false}
    */
-  public void increaseLengths(int minBy, int expectedBy) {
+  protected void resizeBy(int minBy, int expectedBy) {
+    int oldMin = this.minLength;
+    int oldExpected = this.expectedLength;
+
     if (minBy < 0) {
       if (checkError()) {
         this.minLength = Math.max(0, this.minLength + minBy);
       } else {
         throw new IllegalArgumentException("Minimum length increment is negative");
       }
-    } else {
-      this.minLength += minBy;
-      if (minLength < 0) {
-        // cannot express minimum length that large
-        minLength = Integer.MAX_VALUE;
+    } else if ((this.minLength += minBy) < 0) {
+      // cannot express minimum length that large
+      this.minLength = Integer.MAX_VALUE;
+    }
+    this.expectedLength = Math.max(minLength, this.expectedLength + expectedBy);
+
+    StringHolderScope sc = this.scope;
+    if (sc != null) {
+      try {
+        sc.resizeBy(this, this.minLength - oldMin, this.expectedLength - oldExpected);
+      } catch (RuntimeException | Error e) {
+        setError();
+        throw e;
       }
     }
-    this.expectedLength = Math.max(minLength, expectedLength + expectedBy);
   }
 
   /**
@@ -252,7 +293,7 @@ public abstract class StringHolder {
     if (theString != null) {
       return minLength;
     } else {
-      return updateLengths(computeLength(), 0);
+      return resizeTo(computeLength(), 0);
     }
   }
 
@@ -260,6 +301,8 @@ public abstract class StringHolder {
    * Computes the actual length of this instance's contents.
    *
    * By default, this is implemented as {@code toString().length()}.
+   *
+   * When overriding this method, make sure to also override {@link #isLengthKnown()}.
    *
    * @return The actual length.
    */
@@ -270,25 +313,42 @@ public abstract class StringHolder {
   /**
    * Checks if this holder is currently backed by a plain {@link String}.
    *
-   * @return {@code true} if currenly backed by a plain {@link String}.
+   * @return {@code true} if currently backed by a plain {@link String}.
    */
-  public boolean isString() {
+  public final boolean isString() {
     return theString != null;
   }
 
   /**
    * Checks if this {@link StringHolder} is known to yield an empty {@link String}.
-   * 
+   *
    * @return {@code true} if known non-empty.
    */
   public boolean isKnownEmpty() {
     if (minLength > 0) {
       return false;
+    } else if (isLengthKnown() && length() == 0) {
+      return true;
     } else {
       String s;
 
       return (s = theString) != null && s.isEmpty();
     }
+  }
+
+  /**
+   * Returns {@code true} if the actual length is known, i.e. {@link #getMinimumLength()} {@code ==}
+   * {@link #getExpectedLength()} {@code == } {@link #length()}.
+   *
+   * By default, this is only true if {@link #isString()} {@code == true}, but subclasses may
+   * override this check. When they do, they must include a check for {@code ||}
+   * {@link #isString()}.
+   *
+   * @return {@code true} if the length in this holder is known.
+   * @see #isKnownEmpty()
+   */
+  public boolean isLengthKnown() {
+    return isString();
   }
 
   @Override
@@ -346,21 +406,6 @@ public abstract class StringHolder {
   }
 
   /**
-   * Append the contents of this {@link StringHolder} to the given {@link Appendable}, and returns
-   * the number of characters appended. This call may or may not turn the contents of this instance
-   * into a String.
-   *
-   * @param out The target.
-   * @return The number of characters appended.
-   * @throws IOException on error.
-   */
-  public int appendToAndReturnLength(Appendable out) throws IOException {
-    String s = toString();
-    out.append(s);
-    return s.length();
-  }
-
-  /**
    * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}; this may
    * or may not turn the contents of this instance into a String.
    *
@@ -368,20 +413,6 @@ public abstract class StringHolder {
    */
   public final void appendTo(StringBuilder out) {
     appendToAndReturnLength(out);
-  }
-
-  /**
-   * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}, and
-   * returns the number of characters appended. This call may or may not turn the contents of this
-   * instance into a String.
-   *
-   * @param out The target.
-   * @return The number of characters appended.
-   */
-  public int appendToAndReturnLength(StringBuilder out) {
-    String s = toString();
-    out.append(s);
-    return s.length();
   }
 
   /**
@@ -395,6 +426,60 @@ public abstract class StringHolder {
   }
 
   /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}; this may or may
+   * not turn the contents of this instance into a String.
+   *
+   * @param out The target.
+   * @throws IOException on error.
+   */
+  public final void appendTo(Writer out) throws IOException {
+    appendToAndReturnLength(out);
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Appendable}, and returns
+   * the number of characters appended. This call may or may not turn the contents of this instance
+   * into a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   * @throws IOException on error.
+   */
+  public final int appendToAndReturnLength(Appendable out) throws IOException {
+    if (out instanceof Writer) {
+      return appendToAndReturnLength((Writer) out);
+    } else if (out instanceof StringBuilder) {
+      return appendToAndReturnLength((StringBuilder) out);
+    } else if (out instanceof StringBuffer) {
+      return appendToAndReturnLength((StringBuffer) out);
+    } else {
+      return appendToAndReturnLengthDefault(out);
+    }
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}, and
+   * returns the number of characters appended. This call may or may not turn the contents of this
+   * instance into a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   */
+  public final int appendToAndReturnLength(StringBuilder out) {
+    int len;
+    if (isString()) {
+      len = length();
+      out.append(toString());
+    } else {
+      len = appendToAndReturnLengthImpl(out);
+      if (minLength < len) {
+        resizeTo(len, 0);
+      }
+    }
+    return len;
+  }
+
+  /**
    * Append the contents of this {@link StringHolder} to the given {@link StringBuffer}, and returns
    * the number of characters appended. This call may or may not turn the contents of this instance
    * into a String.
@@ -402,10 +487,116 @@ public abstract class StringHolder {
    * @param out The target.
    * @return The number of characters appended.
    */
-  public int appendToAndReturnLength(StringBuffer out) {
+  public final int appendToAndReturnLength(StringBuffer out) {
+    int len;
+    if (isString()) {
+      len = length();
+      out.append(toString());
+    } else {
+      len = appendToAndReturnLengthImpl(out);
+      if (minLength < len) {
+        resizeTo(len, 0);
+      }
+    }
+    return len;
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}, and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   * @throws IOException on error.
+   */
+  public final int appendToAndReturnLength(Writer out) throws IOException {
+    int len;
+    if (isString()) {
+      len = length();
+      out.append(toString());
+    } else {
+      len = appendToAndReturnLengthImpl(out);
+      if (minLength < len) {
+        resizeTo(len, 0);
+      }
+    }
+    return len;
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Appendable} (which is
+   * neither a {@link StringBuilder}, {@link StringBuffer}, nor a {@link Writer}), and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   * @see #appendToAndReturnLength(StringBuilder)
+   * @see #appendToAndReturnLength(StringBuffer)
+   * @see #appendToAndReturnLength(StringWriter)
+   * @throws IOException on error.
+   */
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
     String s = toString();
     out.append(s);
     return s.length();
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}, and
+   * returns the number of characters appended. This call may or may not turn the contents of this
+   * instance into a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   */
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
+    String s = toString();
+    out.append(s);
+    return s.length();
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuffer}, and returns
+   * the number of characters appended. This call may or may not turn the contents of this instance
+   * into a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   */
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
+    String s = toString();
+    out.append(s);
+    return s.length();
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}, and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   * @throws IOException on error.
+   */
+  protected int appendToAndReturnLengthImpl(Writer out) throws IOException {
+    // subclasses may implement a better way for Writers, but we don't
+    return appendToAndReturnLengthDefault(out);
+  }
+
+  private int appendToAndReturnLengthDefault(Appendable out) throws IOException {
+    int len;
+    if (isString()) {
+      len = length();
+      out.append(toString());
+    } else {
+      len = appendToAndReturnLengthDefaultImpl(out);
+      if (minLength < len) {
+        resizeTo(len, 0);
+      }
+    }
+    return len;
   }
 
   @Override
@@ -414,13 +605,8 @@ public abstract class StringHolder {
     if (s != null) {
       return s;
     }
-    try {
-      theString = s = Objects.requireNonNull(getString());
-      updateLengths(s.length(), 0);
-    } catch (IllegalStateException e) {
-      throw new IllegalStateException(
-          "String turned out to be shorter than its claimed minimum length", e);
-    }
+    theString = s = Objects.requireNonNull(getString());
+    resizeTo(s.length(), 0, true);
     return s;
   }
 
@@ -455,9 +641,9 @@ public abstract class StringHolder {
 
   /**
    * Checks if this {@link StringHolder} had some kind of unexpected condition.
-   * 
+   *
    * If so, {@link #getMinimumLength()} may be adjusted to a value smaller than its previous state.
-   * 
+   *
    * @return {@code true} if trouble was detected.
    */
   public final boolean checkError() {
@@ -466,7 +652,7 @@ public abstract class StringHolder {
 
   /**
    * Signals that this instance had some kind of unexpected condition.
-   * 
+   *
    * @see #checkError()
    * @see #clearError()
    */
@@ -476,7 +662,7 @@ public abstract class StringHolder {
 
   /**
    * Clears the trouble state of this instance.
-   * 
+   *
    * @see #checkError()
    * @see #setError()
    */
@@ -492,5 +678,45 @@ public abstract class StringHolder {
    */
   protected Reader newReader() throws IOException {
     return LazyInitReader.withSupplier(() -> new StringReader(StringHolder.this.toString()));
+  }
+
+  /**
+   * Returns the {@link StringHolderScope} associated with this {@link StringHolder}, or
+   * {@code null} if no scope was associated.
+   *
+   * @return The scope, or {@code null}.
+   */
+  public final StringHolderScope getScope() {
+    return scope;
+  }
+
+  /**
+   * Sets the {@link StringHolderScope} associated with this {@link StringHolder}. Any previously
+   * associated scope is removed from this instance and returned.
+   *
+   * @param newScope The new scope, or {@code null} to set "no scope".
+   * @return The old scope, or {@code null} if none was set before.
+   */
+  public final StringHolderScope updateScope(StringHolderScope newScope) {
+    StringHolderScope oldScope = this.scope;
+    if (oldScope != null) {
+      try {
+        oldScope.remove(this);
+      } catch (RuntimeException | Error e) {
+        setError();
+        throw e;
+      }
+    }
+
+    if (newScope != null) {
+      try {
+        newScope.add(this);
+      } catch (RuntimeException | Error e) {
+        setError();
+        throw e;
+      }
+    }
+    this.scope = newScope;
+    return oldScope;
   }
 }

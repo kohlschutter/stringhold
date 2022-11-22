@@ -567,7 +567,7 @@ public class ReaderStringHolderTest {
     StringHolder sh2 = StringHolder.withSupplierMinimumLength(0, () -> "");
     assertEquals(sh2, sh1);
 
-    sh1.increaseLengths(3, -1000);
+    sh1.resizeBy(3, -1000);
     assertEquals(3, sh1.getMinimumLength());
     assertEquals(3, sh1.getExpectedLength());
 

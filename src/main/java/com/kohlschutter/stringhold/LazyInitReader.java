@@ -67,9 +67,9 @@ public final class LazyInitReader extends Reader {
 
   /**
    * Checks if this instance has been initialized with the actual reader.
-   * 
+   *
    * This is typically {@code true} after the first call.
-   * 
+   *
    * @return {@code true} if initialized.
    */
   public boolean isInitialized() {

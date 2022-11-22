@@ -29,8 +29,6 @@ final class SuppliedStringHolder extends StringHolder {
 
   @Override
   protected String getString() {
-    String v = (supplier == null) ? "" : supplier.get();
-    updateLengths(v.length(), 0);
-    return v;
+    return (supplier == null) ? "" : supplier.get();
   }
 }

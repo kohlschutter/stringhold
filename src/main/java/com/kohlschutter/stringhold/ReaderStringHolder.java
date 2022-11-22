@@ -109,13 +109,7 @@ public final class ReaderStringHolder extends StringHolder {
   }
 
   @Override
-  public int appendToAndReturnLength(Appendable out) throws IOException {
-    if (out instanceof Writer) {
-      return appendToWithLength((Writer) out);
-    }
-    if (isString()) {
-      return super.appendToAndReturnLength(out);
-    }
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
     try (Reader reader = newReader()) {
       int len = 0;
 
@@ -136,17 +130,6 @@ public final class ReaderStringHolder extends StringHolder {
   }
 
   /**
-   * Append the contents of this {@link StringHolder} to the given {@link Writer}; this may or may
-   * not turn the contents of this instance into a String.
-   *
-   * @param out The target.
-   * @throws IOException on error.
-   */
-  public void appendTo(Writer out) throws IOException {
-    appendToWithLength(out);
-  }
-
-  /**
    * Append the contents of this {@link StringHolder} to the given {@link Writer}, and returns the
    * number of characters appended. This call may or may not turn the contents of this instance into
    * a String.
@@ -155,10 +138,8 @@ public final class ReaderStringHolder extends StringHolder {
    * @return The number of characters appended.
    * @throws IOException on error.
    */
-  public int appendToWithLength(Writer out) throws IOException {
-    if (isString()) {
-      return super.appendToAndReturnLength(out);
-    }
+  @Override
+  protected int appendToAndReturnLengthImpl(Writer out) throws IOException {
     try (Reader reader = newReader()) {
       int len = 0;
 
@@ -176,11 +157,7 @@ public final class ReaderStringHolder extends StringHolder {
   }
 
   @Override
-  public int appendToAndReturnLength(StringBuilder out) {
-    if (isString()) {
-      return super.appendToAndReturnLength(out);
-    }
-
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
     int len = 0;
     try (Reader reader = newReader()) {
       char[] buf = new char[BUFFER_SIZE];
@@ -196,11 +173,7 @@ public final class ReaderStringHolder extends StringHolder {
   }
 
   @Override
-  public int appendToAndReturnLength(StringBuffer out) {
-    if (isString()) {
-      return super.appendToAndReturnLength(out);
-    }
-
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
     int len = 0;
     try (Reader reader = newReader()) {
 

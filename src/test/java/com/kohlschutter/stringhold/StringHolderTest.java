@@ -198,17 +198,17 @@ public class StringHolderTest {
   @Test
   public void testAppendTo() throws IOException {
     StringHolder abc = StringHolder.withContent("Abc");
-    StringHolder def = StringHolder.withContent("Def");
+    StringHolder defg = StringHolder.withContent("defg");
 
     StringWriter out = new StringWriter();
     abc.appendTo(out);
     assertEquals(abc.toString(), out.toString());
 
-    def.appendTo(out);
-    assertEquals(abc + def.toString(), out.toString());
+    defg.appendTo(out);
+    assertEquals(abc + defg.toString(), out.toString());
 
     abc.appendTo(out);
-    assertEquals("" + abc + def + abc, out.toString());
+    assertEquals("" + abc + defg + abc, out.toString());
   }
 
   @Test
@@ -220,33 +220,145 @@ public class StringHolderTest {
   @Test
   public void testAppendToStringBuilder() {
     StringHolder abc = StringHolder.withContent("Abc");
-    StringHolder def = StringHolder.withContent("Def");
+    StringHolder defg = StringHolder.withContent("defg");
 
     StringBuilder out = new StringBuilder();
     abc.appendTo(out);
     assertEquals(abc.toString(), out.toString());
 
-    def.appendTo(out);
-    assertEquals(abc + def.toString(), out.toString());
+    defg.appendTo(out);
+    assertEquals(abc + defg.toString(), out.toString());
 
     abc.appendTo(out);
-    assertEquals("" + abc + def + abc, out.toString());
+    assertEquals("" + abc + defg + abc, out.toString());
   }
 
   @Test
   public void testAppendToStringBuffer() {
     StringHolder abc = StringHolder.withContent("Abc");
-    StringHolder def = StringHolder.withContent("Def");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
 
     StringBuffer out = new StringBuffer();
     abc.appendTo(out);
     assertEquals(abc.toString(), out.toString());
 
-    def.appendTo(out);
-    assertEquals(abc + def.toString(), out.toString());
+    defg.appendTo(out);
+    assertEquals(abc + defg.toString(), out.toString());
 
     abc.appendTo(out);
-    assertEquals("" + abc + def + abc, out.toString());
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthAppendable() throws IOException {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    Appendable out = new AppendableWrapper(new StringBuilder());
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthStringBuilder() {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    StringBuilder out = new StringBuilder();
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthStringBuilder_defaultImpl() throws IOException {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    StringBuilder out = new StringBuilder();
+    assertEquals(3, abc.appendToAndReturnLength((Appendable) out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthStringBuffer() {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    StringBuffer out = new StringBuffer();
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    abc.appendTo(out);
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthStringBuffer_defaultImpl() throws IOException {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    StringBuffer out = new StringBuffer();
+    assertEquals(3, abc.appendToAndReturnLength((Appendable) out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    abc.appendTo(out);
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthWriter() throws IOException {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    StringWriter out = new StringWriter();
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testAppendToAndReturnLengthWriter_defaultImpl() throws IOException {
+    StringHolder abc = StringHolder.withContent("Abc");
+    StringHolder defg = StringHolder.withSupplier(() -> "defg");
+
+    StringWriter out = new StringWriter();
+    assertEquals(3, abc.appendToAndReturnLength((Appendable) out));
+    assertEquals(abc.toString(), out.toString());
+
+    assertEquals(4, defg.appendToAndReturnLength(out));
+    assertEquals(abc + defg.toString(), out.toString());
+
+    assertEquals(3, abc.appendToAndReturnLength(out));
+    assertEquals("" + abc + defg + abc, out.toString());
   }
 
   @Test
@@ -347,7 +459,7 @@ public class StringHolderTest {
   public void testIncreaseLength() throws Exception {
     StringHolder customHolder = new StringHolder(0, 8) {
       {
-        increaseLengths(1, -1);
+        resizeBy(1, -1);
       }
 
       @Override
@@ -370,7 +482,7 @@ public class StringHolderTest {
       {
         // using a negative increment for the minimum length is not allowed, unless checkError() is
         // true.
-        increaseLengths(-1, 0);
+        resizeBy(-1, 0);
       }
 
       @Override
@@ -387,9 +499,9 @@ public class StringHolderTest {
         // using a negative increment for the minimum length is not allowed
         // unless checkError() is true.
         setError();
-        increaseLengths(-1, 0);
+        resizeBy(-1, 0);
         assertEquals(5, getMinimumLength());
-        increaseLengths(-1000, 0);
+        resizeBy(-1000, 0);
         assertEquals(0, getMinimumLength());
       }
 
@@ -406,7 +518,7 @@ public class StringHolderTest {
       {
         // using a value smaller than the current minimum is not allowed, unless checkError() is
         // true
-        updateLengths(3, 0);
+        resizeTo(3, 0);
       }
 
       @Override
@@ -427,7 +539,7 @@ public class StringHolderTest {
         // using a value smaller than the current minimum is not allowed
         // unless checkError() is true
         setError();
-        updateLengths(3, 0);
+        resizeTo(3, 0);
         assertEquals(3, getMinimumLength());
         assertEquals(3, getExpectedLength());
       }
@@ -446,11 +558,11 @@ public class StringHolderTest {
         // using a value smaller than the current minimum is not allowed
         // unless checkError() is true
         setError();
-        updateLengths(3, 0);
+        resizeTo(3, 0);
 
         clearError();
         // not allowed, since checkError is false again
-        updateLengths(2, 0);
+        resizeTo(2, 0);
       }
 
       @Override
@@ -465,12 +577,29 @@ public class StringHolderTest {
     StringHolder sh = StringHolder.withSupplierMinimumLength(Integer.MAX_VALUE - 1, () -> "");
     assertEquals(Integer.MAX_VALUE - 1, sh.getMinimumLength());
 
-    sh.increaseLengths(1, 0);
+    sh.resizeBy(1, 0);
     assertEquals(Integer.MAX_VALUE, sh.getMinimumLength());
 
     // we increase beyond Integer.MAX_VALUE, and don't overflow
-    sh.increaseLengths(1, 0);
+    sh.resizeBy(1, 0);
     assertEquals(Integer.MAX_VALUE, sh.getMinimumLength());
+  }
+
+  private static final class BrokenStringHolder extends StringHolder {
+    protected BrokenStringHolder() {
+      super(0);
+    }
+
+    void triggerError() {
+      setError();
+      theString = "error";
+    }
+
+    @Override
+    protected String getString() {
+      fail("Unexpected");
+      return "";
+    }
   }
 
   @Test
@@ -493,21 +622,218 @@ public class StringHolderTest {
     assertFalse(sh2.isKnownEmpty());
 
     // a broken implementation sets "theString" directly without updating "minLength"
-    StringHolder shBroken = new StringHolder(0) {
-      {
+    BrokenStringHolder shBroken = new BrokenStringHolder();
+    assertFalse(shBroken.isKnownEmpty());
+    shBroken.triggerError();
+    assertTrue(shBroken.isKnownEmpty());
+    shBroken.length();
+    assertTrue(shBroken.isKnownEmpty());
+  }
+
+  @Test
+  public void testKnownEmpty_customZero() throws Exception {
+    assertFalse(new StringHolder(0) {
+
+      @Override
+      protected String getString() {
         setError();
-        theString = "error";
+        return "error";
+      }
+    }.isKnownEmpty());
+  }
+
+  @Test
+  public void testKnownEmpty_customNonZero() throws Exception {
+    StringHolder sh = new StringHolder(0) {
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    };
+    assertFalse(sh.isKnownEmpty());
+    sh.toString();
+    assertTrue(sh.isKnownEmpty());
+  }
+
+  @Test
+  public void testKnownEmpty_custom_broken() throws Exception {
+    StringHolder sh = new StringHolder(0) {
+
+      @Override
+      protected int computeLength() {
+        return 5;
       }
 
       @Override
       protected String getString() {
-        fail("Unexpected");
         return "";
       }
-
     };
-    assertFalse(shBroken.isKnownEmpty());
-    shBroken.length();
-    assertFalse(shBroken.isKnownEmpty());
+
+    // sh.length() // <-- since we don't call length, the error doesn't matter
+    assertFalse(sh.isKnownEmpty());
+    sh.toString();
+    assertTrue(sh.isKnownEmpty());
+    assertFalse(sh.checkError());
+  }
+
+  @Test
+  public void testKnownEmpty_custom_broken_computeLength() throws Exception {
+    StringHolder sh = new StringHolder(0, 5) {
+
+      @Override
+      protected int computeLength() {
+        return 5;
+      }
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    };
+
+    assertEquals(0, sh.getMinimumLength());
+    assertEquals(5, sh.getExpectedLength());
+    assertEquals(5, sh.length());
+    assertFalse(sh.isKnownEmpty());
+
+    // triggers a "Detected mispredicted minLength" error due to sh.length()'s returned minLength=5
+    assertThrows(IllegalStateException.class, () -> sh.toString());
+    assertEquals(0, sh.getMinimumLength());
+    assertEquals(0, sh.getExpectedLength());
+    assertEquals("", sh.toString());
+    assertTrue(sh.isKnownEmpty());
+  }
+
+  @Test
+  public void testKnownEmpty_custom_setTheStringDirectly() throws Exception {
+    StringHolder customSh = new StringHolder(0) {
+      {
+        theString = "foo";
+      }
+
+      @Override
+      public boolean isLengthKnown() {
+        return false;
+      }
+
+      @Override
+      protected String getString() {
+        fail("Should not be reached");
+        return theString;
+      }
+    };
+
+    assertFalse(customSh.isLengthKnown());
+    assertFalse(customSh.isKnownEmpty());
+  }
+
+  @Test
+  public void testKnownEmpty_customEmpty_setTheStringDirectly() throws Exception {
+    StringHolder customSh = new StringHolder(0) {
+      {
+        theString = "";
+      }
+
+      @Override
+      public boolean isLengthKnown() {
+        return false;
+      }
+
+      @Override
+      protected String getString() {
+        fail("Should not be reached");
+        return theString;
+      }
+    };
+
+    assertFalse(customSh.isLengthKnown());
+    assertTrue(customSh.isKnownEmpty());
+  }
+
+  @Test
+  public void testLengthKnown() throws Exception {
+    assertTrue(StringHolder.withContent("yo").isLengthKnown());
+
+    {
+      StringHolder sh = StringHolder.withSupplier(() -> "yo");
+      assertFalse(sh.isLengthKnown());
+      sh.length();
+      assertTrue(sh.isLengthKnown());
+      assertTrue(sh.isString());
+    }
+
+    {
+      StringHolder sh = new StringHolder(4) {
+        @Override
+        protected int computeLength() {
+          return 4;
+        }
+
+        @Override
+        public boolean isLengthKnown() {
+          return true;
+        }
+
+        @Override
+        protected String getString() {
+          return "test";
+        }
+      };
+      assertTrue(sh.isLengthKnown());
+      sh.length();
+      assertTrue(sh.isLengthKnown());
+      assertFalse(sh.isString());
+      sh.toString();
+      assertTrue(sh.isLengthKnown());
+      assertTrue(sh.isString());
+    }
+  }
+
+  @Test
+  public void testLengthKnown_customZero() throws Exception {
+    StringHolder customSh = new StringHolder(0) {
+      @Override
+      protected int computeLength() {
+        return 0;
+      }
+
+      @Override
+      public boolean isLengthKnown() {
+        return true;
+      }
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    };
+
+    assertTrue(customSh.isLengthKnown());
+    assertTrue(customSh.isKnownEmpty());
+  }
+
+  @Test
+  public void testLengthKnown_custom_broken() throws Exception {
+    StringHolder customSh = new StringHolder(0) {
+      @Override
+      protected int computeLength() {
+        return 5;
+      }
+
+      @Override
+      public boolean isLengthKnown() {
+        return true;
+      }
+
+      @Override
+      protected String getString() {
+        return "foo";
+      }
+    };
+
+    assertTrue(customSh.isLengthKnown());
+    assertFalse(customSh.isKnownEmpty());
   }
 }
