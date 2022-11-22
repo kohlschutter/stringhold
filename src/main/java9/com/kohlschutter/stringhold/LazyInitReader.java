@@ -133,10 +133,10 @@ public final class LazyInitReader extends Reader {
     in.close();
   }
 
-//  @Override
-//  public long transferTo(Writer out) throws IOException {
-//    return in.transferTo(out);
-//  }
+  // @Override
+  // public long transferTo(Writer out) throws IOException {
+  // return in.transferTo(out);
+  // }
 
   private final class KickstartPlaceholder extends Reader {
     @Override
@@ -193,9 +193,9 @@ public final class LazyInitReader extends Reader {
       init().reset();
     }
 
-//    @Override
-//    public long transferTo(Writer out) throws IOException {
-//      return init().transferTo(out);
-//    }
+    // @Override
+    // public long transferTo(Writer out) throws IOException {
+    // return init().transferTo(out);
+    // }
   }
 }

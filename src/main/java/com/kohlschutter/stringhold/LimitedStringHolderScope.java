@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * A {@link StringHolderScope} that keeps track of the aggregate minimum length of all associated
  * {@link StringHolder}s and, optionally, invokes a given callback whenever the limit is exceeded.
- * 
+ *
  * NOTE: This implementation does not keep track of {@link StringHolder}s being garbage-collected
  * and thus removed implicitly from memory without triggering {@link #remove(StringHolder)}. If
  * desired, you may want to implement a {@link WeakReference}-based wrapper.
