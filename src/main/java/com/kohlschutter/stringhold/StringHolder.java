@@ -161,6 +161,58 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   }
 
   /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplier(IOSupplier<Reader> readerSupply,
+      IOExceptionHandler onError) {
+    return new ReaderStringHolder(0, 0, readerSupply, onError);
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param minLen The minimum length of the content, must not be larger than the actual length.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplierMinimumLength(int minLen,
+      IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
+    return new ReaderStringHolder(minLen, minLen, readerSupply, onError);
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param expectedLen The expected length of the content, which is only an estimate.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplierExpectedLength(int expectedLen,
+      IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
+    return new ReaderStringHolder(0, expectedLen, readerSupply, onError);
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param minLen The minimum length of the content, must not be larger than the actual length.
+   * @param expectedLen The expected length of the content, which is only an estimate.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplierMinimumAndExpectedLength(int minLen, int expectedLen,
+      IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
+    return new ReaderStringHolder(minLen, expectedLen, readerSupply, onError);
+  }
+
+  /**
    * Constructs a {@link StringHolder} with the given content.
    *
    * Unless the object already is a {@link StringHolder}, or is known to be empty, its contents are
@@ -175,7 +227,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
     }
     if (obj instanceof String) {
       String s = (String) obj;
-      if (s.length() == 0) {
+      if (s.isEmpty()) {
         return SimpleStringHolder.EMPTY_STRING;
       }
       return new SimpleStringHolder(s);
@@ -183,12 +235,12 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
       return (StringHolder) obj;
     } else {
       if (obj instanceof CharSequence) {
-        if (((CharSequence) obj).length() == 0) {
+        if (CharSequenceReleaseShim.isEmpty((CharSequence) obj)) {
           return SimpleStringHolder.EMPTY_STRING;
         }
       }
       String s = String.valueOf(obj);
-      if (s.length() == 0) {
+      if (s.isEmpty()) {
         return SimpleStringHolder.EMPTY_STRING;
       }
       return new SimpleStringHolder(s);

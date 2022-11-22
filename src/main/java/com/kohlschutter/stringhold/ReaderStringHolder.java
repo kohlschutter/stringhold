@@ -32,7 +32,7 @@ import com.kohlschutter.stringhold.IOExceptionHandler.ExceptionResponse;
  *
  * @author Christian Kohlschütter
  */
-public final class ReaderStringHolder extends StringHolder {
+final class ReaderStringHolder extends StringHolder {
   private static final int BUFFER_SIZE = 8192;
   private final IOExceptionHandler onError;
   private final IOSupplier<Reader> readerSupply;
@@ -44,63 +44,11 @@ public final class ReaderStringHolder extends StringHolder {
    * @param readerSupply The supply of {@link Reader} instances for the content.
    * @param onError The exception handler.
    */
-  private ReaderStringHolder(int minLen, int expectedLen, IOSupplier<Reader> readerSupply,
+  ReaderStringHolder(int minLen, int expectedLen, IOSupplier<Reader> readerSupply,
       IOExceptionHandler onError) {
     super(minLen, expectedLen);
     this.readerSupply = Objects.requireNonNull(readerSupply);
     this.onError = Objects.requireNonNull(onError);
-  }
-
-  /**
-   * Constructs a {@link ReaderStringHolder} with the given Reader source.
-   *
-   * @param readerSupply The supply of {@link Reader} instances for the content.
-   * @param onError The exception handler.
-   * @return The {@link ReaderStringHolder}.
-   */
-  public static ReaderStringHolder withIOSupplier(IOSupplier<Reader> readerSupply,
-      IOExceptionHandler onError) {
-    return new ReaderStringHolder(0, 0, readerSupply, onError);
-  }
-
-  /**
-   * Constructs a {@link ReaderStringHolder} with the given Reader source.
-   *
-   * @param minLen The minimum length of the content, must not be larger than the actual length.
-   * @param readerSupply The supply of {@link Reader} instances for the content.
-   * @param onError The exception handler.
-   * @return The {@link ReaderStringHolder}.
-   */
-  public static ReaderStringHolder withIOSupplierMinimumLength(int minLen,
-      IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
-    return new ReaderStringHolder(minLen, minLen, readerSupply, onError);
-  }
-
-  /**
-   * Constructs a {@link ReaderStringHolder} with the given Reader source.
-   *
-   * @param expectedLen The expected length of the content, which is only an estimate.
-   * @param readerSupply The supply of {@link Reader} instances for the content.
-   * @param onError The exception handler.
-   * @return The {@link ReaderStringHolder}.
-   */
-  public static ReaderStringHolder withIOSupplierExpectedLength(int expectedLen,
-      IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
-    return new ReaderStringHolder(0, expectedLen, readerSupply, onError);
-  }
-
-  /**
-   * Constructs a {@link ReaderStringHolder} with the given Reader source.
-   *
-   * @param minLen The minimum length of the content, must not be larger than the actual length.
-   * @param expectedLen The expected length of the content, which is only an estimate.
-   * @param readerSupply The supply of {@link Reader} instances for the content.
-   * @param onError The exception handler.
-   * @return The {@link ReaderStringHolder}.
-   */
-  public static ReaderStringHolder withIOSupplierMinimumAndExpectedLength(int minLen,
-      int expectedLen, IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
-    return new ReaderStringHolder(minLen, expectedLen, readerSupply, onError);
   }
 
   @Override

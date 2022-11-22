@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd"
+  name="stringhold">
+
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+  </skin>
+  <custom>
+    <fluidoSkin>
+      <gitHub>
+        <projectId>kohlschutter/stringhold</projectId>
+        <ribbonOrientation>right</ribbonOrientation>
+      </gitHub>
+    </fluidoSkin>
+  </custom>
+
+  <bannerLeft>
+    <name>stringhold — A java.lang.String holder</name>
+    <!-- <name>${project.name}</name> -->
+    <!-- <src>https://project-website.example/images/project-logo.png</src>
+      <href>https://project-website.example/</href> -->
+  </bannerLeft>
+
+  <edit>${project.scm.url}</edit>
+
+  <body>
+    <!-- <menu ref="parent" /> -->
+
+    <menu name="Overview">
+      <item name="Welcome" href="index.html" />
+      <!-- <item name="FAQ" href="faq.html" /> -->
+    </menu>
+
+    <menu name="Reference">
+      <item name="API Javadoc" href="apidocs/index.html" />
+      <item name="Source xref" href="xref/index.html" />
+      <item name="Test xref" href="xref-test/index.html" />
+      <item name="Code Coverage" href="jacoco/index.html" />
+    </menu>
+
+    <menu ref="modules" />
+    <menu ref="reports" />
+
+    <footer><![CDATA[
+      <p id="giscus-parent" style="margin-top:20pt;padding-top:20pt;border-top:thin solid #bbb;">
+        <script src="https://giscus.app/client.js"
+          data-repo="kohlschutter/stringhold"
+          data-repo-id="MDEwOlJlcG9zaXRvcnkyNzA2NDIwMQ=="
+          data-category="Giscus"
+          data-category-id="DIC_kwDOAZz3ic4CQT9j"
+          data-mapping="pathname"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="light"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async="async">
+        </script>
+        <small>
+          Discussions widget provided by giscus.app —
+          <a
+            href="https://github.com/giscus/giscus/blob/main/PRIVACY-POLICY.md"
+            target="_top">
+            giscus.app privacy policy
+          </a> —
+          <a href="https://docs.github.com/en/site-policy/github-terms/github-community-guidelines">
+          GitHub Community Guidelines
+          </a>
+        </small>
+      </p>
+      <script><!--
+      document.addEventListener("DOMContentLoaded", function(event) {
+        document.getElementById("bodyColumn").appendChild(document.getElementById("giscus-parent"));
+      });
+      // --></script>
+      <p>Copyright 2022
+         <a href="https://www.kohlschutter.com/">Kohlschütter Search Intelligence</a>
+      </p>
+      ]]>
+    </footer>
+  </body>
+</project>

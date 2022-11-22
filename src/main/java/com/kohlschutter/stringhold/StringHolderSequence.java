@@ -396,5 +396,4 @@ public class StringHolderSequence extends StringHolder implements Appendable {
       return currentString.charAt(currentPos++);
     }
   }
-
 }

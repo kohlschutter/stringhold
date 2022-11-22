@@ -269,7 +269,7 @@ public class StringHolderScopeTest {
 
     StringWriter sw = new StringWriter();
 
-    ReaderStringHolder sh = ReaderStringHolder.withIOSupplier(() -> new StringReader(
+    StringHolder sh = ReaderStringHolder.withReaderSupplier(() -> new StringReader(
         "One, Two, Mississippi"), (e) -> ExceptionResponse.EMPTY);
     sh.updateScope(sc);
 

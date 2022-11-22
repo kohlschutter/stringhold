@@ -100,7 +100,7 @@ public class StringHolderTest {
     // holder 1 claims minimum length of 5, but has checkError() == true
     // holder 2 claims minimum length of 5
     {
-      StringHolder sh1 = ReaderStringHolder.withIOSupplierMinimumLength(5, () -> {
+      StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> {
         throw new IOException();
       }, (e) -> ExceptionResponse.EMPTY);
       StringHolder sh2 = StringHolder.withSupplierMinimumLength(5, () -> "12345");
@@ -111,7 +111,7 @@ public class StringHolderTest {
 
     // holder 1 claims minimum length of 5, but has checkError() == true
     {
-      StringHolder sh1 = ReaderStringHolder.withIOSupplierMinimumLength(5, () -> {
+      StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> {
         throw new IOException();
       }, (e) -> ExceptionResponse.ILLEGAL_STATE);
 
