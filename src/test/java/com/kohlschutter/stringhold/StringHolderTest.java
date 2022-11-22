@@ -20,6 +20,7 @@ package com.kohlschutter.stringhold;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -632,6 +633,52 @@ public class StringHolderTest {
   }
 
   @Test
+  public void testIsEmpty() throws Exception {
+    StringHolder sh = StringHolder.withSupplier(() -> "");
+    assertFalse(sh.isKnownEmpty());
+    assertFalse(sh.isString());
+    assertTrue(sh.isEmpty()); // triggers string conversion
+    assertTrue(sh.isString());
+    assertTrue(sh.isKnownEmpty());
+  }
+
+  @Test
+  public void testIsNotEmpty() throws Exception {
+    StringHolder sh = StringHolder.withSupplier(() -> "not empty");
+    assertFalse(sh.isKnownEmpty());
+    assertFalse(sh.isString());
+    assertFalse(sh.isEmpty()); // triggers string conversion
+    assertTrue(sh.isString());
+    assertFalse(sh.isKnownEmpty());
+  }
+
+  @Test
+  public void testIsEmptyWhenKnownEmpty() throws Exception {
+    StringHolder sh = new StringHolder(0) {
+
+      @Override
+      protected int computeLength() {
+        return 0;
+      }
+
+      @Override
+      public boolean isLengthKnown() {
+        return true;
+      }
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    };
+    assertTrue(sh.isKnownEmpty());
+    assertFalse(sh.isString());
+    assertTrue(sh.isEmpty()); // won't trigger string conversion
+    assertFalse(sh.isString());
+    assertTrue(sh.isKnownEmpty());
+  }
+
+  @Test
   public void testKnownEmpty_customZero() throws Exception {
     assertFalse(new StringHolder(0) {
 
@@ -837,4 +884,70 @@ public class StringHolderTest {
     assertTrue(customSh.isLengthKnown());
     assertFalse(customSh.isKnownEmpty());
   }
+
+  @Test
+  public void testCharAt() throws Exception {
+    StringHolder sh = StringHolder.withContent("abc");
+    assertEquals('c', sh.charAt(2));
+    assertEquals('b', sh.charAt(1));
+    assertEquals('a', sh.charAt(0));
+    assertThrows(IndexOutOfBoundsException.class, () -> sh.charAt(-1));
+    assertThrows(IndexOutOfBoundsException.class, () -> sh.charAt(3));
+  }
+
+  @Test
+  public void testSubSequence() throws Exception {
+    StringHolder sh = StringHolder.withContent("abcdef");
+    assertEquals("cde", sh.subSequence(2, 5));
+    assertEquals("", sh.subSequence(4, 4));
+
+    // we can return the same instance in this case
+    assertTrue(sh.isString());
+    assertSame(sh, sh.subSequence(0, 6));
+    assertTrue(sh.isString());
+
+    StringHolder sh4 = StringHolder.withSupplierFixedLength(6, () -> "abcdef");
+    assertFalse(sh4.isString());
+    assertNotEquals(sh4, sh4.subSequence(0, 5)); // one character too short
+    assertTrue(sh4.isString());
+    assertEquals("abcdef", sh4.toString());
+
+    StringHolder sh2 = StringHolder.withSupplier(() -> "abcdef");
+    assertFalse(sh2.isString());
+    assertSame(sh2, sh2.subSequence(0, 6)); // the same, but converted to string
+    assertTrue(sh2.isString());
+
+    StringHolder sh3 = StringHolder.withSupplierFixedLength(6, () -> "abcdef");
+    assertFalse(sh3.isString());
+    assertSame(sh3, sh3.subSequence(0, 6)); // the same, not converted to string
+    assertFalse(sh3.isString());
+  }
+
+  @Test
+  public void testSupplierFixedLengthZero() throws Exception {
+    // optimization: If a supplier has a fixed length of zero, we can supply an empty string
+    assertSame(StringHolder.withContent(""), StringHolder.withSupplierFixedLength(0, () -> {
+      fail("Should not be reachable");
+      return "";
+    }));
+  }
+
+  @Test
+  public void testSupplierFixedLength() throws Exception {
+    StringHolder shStr = StringHolder.withContent("1");
+    StringHolder shFl = StringHolder.withSupplierFixedLength(1, () -> "1");
+    assertNotSame(shStr, shFl);
+    assertTrue(shFl.isLengthKnown());
+    assertEquals(shStr.toString(), shFl.toString());
+  }
+
+  @Test
+  public void testBrokenSupplierFixedLength() throws Exception {
+    StringHolder sh = StringHolder.withSupplierFixedLength(1, () -> "123");
+    assertThrows(IllegalStateException.class, () -> sh.toString());
+    assertTrue(sh.checkError()); // checkError is set
+    assertEquals("123", sh.toString()); // second time works since we got a string after all
+    assertEquals(3, sh.getMinimumLength());
+  }
+
 }

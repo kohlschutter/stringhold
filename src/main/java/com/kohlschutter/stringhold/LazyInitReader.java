@@ -19,7 +19,6 @@ package com.kohlschutter.stringhold;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.nio.CharBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -32,7 +31,7 @@ import java.util.function.Supplier;
  *
  * @author Christian Kohlschütter
  */
-public final class LazyInitReader extends Reader {
+public final class LazyInitReader extends LazyInitReaderReleaseShim {
   private final AtomicBoolean closed = new AtomicBoolean(false);
   private final IOSupplier<Reader> readerSupplier;
 
@@ -76,11 +75,17 @@ public final class LazyInitReader extends Reader {
     return !(in instanceof KickstartPlaceholder);
   }
 
-  private Reader init() throws IOException {
+  @Override
+  Reader init() throws IOException {
     if (closed.get()) {
       throw new IOException("Stream closed");
     }
     return (in = readerSupplier.get());
+  }
+
+  @Override
+  Reader currentReader() {
+    return in;
   }
 
   @Override
@@ -133,12 +138,7 @@ public final class LazyInitReader extends Reader {
     in.close();
   }
 
-  @Override
-  public long transferTo(Writer out) throws IOException {
-    return in.transferTo(out);
-  }
-
-  private final class KickstartPlaceholder extends Reader {
+  private final class KickstartPlaceholder extends KickstartPlaceholderReleaseShim {
     @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
       return init().read(cbuf, off, len);
@@ -191,11 +191,6 @@ public final class LazyInitReader extends Reader {
     @Override
     public void reset() throws IOException {
       init().reset();
-    }
-
-    @Override
-    public long transferTo(Writer out) throws IOException {
-      return init().transferTo(out);
     }
   }
 }

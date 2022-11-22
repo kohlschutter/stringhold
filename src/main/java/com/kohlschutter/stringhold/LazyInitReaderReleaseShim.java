@@ -17,18 +17,25 @@
  */
 package com.kohlschutter.stringhold;
 
-import java.util.function.Supplier;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 
-class SuppliedStringHolder extends StringHolder {
-  private final Supplier<String> supplier;
+abstract class LazyInitReaderReleaseShim extends Reader {
+  protected abstract class KickstartPlaceholderReleaseShim extends Reader {
 
-  SuppliedStringHolder(int minLen, int expLen, Supplier<String> supplier) {
-    super(minLen, expLen);
-    this.supplier = supplier;
+    @Override
+    public long transferTo(Writer out) throws IOException {
+      return init().transferTo(out);
+    }
   }
 
   @Override
-  protected String getString() {
-    return (supplier == null) ? "" : supplier.get();
+  public long transferTo(Writer out) throws IOException {
+    return currentReader().transferTo(out);
   }
+
+  abstract Reader currentReader();
+
+  abstract Reader init() throws IOException;
 }

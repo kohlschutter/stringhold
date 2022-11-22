@@ -19,16 +19,30 @@ package com.kohlschutter.stringhold;
 
 import java.util.function.Supplier;
 
-class SuppliedStringHolder extends StringHolder {
-  private final Supplier<String> supplier;
+class FixedLengthSuppliedStringHolder extends SuppliedStringHolder {
+  private final int len;
 
-  SuppliedStringHolder(int minLen, int expLen, Supplier<String> supplier) {
-    super(minLen, expLen);
-    this.supplier = supplier;
+  FixedLengthSuppliedStringHolder(int len, Supplier<String> supplier) {
+    super(len, len, supplier);
+    this.len = len;
   }
 
   @Override
-  protected String getString() {
-    return (supplier == null) ? "" : supplier.get();
+  public boolean isLengthKnown() {
+    return true;
+  }
+
+  @Override
+  protected int computeLength() {
+    return len;
+  }
+
+  @Override
+  protected void stringSanityCheck(String s) {
+    if (s.length() != len) {
+      setError();
+      throw new IllegalStateException("String supplied with unexpected length: " + s.length()
+          + "; expected: " + len);
+    }
   }
 }

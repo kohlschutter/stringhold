@@ -17,18 +17,9 @@
  */
 package com.kohlschutter.stringhold;
 
-import java.util.function.Supplier;
-
-class SuppliedStringHolder extends StringHolder {
-  private final Supplier<String> supplier;
-
-  SuppliedStringHolder(int minLen, int expLen, Supplier<String> supplier) {
-    super(minLen, expLen);
-    this.supplier = supplier;
-  }
-
-  @Override
-  protected String getString() {
-    return (supplier == null) ? "" : supplier.get();
+abstract class CharSequenceReleaseShim implements CharSequence {
+  // since Java 15
+  public boolean isEmpty() {
+    return length() == 0;
   }
 }

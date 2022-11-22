@@ -45,7 +45,7 @@ import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
  * @author Christian Kohlschütter
  */
 @SuppressWarnings({"PMD.CyclomaticComplexity"})
-public abstract class StringHolder {
+public abstract class StringHolder extends CharSequenceReleaseShim implements CharSequence {
   String theString;
 
   private int minLength;
@@ -74,6 +74,7 @@ public abstract class StringHolder {
    * @param expectedLength The expected length, which may be larger than the eventual actual length
    */
   protected StringHolder(int minLength, int expectedLength) {
+    super();
     if (minLength < 0) {
       throw new IllegalArgumentException("Invalid minLength");
     }
@@ -133,6 +134,23 @@ public abstract class StringHolder {
   public static StringHolder withSupplierMinimumAndExpectedLength(int minLength, int expectedLength,
       Supplier<String> supplier) {
     return new SuppliedStringHolder(minLength, expectedLength, supplier);
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying the
+   * length the supplied string is going to have. An {@link IllegalStateException} will be thrown
+   * once a string is supplied that does not match this length.
+   *
+   * @param fixedLength The exact length of the string.
+   * @param supplier The supplier.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if fixedLength is negative.
+   */
+  public static StringHolder withSupplierFixedLength(int fixedLength, Supplier<String> supplier) {
+    if (fixedLength == 0) {
+      return SimpleStringHolder.EMPTY_STRING;
+    }
+    return new FixedLengthSuppliedStringHolder(fixedLength, supplier);
   }
 
   /**
@@ -289,6 +307,7 @@ public abstract class StringHolder {
    *
    * @return The actual length.
    */
+  @Override
   public final int length() {
     if (theString != null) {
       return minLength;
@@ -324,7 +343,7 @@ public abstract class StringHolder {
    *
    * @return {@code true} if known non-empty.
    */
-  public boolean isKnownEmpty() {
+  public final boolean isKnownEmpty() {
     if (minLength > 0) {
       return false;
     } else if (isLengthKnown() && length() == 0) {
@@ -334,6 +353,11 @@ public abstract class StringHolder {
 
       return (s = theString) != null && s.isEmpty();
     }
+  }
+
+  @Override
+  public final boolean isEmpty() {
+    return isKnownEmpty() || super.isEmpty();
   }
 
   /**
@@ -607,7 +631,18 @@ public abstract class StringHolder {
     }
     theString = s = Objects.requireNonNull(getString());
     resizeTo(s.length(), 0, true);
+
+    stringSanityCheck(s);
     return s;
+  }
+
+  /**
+   * Called from within {@link #toString()} after updating/assigning the cached string but before
+   * returning it. This may be a good opportunity to see if we got what we wanted, setError, etc.
+   *
+   * @param s The string.
+   */
+  protected void stringSanityCheck(String s) {
   }
 
   /**
@@ -718,5 +753,18 @@ public abstract class StringHolder {
     }
     this.scope = newScope;
     return oldScope;
+  }
+
+  @Override
+  public char charAt(int index) {
+    return toString().charAt(index);
+  }
+
+  @Override
+  public CharSequence subSequence(int start, int end) {
+    if (start == 0 && end == length()) {
+      return this;
+    }
+    return toString().subSequence(start, end);
   }
 }

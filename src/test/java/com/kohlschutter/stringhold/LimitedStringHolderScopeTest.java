@@ -186,7 +186,20 @@ public class LimitedStringHolderScopeTest {
   }
 
   @Test
-  public void testLimit_badExpectedLength_customResize() {
+  public void testLimit_badExpectedLength_customResize_exceedsExpectedLengthLimit() {
+    AtomicBoolean exceeded = new AtomicBoolean(false);
+
+    LimitedStringHolderScope ls = LimitedStringHolderScope
+        .withUpperLimitForMinimumAndExpectedLength(10, 20, () -> exceeded.set(true));
+    CustomResizeStringHolder sh = new CustomResizeStringHolder();
+    sh.updateScope(ls);
+    assertFalse(exceeded.get());
+    sh.triggerResize();
+    assertTrue(exceeded.get());
+  }
+
+  @Test
+  public void testLimit_badExpectedLength_customResize_exceedsMinimumLengthLimit() {
     AtomicBoolean exceeded = new AtomicBoolean(false);
 
     LimitedStringHolderScope ls = LimitedStringHolderScope
@@ -197,5 +210,4 @@ public class LimitedStringHolderScopeTest {
     sh.triggerResize();
     assertTrue(exceeded.get());
   }
-
 }
