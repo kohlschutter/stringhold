@@ -107,7 +107,7 @@ public class ReaderStringHolderTest {
     assertEquals(3, supplies.get());
 
     // append to an unknown Appendable wrapper around out for good measure
-    rsh.appendTo(new AppendableWrapper(out));
+    rsh.appendTo(new WrappedAppendable(out));
   }
 
   @Test

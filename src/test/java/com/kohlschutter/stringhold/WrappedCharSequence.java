@@ -17,40 +17,35 @@
  */
 package com.kohlschutter.stringhold;
 
-import java.io.IOException;
-
 /**
- * Wraps another {@link Appendable}. Used to forcibly de-optimize code when testing.
+ * Wraps another {@link CharSequence}. Used to forcibly de-optimize code when testing.
  *
  * @author Christian Kohlschütter
  */
-final class AppendableWrapper implements Appendable {
-  private final Appendable out;
+final class WrappedCharSequence implements CharSequence {
+  private final CharSequence wrapped;
 
-  AppendableWrapper(Appendable out) {
-    this.out = out;
+  WrappedCharSequence(CharSequence wrapped) {
+    this.wrapped = wrapped;
   }
 
   @Override
-  public Appendable append(CharSequence csq, int start, int end) throws IOException {
-    out.append(csq, start, end);
-    return this;
+  public int length() {
+    return wrapped.length();
   }
 
   @Override
-  public Appendable append(char c) throws IOException {
-    out.append(c);
-    return this;
+  public char charAt(int index) {
+    return wrapped.charAt(index);
   }
 
   @Override
-  public Appendable append(CharSequence csq) throws IOException {
-    out.append(csq);
-    return this;
+  public CharSequence subSequence(int start, int end) {
+    return new WrappedCharSequence(wrapped.subSequence(start, end));
   }
 
   @Override
   public String toString() {
-    return out.toString();
+    return wrapped.toString();
   }
 }

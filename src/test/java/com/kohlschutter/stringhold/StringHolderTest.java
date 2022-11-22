@@ -44,9 +44,9 @@ public class StringHolderTest {
     assertTrue(StringHolder.withContent(new StringBuilder("foo")).isString());
 
     // StringSequences are not supplied as String immediately
-    assertFalse(StringHolder.withContent(new StringSequence()).isString());
+    assertFalse(StringHolder.withContent(new StringHolderSequence()).isString());
 
-    StringHolder sh = StringHolder.withContent(new StringSequence("Foo", "bar"));
+    StringHolder sh = StringHolder.withContent(new StringHolderSequence().appendAll("Foo", "bar"));
     assertFalse(sh.isString());
     assertEquals("Foobar", sh.toString());
     assertTrue(sh.isString());
@@ -254,7 +254,7 @@ public class StringHolderTest {
     StringHolder abc = StringHolder.withContent("Abc");
     StringHolder defg = StringHolder.withSupplier(() -> "defg");
 
-    Appendable out = new AppendableWrapper(new StringBuilder());
+    Appendable out = new WrappedAppendable(new StringBuilder());
     assertEquals(3, abc.appendToAndReturnLength(out));
     assertEquals(abc.toString(), out.toString());
 
@@ -377,7 +377,8 @@ public class StringHolderTest {
   @Test
   public void testReaderWithStringSequence() throws Exception {
     StringWriter out = new StringWriter();
-    StringHolder.withContent(new StringSequence("foo")).toReader().transferTo(out);
+    StringHolder.withContent(new StringHolderSequence().appendAll("foo")).toReader().transferTo(
+        out);
     assertEquals("foo", out.toString());
   }
 

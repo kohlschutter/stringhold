@@ -17,22 +17,40 @@
  */
 package com.kohlschutter.stringhold;
 
+import java.io.IOException;
+
 /**
- * An appendable sequence of strings; {@link StringHolder}s are automatically converted upon append.
+ * Wraps another {@link Appendable}. Used to forcibly de-optimize code when testing.
  *
  * @author Christian Kohlschütter
  */
-public class StringSequence extends StringHolderSequence {
+final class WrappedAppendable implements Appendable {
+  private final Appendable out;
 
-  /**
-   * Constructs a new, empty {@link StringSequence}.
-   */
-  public StringSequence() {
-    super();
+  WrappedAppendable(Appendable out) {
+    this.out = out;
   }
 
   @Override
-  protected boolean needsStringConversion(StringHolder sh) {
-    return true;
+  public Appendable append(CharSequence csq, int start, int end) throws IOException {
+    out.append(csq, start, end);
+    return this;
+  }
+
+  @Override
+  public Appendable append(char c) throws IOException {
+    out.append(c);
+    return this;
+  }
+
+  @Override
+  public Appendable append(CharSequence csq) throws IOException {
+    out.append(csq);
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return out.toString();
   }
 }
