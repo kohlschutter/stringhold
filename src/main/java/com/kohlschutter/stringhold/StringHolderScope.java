@@ -49,4 +49,21 @@ public interface StringHolderScope {
    */
   default void resizeBy(StringHolder sh, int minLengthBy, int expectedLengthBy) {
   }
+
+  /**
+   * Called upon a {@link StringHolder} entering error state, e.g., when a length constraint was
+   * violated.
+   *
+   * @param sh The {@link StringHolder}.
+   */
+  default void setError(StringHolder sh) {
+  }
+
+  /**
+   * Called upon a {@link StringHolder} leaving error state.
+   *
+   * @param sh The {@link StringHolder}.
+   */
+  default void clearError(StringHolder sh) {
+  }
 }

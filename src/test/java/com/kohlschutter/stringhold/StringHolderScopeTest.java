@@ -17,7 +17,11 @@
  */
 package com.kohlschutter.stringhold;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -28,8 +32,9 @@ import org.junit.jupiter.api.Test;
 import com.kohlschutter.stringhold.IOExceptionHandler.ExceptionResponse;
 
 public class StringHolderScopeTest {
-  private static final class CountingScope implements StringHolderScope {
+  private static class CountingScope implements StringHolderScope {
     int count;
+    int error;
 
     @Override
     public void add(StringHolder sh) {
@@ -40,6 +45,17 @@ public class StringHolderScopeTest {
     public void remove(StringHolder sh) {
       --count;
     }
+
+    @Override
+    public void setError(StringHolder sh) {
+      ++error;
+    }
+
+    @Override
+    public void clearError(StringHolder sh) {
+      --error;
+    }
+
   }
 
   @Test
@@ -261,5 +277,55 @@ public class StringHolderScopeTest {
 
     // The append happens before resizeBy gets called
     assertEquals("One, Two, Mississippi", sw.toString());
+  }
+
+  private static final class BrokenStringHolder extends StringHolder {
+    @Override
+    protected String getString() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    void setErrorState(boolean b) {
+      if (b) {
+        setError();
+      } else {
+        clearError();
+      }
+    }
+  }
+
+  @Test
+  public void testError() throws Exception {
+    CountingScope sc = new CountingScope();
+
+    BrokenStringHolder bsh = new BrokenStringHolder();
+    bsh.updateScope(sc);
+
+    assertEquals(0, sc.error);
+    bsh.setErrorState(true);
+    assertEquals(1, sc.error);
+    bsh.setErrorState(false);
+    assertEquals(0, sc.error);
+  }
+
+  @Test
+  public void testErrorDefaultImpl() throws Exception {
+    StringHolderScope sc = new StringHolderScope() {
+
+      @Override
+      public void add(StringHolder sh) {
+      }
+
+      @Override
+      public void remove(StringHolder sh) {
+      }
+    };
+
+    BrokenStringHolder bsh = new BrokenStringHolder();
+    bsh.updateScope(sc);
+
+    bsh.setErrorState(true);
+    bsh.setErrorState(false);
   }
 }

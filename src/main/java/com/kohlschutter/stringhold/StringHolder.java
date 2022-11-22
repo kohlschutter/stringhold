@@ -57,6 +57,13 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   private StringHolderScope scope = null;
 
   /**
+   * Constructs a {@link StringHolder} with a zero minimum length.
+   */
+  protected StringHolder() {
+    this(0);
+  }
+
+  /**
    * Constructs a {@link StringHolder} with the given minimum length, use {@code 0} if no minimum
    * length is known.
    *
@@ -225,7 +232,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @throws IllegalStateException if the value is negative, and {@link #checkError()} is
    *           {@code false}.
    */
-  protected int resizeTo(int min, int expected) {
+  protected final int resizeTo(int min, int expected) {
     return resizeTo(min, expected, false);
   }
 
@@ -274,7 +281,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @throws IllegalArgumentException if minBy is negative and {@link #checkError()} is
    *           {@code false}
    */
-  protected void resizeBy(int minBy, int expectedBy) {
+  protected final void resizeBy(int minBy, int expectedBy) {
     int oldMin = this.minLength;
     int oldExpected = this.expectedLength;
 
@@ -693,6 +700,10 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    */
   protected final void setError() {
     trouble = true;
+    StringHolderScope sc = scope;
+    if (sc != null) {
+      sc.setError(this);
+    }
   }
 
   /**
@@ -703,6 +714,10 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    */
   protected final void clearError() {
     trouble = false;
+    StringHolderScope sc = scope;
+    if (sc != null) {
+      sc.clearError(this);
+    }
   }
 
   /**
