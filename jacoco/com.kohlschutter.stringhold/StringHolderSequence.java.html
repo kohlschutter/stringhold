@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringHolderSequence.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stringhold</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold</a> &gt; <span class="el_source">StringHolderSequence.java</span></div><h1>StringHolderSequence.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * An {@link Appendable} sequence of strings or {@link StringHolder}s.
+ *
+ * @author Christian Kohlschütter
+ */
+public class StringHolderSequence extends StringHolder implements Appendable {
+<span class="fc" id="L34">  private List&lt;Object&gt; sequence = new ArrayList&lt;&gt;();</span>
+
+  /**
+   * Constructs a new, empty {@link StringHolderSequence}.
+   */
+  public StringHolderSequence() {
+<span class="fc" id="L40">    super(0);</span>
+<span class="fc" id="L41">  }</span>
+
+  private void addSequence(String o) {
+<span class="fc" id="L44">    int len = o.length();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (len == 0) {</span>
+<span class="fc" id="L46">      return;</span>
+    }
+
+<span class="fc" id="L49">    uncache();</span>
+<span class="fc" id="L50">    sequence.add(o);</span>
+<span class="fc" id="L51">    resizeBy(len, len);</span>
+<span class="fc" id="L52">  }</span>
+
+  private void addSequence(StringHolder o, int minLen, int expLen) {
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (needsStringConversion(o)) {</span>
+<span class="fc" id="L56">      addSequence(o.toString());</span>
+<span class="fc" id="L57">      return;</span>
+    }
+
+<span class="fc" id="L60">    uncache();</span>
+<span class="fc" id="L61">    sequence.add(o);</span>
+<span class="fc" id="L62">    resizeBy(minLen, expLen);</span>
+<span class="fc" id="L63">  }</span>
+
+  /**
+   * Checks if the to-be-appended {@link StringHolder} should be added as a {@link String} (with
+   * conversion via {@link StringHolder#toString()}) instead of adding it directly.
+   *
+   * This is false by default for all objects. Subclasses may override this selectively. If all
+   * objects should be converted to strings, use {@link StringSequence}.
+   *
+   * @param sh The {@link StringHolder}.
+   * @return {@code true} if it should be appended as a string.
+   * @see StringSequence
+   */
+  protected boolean needsStringConversion(StringHolder sh) {
+<span class="fc" id="L77">    return false;</span>
+  }
+
+  @Override
+  public StringHolderSequence append(CharSequence csq, int start, int end) {
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    if (end == start) {</span>
+<span class="fc" id="L83">      return this;</span>
+    }
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    if (csq instanceof String) {</span>
+<span class="fc" id="L87">      append(((String) csq).substring(start, end));</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    } else if (csq instanceof StringBuilder) {</span>
+<span class="fc" id="L89">      append(((StringBuilder) csq).substring(start, end));</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    } else if (csq instanceof StringBuffer) {</span>
+<span class="fc" id="L91">      append(((StringBuffer) csq).substring(start, end));</span>
+    } else {
+<span class="fc" id="L93">      append(csq.subSequence(start, end));</span>
+    }
+<span class="fc" id="L95">    return this;</span>
+  }
+
+  @Override
+  public StringHolderSequence append(char c) {
+<span class="fc" id="L100">    addSequence(String.valueOf(c));</span>
+<span class="fc" id="L101">    return this;</span>
+  }
+
+  /**
+   * Appends the given {@link String}, unless it is empty.
+   *
+   * @param s The string.
+   * @return This instance.
+   */
+  public StringHolderSequence append(String s) {
+<span class="fc" id="L111">    addSequence(s);</span>
+<span class="fc" id="L112">    return this;</span>
+  }
+
+  /**
+   * Appends the given {@link StringHolder}, unless it is known to be empty.
+   *
+   * @param s The string.
+   * @return This instance.
+   */
+  public StringHolderSequence append(StringHolder s) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (!s.isKnownEmpty()) {</span>
+<span class="fc" id="L123">      addSequence(s, s.getMinimumLength(), s.getExpectedLength());</span>
+    }
+<span class="fc" id="L125">    return this;</span>
+  }
+
+  /**
+   * Appends the given {@link CharSequence}, unless it is known to be empty.
+   *
+   * @param s The string.
+   */
+  @Override
+  public StringHolderSequence append(CharSequence s) {
+<span class="fc" id="L135">    int len = s.length();</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">    if (len &gt; 0) {</span>
+<span class="fc" id="L137">      addSequence(String.valueOf(s));</span>
+    }
+<span class="fc" id="L139">    return this;</span>
+  }
+
+  /**
+   * Appends all given objects.
+   *
+   * @param objects The objects to append.
+   * @return This instance.
+   */
+  public StringHolderSequence appendAll(Object... objects) {
+<span class="fc" id="L149">    Objects.requireNonNull(objects);</span>
+
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    for (Object obj : objects) {</span>
+<span class="fc" id="L152">      append(obj);</span>
+    }
+<span class="fc" id="L154">    return this;</span>
+  }
+
+  /**
+   * Appends all given objects.
+   *
+   * @param objects The objects to append.
+   * @return This instance.
+   */
+  public StringHolderSequence appendAll(Iterable&lt;Object&gt; objects) {
+<span class="fc" id="L164">    Objects.requireNonNull(objects);</span>
+
+<span class="fc bfc" id="L166" title="All 2 branches covered.">    for (Object obj : objects) {</span>
+<span class="fc" id="L167">      append(obj);</span>
+<span class="fc" id="L168">    }</span>
+<span class="fc" id="L169">    return this;</span>
+  }
+
+  /**
+   * Appends the given object, unless it is known to be empty.
+   *
+   * The object
+   *
+   * @param s The string.
+   * @return This instance.
+   */
+  public StringHolderSequence append(Object s) {
+<span class="fc bfc" id="L181" title="All 2 branches covered.">    if (s instanceof StringHolder) {</span>
+<span class="fc" id="L182">      return append((StringHolder) s);</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    } else if (s instanceof String) {</span>
+<span class="fc" id="L184">      return append((String) s);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">    } else if (s instanceof CharSequence) {</span>
+<span class="fc" id="L186">      return append((CharSequence) s);</span>
+    } else {
+<span class="fc" id="L188">      return append(String.valueOf(s));</span>
+    }
+  }
+
+  @Override
+  protected final int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
+<span class="fc" id="L194">    int len = 0;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L197">        StringHolder holder = (StringHolder) obj;</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
+<span class="fc" id="L199">          continue;</span>
+        }
+
+<span class="fc" id="L202">        len += holder.appendToAndReturnLength(out);</span>
+<span class="fc" id="L203">      } else {</span>
+<span class="fc" id="L204">        String s = (String) obj;</span>
+<span class="fc" id="L205">        len += s.length();</span>
+<span class="fc" id="L206">        out.append(s);</span>
+      }
+<span class="fc" id="L208">    }</span>
+<span class="fc" id="L209">    return len;</span>
+  }
+
+  @Override
+  protected final int appendToAndReturnLengthImpl(StringBuilder out) {
+<span class="fc" id="L214">    out.ensureCapacity(out.length() + getMinimumLength());</span>
+
+<span class="fc" id="L216">    int len = 0;</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L219">        StringHolder holder = (StringHolder) obj;</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
+<span class="fc" id="L221">          continue;</span>
+        }
+
+<span class="fc" id="L224">        len += holder.appendToAndReturnLength(out);</span>
+<span class="fc" id="L225">      } else {</span>
+<span class="fc" id="L226">        String s = (String) obj;</span>
+<span class="fc" id="L227">        len += s.length();</span>
+<span class="fc" id="L228">        out.append(s);</span>
+      }
+<span class="fc" id="L230">    }</span>
+<span class="fc" id="L231">    return len;</span>
+  }
+
+  @Override
+  protected final int appendToAndReturnLengthImpl(StringBuffer out) {
+<span class="fc" id="L236">    out.ensureCapacity(out.length() + getMinimumLength());</span>
+
+<span class="fc" id="L238">    int len = 0;</span>
+<span class="fc bfc" id="L239" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L241">        StringHolder holder = (StringHolder) obj;</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
+<span class="fc" id="L243">          continue;</span>
+        }
+
+<span class="fc" id="L246">        len += holder.appendToAndReturnLength(out);</span>
+<span class="fc" id="L247">      } else {</span>
+<span class="fc" id="L248">        String s = (String) obj;</span>
+<span class="fc" id="L249">        len += s.length();</span>
+<span class="fc" id="L250">        out.append(s);</span>
+      }
+<span class="fc" id="L252">    }</span>
+<span class="fc" id="L253">    return len;</span>
+  }
+
+  /**
+   * Appends to a list that only holds Strings or StringSuppliers, excluding
+   * {@link StringHolderSequence}s, whose contents are flattened to the list.
+   *
+   * @param flatList The list to append to.
+   * @return The minimum for the estimated length.
+   */
+  final int appendToFlatList(List&lt;Object&gt; flatList) {
+<span class="fc" id="L264">    int len = 0;</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L267">        StringHolder holder = (StringHolder) obj;</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
+<span class="fc" id="L269">          continue;</span>
+        }
+
+<span class="fc bfc" id="L272" title="All 2 branches covered.">        if (obj instanceof StringHolderSequence) {</span>
+<span class="fc" id="L273">          len += ((StringHolderSequence) obj).appendToFlatList(flatList);</span>
+        } else {
+<span class="fc" id="L275">          len += holder.getMinimumLength();</span>
+<span class="fc" id="L276">          flatList.add(obj);</span>
+        }
+<span class="fc" id="L278">      } else {</span>
+<span class="fc" id="L279">        String s = (String) obj;</span>
+<span class="fc" id="L280">        len += s.length();</span>
+<span class="fc" id="L281">        flatList.add(s);</span>
+      }
+<span class="fc" id="L283">    }</span>
+<span class="fc" id="L284">    return len;</span>
+  }
+
+  @Override
+  protected synchronized String getString() {
+<span class="fc" id="L289">    StringBuilder sb = new StringBuilder(Math.max(16, getExpectedLength()));</span>
+<span class="fc" id="L290">    int len = appendToAndReturnLength(sb);</span>
+
+<span class="fc" id="L292">    List&lt;Object&gt; list = new ArrayList&lt;&gt;();</span>
+
+    final String s;
+<span class="fc bfc" id="L295" title="All 2 branches covered.">    if (len == 0) {</span>
+<span class="fc" id="L296">      s = &quot;&quot;;</span>
+    } else {
+<span class="fc" id="L298">      s = sb.toString();</span>
+<span class="fc" id="L299">      list.add(s);</span>
+    }
+
+<span class="fc" id="L302">    sequence = list;</span>
+
+<span class="fc" id="L304">    return s;</span>
+  }
+
+  @Override
+  protected Reader newReader() {
+<span class="fc bfc" id="L309" title="All 2 branches covered.">    if (sequence.isEmpty()) {</span>
+<span class="fc" id="L310">      return new StringReader(&quot;&quot;);</span>
+    }
+
+<span class="fc" id="L313">    final List&lt;Object&gt; flatList = new ArrayList&lt;&gt;(sequence.size());</span>
+<span class="fc" id="L314">    int len = appendToFlatList(flatList);</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">    if (len == 0) {</span>
+<span class="fc" id="L316">      return new StringReader(&quot;&quot;);</span>
+    }
+
+<span class="fc" id="L319">    return new StringSequenceReader(flatList.iterator());</span>
+  }
+
+  private static final class StringSequenceReader extends Reader {
+<span class="fc" id="L323">    private boolean closed = false;</span>
+
+<span class="fc" id="L325">    private String currentString = null;</span>
+    private int currentPos;
+
+    private final Iterator&lt;Object&gt; flatObjectIterator;
+
+    private StringSequenceReader(Iterator&lt;Object&gt; flatObjectIterator) {
+<span class="fc" id="L331">      super();</span>
+<span class="fc" id="L332">      this.flatObjectIterator = flatObjectIterator;</span>
+<span class="fc" id="L333">    }</span>
+
+    private void ensureOpen() throws IOException {
+<span class="fc bfc" id="L336" title="All 2 branches covered.">      if (closed) {</span>
+<span class="fc" id="L337">        throw new IOException(&quot;Stream closed&quot;);</span>
+      }
+<span class="fc" id="L339">    }</span>
+
+    @Override
+    public boolean ready() throws IOException {
+<span class="fc" id="L343">      ensureOpen();</span>
+<span class="fc" id="L344">      return true;</span>
+    }
+
+    @Override
+    public synchronized void close() throws IOException {
+<span class="fc bfc" id="L349" title="All 2 branches covered.">      if (!closed) {</span>
+<span class="fc" id="L350">        closed = true;</span>
+      }
+<span class="fc" id="L352">    }</span>
+
+    int ensureObject() {
+<span class="fc bfc" id="L355" title="All 2 branches covered.">      if (currentString != null) {</span>
+<span class="fc" id="L356">        int len = currentString.length();</span>
+<span class="fc bfc" id="L357" title="All 2 branches covered.">        if (currentPos &gt;= len) {</span>
+<span class="fc" id="L358">          currentString = null;</span>
+<span class="fc" id="L359">          return ensureObject();</span>
+        } else {
+<span class="fc" id="L361">          return len;</span>
+        }
+      } else {
+<span class="fc bfc" id="L364" title="All 2 branches covered.">        while (flatObjectIterator.hasNext()) {</span>
+<span class="fc" id="L365">          currentString = flatObjectIterator.next().toString();</span>
+<span class="fc" id="L366">          currentPos = 0;</span>
+<span class="fc" id="L367">          int len = currentString.length();</span>
+<span class="fc bfc" id="L368" title="All 2 branches covered.">          if (len &gt; 0) {</span>
+<span class="fc" id="L369">            return len;</span>
+          }
+<span class="fc" id="L371">        }</span>
+<span class="fc" id="L372">        currentString = null;</span>
+<span class="fc" id="L373">        return 0;</span>
+      }
+    }
+
+    @Override
+    public int read(char[] cbuf, int off, int len) throws IOException {
+<span class="fc" id="L379">      int currentLen = ensureObject();</span>
+<span class="fc bfc" id="L380" title="All 2 branches covered.">      if (currentLen == 0) {</span>
+<span class="fc" id="L381">        return -1;</span>
+      }
+
+<span class="fc" id="L384">      len = Math.min(currentLen - currentPos, Math.min(cbuf.length - off, len));</span>
+<span class="fc" id="L385">      currentString.getChars(currentPos, currentPos + len, cbuf, off);</span>
+<span class="fc" id="L386">      currentPos += len;</span>
+<span class="fc" id="L387">      return len;</span>
+    }
+
+    @Override
+    public int read() throws IOException {
+<span class="fc" id="L392">      int currentLen = ensureObject();</span>
+<span class="fc bfc" id="L393" title="All 2 branches covered.">      if (currentLen == 0) {</span>
+<span class="fc" id="L394">        return -1;</span>
+      }
+<span class="fc" id="L396">      return currentString.charAt(currentPos++);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

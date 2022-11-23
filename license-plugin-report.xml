@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1669162426238">
+    <module artifactId="stringhold" groupId="com.kohlschutter.stringhold" version="1.0.0-SNAPSHOT"/>
+    <files>
+        <file path="src/main/java/com/kohlschutter/stringhold/CachedIOSupplier.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/FixedLengthSuppliedStringHolder.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/IOExceptionHandler.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/IOSupplier.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/LazyInitReader.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/LazyInitReaderReleaseShim.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/LimitedStringHolderScope.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/ReaderStringHolder.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/SimpleStringHolder.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/StringHolder.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/StringHolderScope.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/StringHolderSequence.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/StringSequence.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/SuppliedStringHolder.java" result="PRESENT"/>
+        <file path="src/main/java14/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
+        <file path="src/main/java9/com/kohlschutter/stringhold/LazyInitReaderReleaseShim.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/CachedIOSupplierTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/LazyInitReaderTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/LimitedStringHolderScopeTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/ReaderStringHolderTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/StringHolderScopeTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/StringHolderSequenceTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/StringHolderTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/StringSequenceTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/SuppliedStringHolderTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/WrappedAppendable.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/WrappedCharSequence.java" result="PRESENT"/>
+    </files>
+</licensePluginReport>
