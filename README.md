@@ -145,6 +145,24 @@ Q: Is this an accidental implementation of half of Lisp?
 
 A: Maybe.
 
+## Installation
+
+### Maven
+
+Add the following dependency:
+
+    <dependency>
+        <groupId>com.kohlschutter.stringhold</groupId>
+        <artifactId>stringhold</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+### Gradle
+
+    dependencies {
+        implementation 'com.kohlschutter.stringhold:stringhold:1.0.0-SNAPSHOT'
+    }
+
 ## Building from source
 
 You currently need Maven or Eclipse with m2e, and Java 15 or later. Just run:
