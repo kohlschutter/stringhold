@@ -130,8 +130,9 @@
 <h2><a name="Modern_Java"></a>Modern Java</h2>
 <p><b>stringhold</b> is fully compatible with Java 8 and above. Thanks to a Multirelease jar structure, it can optimize the use of Java methods introduced in newer Java releases whenever possible, such as <code>CharSequence#isEmpty()</code> &#x2014; without complicating its own public API.</p></section><section>
 <h2><a name="Code_Quality"></a>Code Quality</h2>
-<p>This project currently maintains a 100% code coverage policy. This is one of the projects where this makes actual sense.</p>
-<p>API is expected to not disappear across minor and patch releases. Changes in behavior are possible but will be clearly marked in the changelog.</p>
+<p>This project currently maintains a <a class="externalLink" href="https://kohlschutter.github.io/stringhold/jacoco/index.html">100% code coverage</a> policy.</p>
+<p>This is one of the projects where this makes actual sense.</p>
+<p>The <b>stringhold</b> API is expected to not have breaking changes across minor and patch releases. Changes in behavior are possible but should be clearly marked in the changelog.</p>
 <h1>Usage Examples</h1></section><section>
 <h2><a name="The_Basics"></a>The Basics</h2>
 <p>A StringHolder using a String directly:</p>
@@ -174,7 +175,7 @@ seq.toString(); // &quot;Hello World&quot;
 <p>A StringHolder that reads contents from a function that supplies StringReader instances:</p>
 
 <div class="source"><pre class="prettyprint"><code>StringHolder h = StringHolder.withReaderSupplier(() -&gt; new StringReader(&quot;hello&quot;), (
-    e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);	
+    e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 </code></pre></div></section><section>
 <h2><a name="The_full_API"></a>The full API</h2>
 <p>(javadoc link here)</p>
