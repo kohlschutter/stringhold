@@ -58,6 +58,39 @@
         <developerConnection>scm:git:https://github.com/kohlschutter/stringhold.git</developerConnection>
     </scm>
 
+    <profiles>
+        <profile>
+            <id>use-snapshots</id>
+            <repositories>
+                <repository>
+                    <id>snapshots-repo</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>use-staging</id>
+            <repositories>
+                <repository>
+                    <id>snapshots-staging</id>
+                    <url>https://oss.sonatype.org/content/groups/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>com.kohlschutter</groupId>
