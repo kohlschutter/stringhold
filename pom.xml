@@ -24,7 +24,6 @@
         <file.encoding>UTF-8</file.encoding>
         <maven.compile.encoding>UTF-8</maven.compile.encoding>
     </properties>
-
     <organization>
         <name>Kohlschütter Search Intelligence</name>
         <url>https://www.kohlschutter.com/</url>
@@ -42,6 +41,22 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>github.com/kohlschutter/stringhold</id>
+            <url>gitsite:git@github.com/kohlschutter/stringhold.git</url>
+        </site>
+    </distributionManagement>
+    <scm>
+        <url>https://github.com/kohlschutter/stringhold</url>
+        <connection>scm:git:https://github.com/kohlschutter/stringhold.git</connection>
+        <developerConnection>scm:git:https://github.com/kohlschutter/stringhold.git</developerConnection>
+    </scm>
 
     <dependencies>
         <dependency>
