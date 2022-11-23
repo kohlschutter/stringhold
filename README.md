@@ -23,7 +23,7 @@ Stringhold provides classes replacing or improving the functionality of the foll
 - StringBuilder
 - StringBuffer
 - Writer
- 
+
 ## StringHolder API
 
 A `StringHolder` is something *holding* data that may turn into a String. This can simply be a String *itself*, something that can *assemble* a String from its own state, or something that gets a String *supplied* from somewhere else (e.g., a `Supplier<String>`).
@@ -73,9 +73,11 @@ A set of StringHolders can be associated with a `StringHolderScope`, which recei
 
 ## Code Quality
 
-This project currently maintains a 100% code coverage policy. This is one of the projects where this makes actual sense.
+This project currently maintains a [100% code coverage](https://kohlschutter.github.io/stringhold/jacoco/index.html) policy.
 
-API is expected to not disappear across minor and patch releases. Changes in behavior are possible but will be clearly marked in the changelog.
+This is one of the projects where this makes actual sense.
+
+The **stringhold** API is expected to not have breaking changes across minor and patch releases. Changes in behavior are possible but should be clearly marked in the changelog.
 
 # Usage Examples
 
@@ -85,43 +87,43 @@ A StringHolder using a String directly:
 
 	StringHolder h = StringHolder.withContent("Some string");
 	h.isString(); // always true
-	
+
 	h.toString(); // simply returns the associated string.
 
 A StringHolder using a String supplier:
 
 	StringHolder h = StringHolder.withSupplier(() -> "Some string");
 	h.isString(); // not true yet
-	
+
 	h.toString(); // calls Supplier.get()
 	h.isString(); // now true
 
 	h.toString(); // doesn't Supplier.get() a second time, string is cached
-	
+
 A StringHolder using a String supplier and some length constraints:
-	
+
 	StringHolder h = StringHolder.withSupplierMinimumAndExpectedLength(5, 20, () -> "Some string");
 	h.isEmpty(); // false because we claim the string is at least 5 characters long
 	h.isString(); // not true yet
 
 A sequence of String(Holder)s, some are nested:
-	
+
 	StringHolderSequence seq = new StringHolderSequence();
 	seq.append("Hello");
 	seq.append(' ');
 	seq.append(new StringHolderSequence().append(StringHolder.withSupplier(() -> "World"));
-	
+
 	// Append to a writer
 	try (Writer out = new FileWriter(new File("/tmp/out"))) {
 		seq.appendTo(out);
 	}
-	
+
 	seq.toString(); // "Hello World"
-	
+
 A StringHolder that reads contents from a function that supplies StringReader instances:
 
 	StringHolder h = StringHolder.withReaderSupplier(() -> new StringReader("hello"), (
-        e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);	
+        e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 ## The full API
 
 (javadoc link here)
