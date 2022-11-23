@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringHolder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stringhold</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold</a> &gt; <span class="el_source">StringHolder.java</span></div><h1>StringHolder.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Objects;
+import java.util.function.Supplier;
+
+import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
+
+/**
+ * A {@link StringHolder} holds something that can &lt;em&gt;eventually&lt;/em&gt; turn into a string.
+ *
+ * {@link StringHolder}s may reduce string allocation in cases where the final string sequence is,
+ * for example sent to a Writer (or other Appendable), discarded after a certain length, ignored
+ * upon an exception thrown along the way, etc.
+ *
+ * Apart from reducing string concatenation-related allocations, {@link StringHolder}s may reduce
+ * the end-to-end string life-cycle by allowing concurrency between construction and transmission:
+ * The string can be transmitted while it's being constructed.
+ *
+ * Unlike regular stream-based approaches, a pre-rendered structure is available before transmission
+ * starts. This means a transmission that is known to exceed certain limits can be stopped before a
+ * single character is transmitted.
+ *
+ * @author Christian Kohlschütter
+ */
+@SuppressWarnings({&quot;PMD.CyclomaticComplexity&quot;})
+public abstract class StringHolder extends CharSequenceReleaseShim implements CharSequence {
+  String theString;
+
+  private int minLength;
+  private int expectedLength;
+
+<span class="fc" id="L54">  private boolean trouble = false;</span>
+
+<span class="fc" id="L56">  @SuppressFBWarnings(&quot;EI_EXPOSE_REP&quot;)</span>
+  private StringHolderScope scope = null;
+
+  /**
+   * Constructs a {@link StringHolder} with a zero minimum length.
+   */
+  protected StringHolder() {
+<span class="fc" id="L63">    this(0);</span>
+<span class="fc" id="L64">  }</span>
+
+  /**
+   * Constructs a {@link StringHolder} with the given minimum length, use {@code 0} if no minimum
+   * length is known.
+   *
+   * @param minLength The minimum length, which must not be larger than the eventual actual length.
+   */
+  protected StringHolder(int minLength) {
+<span class="fc" id="L73">    this(minLength, minLength);</span>
+<span class="fc" id="L74">  }</span>
+
+  /**
+   * Constructs a {@link StringHolder} with the given minimum length (use {@code 0} if no minimum
+   * length is known), and expected length.
+   *
+   * @param minLength The minimum length, which must not be larger than the eventual actual length.
+   * @param expectedLength The expected length, which may be larger than the eventual actual length
+   */
+  protected StringHolder(int minLength, int expectedLength) {
+<span class="fc" id="L84">    super();</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">    if (minLength &lt; 0) {</span>
+<span class="fc" id="L86">      throw new IllegalArgumentException(&quot;Invalid minLength&quot;);</span>
+    }
+<span class="fc" id="L88">    this.minLength = minLength;</span>
+<span class="fc" id="L89">    this.expectedLength = Math.max(minLength, expectedLength);</span>
+<span class="fc" id="L90">  }</span>
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, assuming a minimum
+   * length of 0.
+   *
+   * @param supplier The supplier.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   */
+  public static StringHolder withSupplier(Supplier&lt;String&gt; supplier) {
+<span class="fc" id="L101">    return withSupplierMinimumLength(0, supplier);</span>
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
+   * minimum of the estimated length.
+   *
+   * @param minLength The minimum length, must not be larger than the actual length.
+   * @param supplier The supplier.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   */
+  public static StringHolder withSupplierMinimumLength(int minLength, Supplier&lt;String&gt; supplier) {
+<span class="fc" id="L114">    return new SuppliedStringHolder(minLength, minLength, supplier);</span>
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
+   * minimum of the estimated length.
+   *
+   * @param expectedLength The expected length, may be larger than the actual length.
+   * @param supplier The supplier.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   */
+  public static StringHolder withSupplierExpectedLength(int expectedLength,
+      Supplier&lt;String&gt; supplier) {
+<span class="fc" id="L128">    return new SuppliedStringHolder(0, expectedLength, supplier);</span>
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
+   * minimum of the estimated length.
+   *
+   * @param minLength The minimum length, must not be larger than the actual length.
+   * @param expectedLength The expected length, may be larger than the actual length.
+   * @param supplier The supplier.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   */
+  public static StringHolder withSupplierMinimumAndExpectedLength(int minLength, int expectedLength,
+      Supplier&lt;String&gt; supplier) {
+<span class="fc" id="L143">    return new SuppliedStringHolder(minLength, expectedLength, supplier);</span>
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying the
+   * length the supplied string is going to have. An {@link IllegalStateException} will be thrown
+   * once a string is supplied that does not match this length.
+   *
+   * @param fixedLength The exact length of the string.
+   * @param supplier The supplier.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if fixedLength is negative.
+   */
+  public static StringHolder withSupplierFixedLength(int fixedLength, Supplier&lt;String&gt; supplier) {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">    if (fixedLength == 0) {</span>
+<span class="fc" id="L158">      return SimpleStringHolder.EMPTY_STRING;</span>
+    }
+<span class="fc" id="L160">    return new FixedLengthSuppliedStringHolder(fixedLength, supplier);</span>
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplier(IOSupplier&lt;Reader&gt; readerSupply,
+      IOExceptionHandler onError) {
+<span class="fc" id="L172">    return new ReaderStringHolder(0, 0, readerSupply, onError);</span>
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param minLen The minimum length of the content, must not be larger than the actual length.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplierMinimumLength(int minLen,
+      IOSupplier&lt;Reader&gt; readerSupply, IOExceptionHandler onError) {
+<span class="fc" id="L185">    return new ReaderStringHolder(minLen, minLen, readerSupply, onError);</span>
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param expectedLen The expected length of the content, which is only an estimate.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplierExpectedLength(int expectedLen,
+      IOSupplier&lt;Reader&gt; readerSupply, IOExceptionHandler onError) {
+<span class="fc" id="L198">    return new ReaderStringHolder(0, expectedLen, readerSupply, onError);</span>
+  }
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param minLen The minimum length of the content, must not be larger than the actual length.
+   * @param expectedLen The expected length of the content, which is only an estimate.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   * @return The {@link ReaderStringHolder}.
+   */
+  public static StringHolder withReaderSupplierMinimumAndExpectedLength(int minLen, int expectedLen,
+      IOSupplier&lt;Reader&gt; readerSupply, IOExceptionHandler onError) {
+<span class="fc" id="L212">    return new ReaderStringHolder(minLen, expectedLen, readerSupply, onError);</span>
+  }
+
+  /**
+   * Constructs a {@link StringHolder} with the given content.
+   *
+   * Unless the object already is a {@link StringHolder}, or is known to be empty, its contents are
+   * converted to String.
+   *
+   * @param obj The object.
+   * @return The {@link StringHolder} instance.
+   */
+  public static StringHolder withContent(Object obj) {
+<span class="fc bfc" id="L225" title="All 2 branches covered.">    if (obj == null) {</span>
+<span class="fc" id="L226">      return SimpleStringHolder.EMPTY_STRING;</span>
+    }
+<span class="fc bfc" id="L228" title="All 2 branches covered.">    if (obj instanceof String) {</span>
+<span class="fc" id="L229">      String s = (String) obj;</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">      if (s.isEmpty()) {</span>
+<span class="fc" id="L231">        return SimpleStringHolder.EMPTY_STRING;</span>
+      }
+<span class="fc" id="L233">      return new SimpleStringHolder(s);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">    } else if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L235">      return (StringHolder) obj;</span>
+    } else {
+<span class="fc bfc" id="L237" title="All 2 branches covered.">      if (obj instanceof CharSequence) {</span>
+<span class="fc bfc" id="L238" title="All 2 branches covered.">        if (CharSequenceReleaseShim.isEmpty((CharSequence) obj)) {</span>
+<span class="fc" id="L239">          return SimpleStringHolder.EMPTY_STRING;</span>
+        }
+      }
+<span class="fc" id="L242">      String s = String.valueOf(obj);</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">      if (s.isEmpty()) {</span>
+<span class="fc" id="L244">        return SimpleStringHolder.EMPTY_STRING;</span>
+      }
+<span class="fc" id="L246">      return new SimpleStringHolder(s);</span>
+    }
+  }
+
+  /**
+   * Returns the current minimum length of the expected string length in this {@link StringHolder}.
+   *
+   * This is equivalent to {@link #length()} if {@link #isString()} is {@code true}.
+   *
+   * NOTE: When using this parameter for optimizations (e.g., to speed-up equality checks), make
+   * sure to also check {@link #checkError()}. When that method returns {@code true}, the minimum
+   * length can actually not be guaranteed.
+   *
+   * @return The minimum length (but be sure to see {@link #checkError()}).
+   */
+  public final int getMinimumLength() {
+<span class="fc" id="L262">    return minLength;</span>
+  }
+
+  /**
+   * Returns the current estimate of the length of the string in this {@link StringHolder}, which is
+   * at least the {@link #getMinimumLength()} but could be substantially larger.
+   *
+   * This is equivalent to {@link #length()} if {@link #isString()} is {@code true}.
+   *
+   * @return The currently expected length.
+   */
+  public final int getExpectedLength() {
+<span class="fc" id="L274">    return expectedLength;</span>
+  }
+
+  /**
+   * Sets the expected lengths (minimum and estimated) to the given values.
+   *
+   * @param min The new minimum length, must not be smaller than the current minimum (unless
+   *          {@link #checkError()} is {@code true})
+   * @param expected The new expected length (will be rounded up if less than {@code min}).
+   * @return The new expected length (which may be adjusted to the new minimum).
+   * @throws IllegalStateException if the value is negative, and {@link #checkError()} is
+   *           {@code false}.
+   */
+  protected final int resizeTo(int min, int expected) {
+<span class="fc" id="L288">    return resizeTo(min, expected, false);</span>
+  }
+
+  private int resizeTo(int min, int expected, boolean fromToString) {
+<span class="fc" id="L292">    int oldMin = this.minLength;</span>
+<span class="fc" id="L293">    int oldExpected = this.expectedLength;</span>
+
+<span class="fc bfc" id="L295" title="All 2 branches covered.">    if (min &lt; oldMin) {</span>
+<span class="fc bfc" id="L296" title="All 2 branches covered.">      if (checkError()) {</span>
+        // throw away our previous expectations upon error
+<span class="fc" id="L298">        expected = (min = Math.max(0, min));</span>
+      } else {
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (fromToString) {</span>
+<span class="fc" id="L301">          setError();</span>
+<span class="fc" id="L302">          resizeTo(min, expected, false);</span>
+<span class="fc" id="L303">          throw new IllegalStateException(&quot;Detected mispredicted minLength&quot;);</span>
+        } else {
+<span class="fc" id="L305">          throw new IllegalStateException(&quot;New minimum is smaller than current minimum&quot;);</span>
+        }
+      }
+    }
+<span class="fc" id="L309">    int el = (this.expectedLength = Math.max((this.minLength = min), expected));</span>
+
+<span class="fc" id="L311">    StringHolderScope sc = this.scope;</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">    if (sc != null) {</span>
+      try {
+<span class="fc" id="L314">        sc.resizeBy(this, this.minLength - oldMin, this.expectedLength - oldExpected);</span>
+<span class="fc" id="L315">      } catch (RuntimeException | Error e) {</span>
+<span class="fc" id="L316">        setError();</span>
+<span class="fc" id="L317">        throw e;</span>
+<span class="fc" id="L318">      }</span>
+    }
+
+<span class="fc" id="L321">    return el;</span>
+  }
+
+  /**
+   * Increases the expected lengths (minimum and estimated) by the given values.
+   *
+   * Any value that overflows {@link Integer#MAX_VALUE} will be capped at that limit.
+   *
+   * @param minBy The minimum length increment, must not be negative (unless {@link #checkError()}
+   *          is {@code true})
+   * @param expectedBy The expected length increment, may be negative; final length will be
+   *          {@code &gt;= 0}.
+   * @throws IllegalArgumentException if minBy is negative and {@link #checkError()} is
+   *           {@code false}
+   */
+  protected final void resizeBy(int minBy, int expectedBy) {
+<span class="fc" id="L337">    int oldMin = this.minLength;</span>
+<span class="fc" id="L338">    int oldExpected = this.expectedLength;</span>
+
+<span class="fc bfc" id="L340" title="All 2 branches covered.">    if (minBy &lt; 0) {</span>
+<span class="fc bfc" id="L341" title="All 2 branches covered.">      if (checkError()) {</span>
+<span class="fc" id="L342">        this.minLength = Math.max(0, this.minLength + minBy);</span>
+      } else {
+<span class="fc" id="L344">        throw new IllegalArgumentException(&quot;Minimum length increment is negative&quot;);</span>
+      }
+<span class="fc bfc" id="L346" title="All 2 branches covered.">    } else if ((this.minLength += minBy) &lt; 0) {</span>
+      // cannot express minimum length that large
+<span class="fc" id="L348">      this.minLength = Integer.MAX_VALUE;</span>
+    }
+<span class="fc" id="L350">    this.expectedLength = Math.max(minLength, this.expectedLength + expectedBy);</span>
+
+<span class="fc" id="L352">    StringHolderScope sc = this.scope;</span>
+<span class="fc bfc" id="L353" title="All 2 branches covered.">    if (sc != null) {</span>
+      try {
+<span class="fc" id="L355">        sc.resizeBy(this, this.minLength - oldMin, this.expectedLength - oldExpected);</span>
+<span class="fc" id="L356">      } catch (RuntimeException | Error e) {</span>
+<span class="fc" id="L357">        setError();</span>
+<span class="fc" id="L358">        throw e;</span>
+<span class="fc" id="L359">      }</span>
+    }
+<span class="fc" id="L361">  }</span>
+
+  /**
+   * Returns the actual length of this instance's contents. This may trigger a conversion to
+   * {@link String}.
+   *
+   * @return The actual length.
+   */
+  @Override
+  public final int length() {
+<span class="fc bfc" id="L371" title="All 2 branches covered.">    if (theString != null) {</span>
+<span class="fc" id="L372">      return minLength;</span>
+    } else {
+<span class="fc" id="L374">      return resizeTo(computeLength(), 0);</span>
+    }
+  }
+
+  /**
+   * Computes the actual length of this instance's contents.
+   *
+   * By default, this is implemented as {@code toString().length()}.
+   *
+   * When overriding this method, make sure to also override {@link #isLengthKnown()}.
+   *
+   * @return The actual length.
+   */
+  protected int computeLength() {
+<span class="fc" id="L388">    return toString().length();</span>
+  }
+
+  /**
+   * Checks if this holder is currently backed by a plain {@link String}.
+   *
+   * @return {@code true} if currently backed by a plain {@link String}.
+   */
+  public final boolean isString() {
+<span class="fc bfc" id="L397" title="All 2 branches covered.">    return theString != null;</span>
+  }
+
+  /**
+   * Checks if this {@link StringHolder} is known to yield an empty {@link String}.
+   *
+   * @return {@code true} if known non-empty.
+   */
+  public final boolean isKnownEmpty() {
+<span class="fc bfc" id="L406" title="All 2 branches covered.">    if (minLength &gt; 0) {</span>
+<span class="fc" id="L407">      return false;</span>
+<span class="fc bfc" id="L408" title="All 4 branches covered.">    } else if (isLengthKnown() &amp;&amp; length() == 0) {</span>
+<span class="fc" id="L409">      return true;</span>
+    } else {
+      String s;
+
+<span class="fc bfc" id="L413" title="All 4 branches covered.">      return (s = theString) != null &amp;&amp; s.isEmpty();</span>
+    }
+  }
+
+  @Override
+  public final boolean isEmpty() {
+<span class="fc bfc" id="L419" title="All 4 branches covered.">    return isKnownEmpty() || super.isEmpty();</span>
+  }
+
+  /**
+   * Returns {@code true} if the actual length is known, i.e. {@link #getMinimumLength()} {@code ==}
+   * {@link #getExpectedLength()} {@code == } {@link #length()}.
+   *
+   * By default, this is only true if {@link #isString()} {@code == true}, but subclasses may
+   * override this check. When they do, they must include a check for {@code ||}
+   * {@link #isString()}.
+   *
+   * @return {@code true} if the length in this holder is known.
+   * @see #isKnownEmpty()
+   */
+  public boolean isLengthKnown() {
+<span class="fc" id="L434">    return isString();</span>
+  }
+
+  @Override
+  public final int hashCode() {
+<span class="fc" id="L439">    return toString().hashCode();</span>
+  }
+
+  @SuppressFBWarnings(&quot;EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS&quot;)
+  @Override
+  public final boolean equals(Object obj) {
+<span class="fc bfc" id="L445" title="All 2 branches covered.">    if (obj == null) {</span>
+<span class="fc" id="L446">      return false;</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">    } else if (obj == this) {</span>
+<span class="fc" id="L448">      return true;</span>
+<span class="fc bfc" id="L449" title="All 2 branches covered.">    } else if (obj instanceof String) {</span>
+<span class="fc" id="L450">      return equalsString((String) obj);</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">    } else if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L452">      return equalsStringHolder((StringHolder) obj);</span>
+    } else {
+<span class="fc" id="L454">      return false;</span>
+    }
+  }
+
+  private boolean equalsString(String s) {
+<span class="fc bfc" id="L459" title="All 4 branches covered.">    if (!checkError() &amp;&amp; s.length() &lt; getMinimumLength()) {</span>
+<span class="fc" id="L460">      return false;</span>
+    } else {
+<span class="fc" id="L462">      return toString().equals(s);</span>
+    }
+  }
+
+  private boolean equalsStringHolder(StringHolder obj) {
+<span class="fc bfc" id="L467" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc bfc" id="L468" title="All 4 branches covered.">      if (!obj.checkError() &amp;&amp; length() &lt; obj.getMinimumLength()) {</span>
+<span class="fc" id="L469">        return false;</span>
+      }
+<span class="fc bfc" id="L471" title="All 2 branches covered.">    } else if (obj.isString()) {</span>
+<span class="fc bfc" id="L472" title="All 4 branches covered.">      if (!checkError() &amp;&amp; obj.length() &lt; getMinimumLength()) {</span>
+<span class="fc" id="L473">        return false;</span>
+      }
+    }
+
+<span class="fc" id="L477">    return obj.equalsString(toString());</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Appendable}; this may or
+   * may not turn the contents of this instance into a String.
+   *
+   * @param out The target.
+   * @throws IOException on error.
+   */
+  public final void appendTo(Appendable out) throws IOException {
+<span class="fc" id="L488">    appendToAndReturnLength(out);</span>
+<span class="fc" id="L489">  }</span>
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}; this may
+   * or may not turn the contents of this instance into a String.
+   *
+   * @param out The target.
+   */
+  public final void appendTo(StringBuilder out) {
+<span class="fc" id="L498">    appendToAndReturnLength(out);</span>
+<span class="fc" id="L499">  }</span>
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuffer}; this may or
+   * may not turn the contents of this instance into a String.
+   *
+   * @param out The target.
+   */
+  public final void appendTo(StringBuffer out) {
+<span class="fc" id="L508">    appendToAndReturnLength(out);</span>
+<span class="fc" id="L509">  }</span>
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}; this may or may
+   * not turn the contents of this instance into a String.
+   *
+   * @param out The target.
+   * @throws IOException on error.
+   */
+  public final void appendTo(Writer out) throws IOException {
+<span class="fc" id="L519">    appendToAndReturnLength(out);</span>
+<span class="fc" id="L520">  }</span>
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Appendable}, and returns
+   * the number of characters appended. This call may or may not turn the contents of this instance
+   * into a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   * @throws IOException on error.
+   */
+  public final int appendToAndReturnLength(Appendable out) throws IOException {
+<span class="fc bfc" id="L532" title="All 2 branches covered.">    if (out instanceof Writer) {</span>
+<span class="fc" id="L533">      return appendToAndReturnLength((Writer) out);</span>
+<span class="fc bfc" id="L534" title="All 2 branches covered.">    } else if (out instanceof StringBuilder) {</span>
+<span class="fc" id="L535">      return appendToAndReturnLength((StringBuilder) out);</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">    } else if (out instanceof StringBuffer) {</span>
+<span class="fc" id="L537">      return appendToAndReturnLength((StringBuffer) out);</span>
+    } else {
+<span class="fc" id="L539">      return appendToAndReturnLengthDefault(out);</span>
+    }
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}, and
+   * returns the number of characters appended. This call may or may not turn the contents of this
+   * instance into a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   */
+  public final int appendToAndReturnLength(StringBuilder out) {
+    int len;
+<span class="fc bfc" id="L553" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L554">      len = length();</span>
+<span class="fc" id="L555">      out.append(toString());</span>
+    } else {
+<span class="fc" id="L557">      len = appendToAndReturnLengthImpl(out);</span>
+<span class="fc bfc" id="L558" title="All 2 branches covered.">      if (minLength &lt; len) {</span>
+<span class="fc" id="L559">        resizeTo(len, 0);</span>
+      }
+    }
+<span class="fc" id="L562">    return len;</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuffer}, and returns
+   * the number of characters appended. This call may or may not turn the contents of this instance
+   * into a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   */
+  public final int appendToAndReturnLength(StringBuffer out) {
+    int len;
+<span class="fc bfc" id="L575" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L576">      len = length();</span>
+<span class="fc" id="L577">      out.append(toString());</span>
+    } else {
+<span class="fc" id="L579">      len = appendToAndReturnLengthImpl(out);</span>
+<span class="fc bfc" id="L580" title="All 2 branches covered.">      if (minLength &lt; len) {</span>
+<span class="fc" id="L581">        resizeTo(len, 0);</span>
+      }
+    }
+<span class="fc" id="L584">    return len;</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}, and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   * @throws IOException on error.
+   */
+  public final int appendToAndReturnLength(Writer out) throws IOException {
+    int len;
+<span class="fc bfc" id="L598" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L599">      len = length();</span>
+<span class="fc" id="L600">      out.append(toString());</span>
+    } else {
+<span class="fc" id="L602">      len = appendToAndReturnLengthImpl(out);</span>
+<span class="fc bfc" id="L603" title="All 2 branches covered.">      if (minLength &lt; len) {</span>
+<span class="fc" id="L604">        resizeTo(len, 0);</span>
+      }
+    }
+<span class="fc" id="L607">    return len;</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Appendable} (which is
+   * neither a {@link StringBuilder}, {@link StringBuffer}, nor a {@link Writer}), and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   * @see #appendToAndReturnLength(StringBuilder)
+   * @see #appendToAndReturnLength(StringBuffer)
+   * @see #appendToAndReturnLength(StringWriter)
+   * @throws IOException on error.
+   */
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
+<span class="fc" id="L624">    String s = toString();</span>
+<span class="fc" id="L625">    out.append(s);</span>
+<span class="fc" id="L626">    return s.length();</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuilder}, and
+   * returns the number of characters appended. This call may or may not turn the contents of this
+   * instance into a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   */
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
+<span class="fc" id="L638">    String s = toString();</span>
+<span class="fc" id="L639">    out.append(s);</span>
+<span class="fc" id="L640">    return s.length();</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link StringBuffer}, and returns
+   * the number of characters appended. This call may or may not turn the contents of this instance
+   * into a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   */
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
+<span class="fc" id="L652">    String s = toString();</span>
+<span class="fc" id="L653">    out.append(s);</span>
+<span class="fc" id="L654">    return s.length();</span>
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}, and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String. It won't be called if it's already one.
+   *
+   * @param out The target.
+   * @return The number of characters appended (which is assumed to be the new minimum length).
+   * @throws IOException on error.
+   */
+  protected int appendToAndReturnLengthImpl(Writer out) throws IOException {
+    // subclasses may implement a better way for Writers, but we don't
+<span class="fc" id="L668">    return appendToAndReturnLengthDefault(out);</span>
+  }
+
+  private int appendToAndReturnLengthDefault(Appendable out) throws IOException {
+    int len;
+<span class="fc bfc" id="L673" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L674">      len = length();</span>
+<span class="fc" id="L675">      out.append(toString());</span>
+    } else {
+<span class="fc" id="L677">      len = appendToAndReturnLengthDefaultImpl(out);</span>
+<span class="fc bfc" id="L678" title="All 2 branches covered.">      if (minLength &lt; len) {</span>
+<span class="fc" id="L679">        resizeTo(len, 0);</span>
+      }
+    }
+<span class="fc" id="L682">    return len;</span>
+  }
+
+  @Override
+  public final String toString() {
+<span class="fc" id="L687">    String s = theString;</span>
+<span class="fc bfc" id="L688" title="All 2 branches covered.">    if (s != null) {</span>
+<span class="fc" id="L689">      return s;</span>
+    }
+<span class="fc" id="L691">    theString = s = Objects.requireNonNull(getString());</span>
+<span class="fc" id="L692">    resizeTo(s.length(), 0, true);</span>
+
+<span class="fc" id="L694">    stringSanityCheck(s);</span>
+<span class="fc" id="L695">    return s;</span>
+  }
+
+  /**
+   * Called from within {@link #toString()} after updating/assigning the cached string but before
+   * returning it. This may be a good opportunity to see if we got what we wanted, setError, etc.
+   *
+   * @param s The string.
+   */
+  protected void stringSanityCheck(String s) {
+<span class="fc" id="L705">  }</span>
+
+  /**
+   * Retrieves the string.
+   *
+   * @return The string; must not be {@code null}.
+   */
+  protected abstract String getString();
+
+  /**
+   * Un-caches the already-determined String. This can be used to implement mutable data structures.
+   */
+  protected void uncache() {
+<span class="fc" id="L718">    theString = null;</span>
+<span class="fc" id="L719">  }</span>
+
+  /**
+   * Provides the contents of this {@link StringHolder} as a {@link Reader}.
+   *
+   * @return The reader.
+   * @throws IOException on error.
+   */
+  public final Reader toReader() throws IOException {
+<span class="fc" id="L728">    String s = theString;</span>
+<span class="fc bfc" id="L729" title="All 2 branches covered.">    if (s != null) {</span>
+<span class="fc" id="L730">      return new StringReader(s);</span>
+    } else {
+<span class="fc" id="L732">      return newReader();</span>
+    }
+  }
+
+  /**
+   * Checks if this {@link StringHolder} had some kind of unexpected condition.
+   *
+   * If so, {@link #getMinimumLength()} may be adjusted to a value smaller than its previous state.
+   *
+   * @return {@code true} if trouble was detected.
+   */
+  public final boolean checkError() {
+<span class="fc" id="L744">    return trouble;</span>
+  }
+
+  /**
+   * Signals that this instance had some kind of unexpected condition.
+   *
+   * @see #checkError()
+   * @see #clearError()
+   */
+  protected final void setError() {
+<span class="fc" id="L754">    trouble = true;</span>
+<span class="fc" id="L755">    StringHolderScope sc = scope;</span>
+<span class="fc bfc" id="L756" title="All 2 branches covered.">    if (sc != null) {</span>
+<span class="fc" id="L757">      sc.setError(this);</span>
+    }
+<span class="fc" id="L759">  }</span>
+
+  /**
+   * Clears the trouble state of this instance.
+   *
+   * @see #checkError()
+   * @see #setError()
+   */
+  protected final void clearError() {
+<span class="fc" id="L768">    trouble = false;</span>
+<span class="fc" id="L769">    StringHolderScope sc = scope;</span>
+<span class="fc bfc" id="L770" title="All 2 branches covered.">    if (sc != null) {</span>
+<span class="fc" id="L771">      sc.clearError(this);</span>
+    }
+<span class="fc" id="L773">  }</span>
+
+  /**
+   * Constructs a new {@link Reader} providing the contents of this {@link StringHolder}.
+   *
+   * @return The reader.
+   * @throws IOException on error.
+   */
+  protected Reader newReader() throws IOException {
+<span class="fc" id="L782">    return LazyInitReader.withSupplier(() -&gt; new StringReader(StringHolder.this.toString()));</span>
+  }
+
+  /**
+   * Returns the {@link StringHolderScope} associated with this {@link StringHolder}, or
+   * {@code null} if no scope was associated.
+   *
+   * @return The scope, or {@code null}.
+   */
+  public final StringHolderScope getScope() {
+<span class="fc" id="L792">    return scope;</span>
+  }
+
+  /**
+   * Sets the {@link StringHolderScope} associated with this {@link StringHolder}. Any previously
+   * associated scope is removed from this instance and returned.
+   *
+   * @param newScope The new scope, or {@code null} to set &quot;no scope&quot;.
+   * @return The old scope, or {@code null} if none was set before.
+   */
+  public final StringHolderScope updateScope(StringHolderScope newScope) {
+<span class="fc" id="L803">    StringHolderScope oldScope = this.scope;</span>
+<span class="fc bfc" id="L804" title="All 2 branches covered.">    if (oldScope != null) {</span>
+      try {
+<span class="fc" id="L806">        oldScope.remove(this);</span>
+<span class="fc" id="L807">      } catch (RuntimeException | Error e) {</span>
+<span class="fc" id="L808">        setError();</span>
+<span class="fc" id="L809">        throw e;</span>
+<span class="fc" id="L810">      }</span>
+    }
+
+<span class="fc bfc" id="L813" title="All 2 branches covered.">    if (newScope != null) {</span>
+      try {
+<span class="fc" id="L815">        newScope.add(this);</span>
+<span class="fc" id="L816">      } catch (RuntimeException | Error e) {</span>
+<span class="fc" id="L817">        setError();</span>
+<span class="fc" id="L818">        throw e;</span>
+<span class="fc" id="L819">      }</span>
+    }
+<span class="fc" id="L821">    this.scope = newScope;</span>
+<span class="fc" id="L822">    return oldScope;</span>
+  }
+
+  @Override
+  public char charAt(int index) {
+<span class="fc" id="L827">    return toString().charAt(index);</span>
+  }
+
+  @Override
+  public CharSequence subSequence(int start, int end) {
+<span class="fc bfc" id="L832" title="All 4 branches covered.">    if (start == 0 &amp;&amp; end == length()) {</span>
+<span class="fc" id="L833">      return this;</span>
+    }
+<span class="fc" id="L835">    return toString().subSequence(start, end);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
