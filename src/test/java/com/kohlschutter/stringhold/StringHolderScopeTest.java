@@ -75,7 +75,7 @@ public class StringHolderScopeTest {
     sh.updateScope(null);
     assertEquals(0, cs.count);
     assertNull(sh.getScope());
-    sh.updateScope(null);
+    sh.updateScope(StringHolderScope.NONE);
     assertNull(sh.getScope());
     assertEquals(0, cs.count);
   }

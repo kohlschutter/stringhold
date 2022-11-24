@@ -17,6 +17,8 @@
  */
 package com.kohlschutter.stringhold;
 
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+
 /**
  * A scope that can be associated with {@link StringHolder} instances.
  *
@@ -26,6 +28,21 @@ package com.kohlschutter.stringhold;
  * @author Christian Kohlschütter
  */
 public interface StringHolderScope {
+  /**
+   * Placeholder to be used to indicate "no scope" where {@code null} is not allowed.
+   */
+  StringHolderScope NONE = new StringHolderScope() {
+    @Override
+    @ExcludeFromCodeCoverageGeneratedReport
+    public void add(StringHolder sh) {
+    }
+
+    @Override
+    @ExcludeFromCodeCoverageGeneratedReport
+    public void remove(StringHolder sh) {
+    }
+  };
+
   /**
    * Called upon adding a {@link StringHolder} with this {@link StringHolderScope}.
    *

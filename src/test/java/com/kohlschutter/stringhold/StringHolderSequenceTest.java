@@ -249,7 +249,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testAppendCharSequenceRange() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = new StringHolderSequence(5);
 
     seq.append("WAT", 2, 2); // empty range
 

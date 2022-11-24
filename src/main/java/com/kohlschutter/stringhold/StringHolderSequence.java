@@ -31,13 +31,23 @@ import java.util.Objects;
  * @author Christian Kohlschütter
  */
 public class StringHolderSequence extends StringHolder implements Appendable {
-  private List<Object> sequence = new ArrayList<>();
+  private List<Object> sequence;
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
    */
   public StringHolderSequence() {
+    this(10);
+  }
+
+  /**
+   * Constructs a new, empty {@link StringHolderSequence}.
+   *
+   * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
+   */
+  public StringHolderSequence(int estimatedNumberOfAppends) {
     super(0);
+    sequence = new ArrayList<>(estimatedNumberOfAppends);
   }
 
   private void addSequence(String o) {
@@ -52,7 +62,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   private void addSequence(StringHolder o, int minLen, int expLen) {
-    if (needsStringConversion(o)) {
+    if (o.isString() || needsStringConversion(o)) {
       addSequence(o.toString());
       return;
     }

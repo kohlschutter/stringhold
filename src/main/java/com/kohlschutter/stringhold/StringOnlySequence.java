@@ -28,7 +28,16 @@ public class StringOnlySequence extends StringHolderSequence {
    * Constructs a new, empty {@link StringOnlySequence}.
    */
   public StringOnlySequence() {
-    super();
+    this(10);
+  }
+
+  /**
+   * Constructs a new, empty {@link StringOnlySequence}.
+   *
+   * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
+   */
+  public StringOnlySequence(int estimatedNumberOfAppends) {
+    super(estimatedNumberOfAppends);
   }
 
   @Override

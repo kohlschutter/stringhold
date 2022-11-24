@@ -798,10 +798,14 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * Sets the {@link StringHolderScope} associated with this {@link StringHolder}. Any previously
    * associated scope is removed from this instance and returned.
    *
-   * @param newScope The new scope, or {@code null} to set "no scope".
+   * @param newScope The new scope, or {@code null}/{@link StringHolderScope#NONE} to set "no
+   *          scope".
    * @return The old scope, or {@code null} if none was set before.
    */
   public final StringHolderScope updateScope(StringHolderScope newScope) {
+    if (newScope == StringHolderScope.NONE) { // NOPMD
+      newScope = null;
+    }
     StringHolderScope oldScope = this.scope;
     if (oldScope != null) {
       try {
