@@ -688,11 +688,13 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
     if (s != null) {
       return s;
     }
-    theString = s = Objects.requireNonNull(getString());
-    resizeTo(s.length(), 0, true);
+    synchronized (this) {
+      theString = s = Objects.requireNonNull(getString());
+      resizeTo(s.length(), 0, true);
 
-    stringSanityCheck(s);
-    return s;
+      stringSanityCheck(s);
+      return s;
+    }
   }
 
   /**

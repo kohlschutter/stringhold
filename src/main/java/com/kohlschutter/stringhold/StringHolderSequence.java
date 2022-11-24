@@ -67,11 +67,11 @@ public class StringHolderSequence extends StringHolder implements Appendable {
    * conversion via {@link StringHolder#toString()}) instead of adding it directly.
    *
    * This is false by default for all objects. Subclasses may override this selectively. If all
-   * objects should be converted to strings, use {@link StringSequence}.
+   * objects should be converted to strings, use {@link StringOnlySequence}.
    *
    * @param sh The {@link StringHolder}.
    * @return {@code true} if it should be appended as a string.
-   * @see StringSequence
+   * @see StringOnlySequence
    */
   protected boolean needsStringConversion(StringHolder sh) {
     return false;

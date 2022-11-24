@@ -27,7 +27,7 @@ public class StringSequenceTest {
   @Test
   public void testAppendSupplied() {
     testAppendSupplied(new StringHolderSequence(), false);
-    testAppendSupplied(new StringSequence(), true);
+    testAppendSupplied(new StringOnlySequence(), true);
   }
 
   private void testAppendSupplied(StringHolderSequence seq, boolean isStringAfterAppend) {

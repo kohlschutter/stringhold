@@ -22,12 +22,12 @@ package com.kohlschutter.stringhold;
  *
  * @author Christian Kohlschütter
  */
-public class StringSequence extends StringHolderSequence {
+public class StringOnlySequence extends StringHolderSequence {
 
   /**
-   * Constructs a new, empty {@link StringSequence}.
+   * Constructs a new, empty {@link StringOnlySequence}.
    */
-  public StringSequence() {
+  public StringOnlySequence() {
     super();
   }
 
