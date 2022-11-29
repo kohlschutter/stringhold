@@ -1053,6 +1053,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param o The other object.
    * @return The comparison result, as defined by {@link #compareTo(Object)}.
    */
+  @SuppressWarnings({"PMD.CognitiveComplexity"})
   protected final int compareToDefault(CharSequence o) {
     int k = 0;
 
@@ -1073,13 +1074,22 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
         return -1;
       }
     }
+
+    int len1;
     if (isString()) {
       if (o instanceof String) {
         return toString().compareTo((String) o);
       }
-      lim = Math.min(length(), len2);
+      len1 = length();
+      lim = Math.min(len1, len2);
     } else {
-      lim = len2;
+      if (isLengthKnown()) {
+        len1 = length();
+        lim = Math.min(len1, len2);
+      } else {
+        len1 = Integer.MAX_VALUE;
+        lim = len2;
+      }
     }
 
     while (k < lim) {
@@ -1096,8 +1106,11 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
         }
       }
     }
+
     if (getMinimumLength() > k) {
       return 1;
+    } else if (len1 == k) {
+      return len1 - len2;
     }
     try {
       charAt(k);
@@ -1115,6 +1128,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param o The other object.
    * @return The comparison result, as defined by {@link #compareTo(Object)}.
    */
+  @SuppressWarnings({"PMD.NPathComplexity", "PMD.CognitiveComplexity"})
   protected int compareToDefault(StringHolder o) {
     int k = 0;
 
@@ -1146,6 +1160,97 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
       return compareTo(o.toString());
     }
 
+    boolean len1Known = isLengthKnown();
+    boolean len2Known = o.isLengthKnown();
+
+    if (len1Known && len2Known) {
+      return compareBothLengthsKnown(o, k, length(), o.length());
+    } else if (len1Known) {
+      return compareOurLengthKnown(o, k, length());
+    } else if (len2Known) {
+      return compareOtherLengthKnown(o, k, o.length());
+    } else {
+      return compareBothLengthsUnknown(o, k);
+    }
+  }
+
+  private int compareBothLengthsKnown(StringHolder o, int k, int len1, int len2) {
+    int lim = Math.min(len1, len2);
+
+    char c1;
+    char c2;
+
+    while (k < lim) {
+      c1 = charAt(k);
+      c2 = o.charAt(k);
+      if (c1 != c2) {
+        return c1 - c2;
+      }
+      k++;
+    }
+
+    return len1 - len2;
+  }
+
+  private int compareOurLengthKnown(StringHolder o, int k, int len1) {
+    char c1;
+    char c2;
+
+    while (k < len1) {
+      c1 = charAt(k);
+      try {
+        c2 = o.charAt(k);
+      } catch (IndexOutOfBoundsException e) {
+        return 1;
+      }
+      if (c1 != c2) {
+        return c1 - c2;
+      }
+      k++;
+    }
+
+    try {
+      if (o.getMinimumLength() > k) {
+        return -1;
+      }
+      o.charAt(k);
+      return -1;
+    } catch (IndexOutOfBoundsException e) {
+      return 0;
+    }
+  }
+
+  private int compareOtherLengthKnown(StringHolder o, int k, int len2) {
+    char c1;
+    char c2;
+
+    while (k < len2) {
+      try {
+        c1 = charAt(k);
+      } catch (IndexOutOfBoundsException e) {
+        return -1;
+      }
+      c2 = o.charAt(k);
+      if (c1 != c2) {
+        return c1 - c2;
+      }
+      k++;
+    }
+
+    try {
+      if (getMinimumLength() > k) {
+        return 1;
+      }
+      charAt(k);
+      return 1;
+    } catch (IndexOutOfBoundsException e) {
+      return 0;
+    }
+  }
+
+  private int compareBothLengthsUnknown(StringHolder o, int k) {
+    char c1;
+    char c2;
     while (true) {
       k++;
 

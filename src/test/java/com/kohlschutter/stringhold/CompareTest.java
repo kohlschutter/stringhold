@@ -207,12 +207,6 @@ public class CompareTest {
     assertEquals(0, new CustomEmptyStringHolder().compareTo(new CustomEmptyStringHolder()));
   }
 
-  @Test
-  public void testYo() {
-    assertEquals(0, StringHolder.withContent("").compareTo(StringHolder.withSupplier(() -> "")));
-
-  }
-
   private static final class CustomEmptyStringHolder extends StringHolder {
     @Override
     protected String getString() {
@@ -358,9 +352,17 @@ public class CompareTest {
         new CustomCharAtStringHolder("aa")));
     assertEquals(1, new KnownLengthCustomCharAtStringHolder("aa").compareTo(
         new CustomCharAtStringHolder("a")));
+    assertEquals(0, new KnownLengthCustomCharAtStringHolder("aa").compareTo(
+        new CustomCharAtStringHolder("aa")));
     assertEquals(-1, new KnownLengthCustomCharAtStringHolder("aa").compareTo(
         new CustomCharAtStringHolder("ab")));
     assertEquals(1, new KnownLengthCustomCharAtStringHolder("ab").compareTo(
+        new CustomCharAtStringHolder("aa")));
+    assertEquals(-1, new KnownLengthCustomCharAtStringHolder("aa").compareTo(
+        new CustomCharAtStringHolder("aaa")));
+    assertEquals(0, new KnownLengthCustomCharAtStringHolder("aaa").compareTo(
+        new CustomCharAtStringHolder("aaa")));
+    assertEquals(1, new KnownLengthCustomCharAtStringHolder("aaa").compareTo(
         new CustomCharAtStringHolder("aa")));
 
     assertEquals(0, new CustomCharAtStringHolder("").compareTo(
@@ -377,7 +379,15 @@ public class CompareTest {
         new KnownLengthCustomCharAtStringHolder("a")));
     assertEquals(-1, new CustomCharAtStringHolder("aa").compareTo(
         new KnownLengthCustomCharAtStringHolder("ab")));
+    assertEquals(0, new CustomCharAtStringHolder("aa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aa")));
     assertEquals(1, new CustomCharAtStringHolder("ab").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aa")));
+    assertEquals(-1, new CustomCharAtStringHolder("aa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aaa")));
+    assertEquals(0, new CustomCharAtStringHolder("aaa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aaa")));
+    assertEquals(1, new CustomCharAtStringHolder("aaa").compareTo(
         new KnownLengthCustomCharAtStringHolder("aa")));
 
     assertEquals(0, new KnownLengthCustomCharAtStringHolder("").compareTo(
@@ -398,6 +408,12 @@ public class CompareTest {
         new KnownLengthCustomCharAtStringHolder("ab")));
     assertEquals(1, new KnownLengthCustomCharAtStringHolder("ab").compareTo(
         new KnownLengthCustomCharAtStringHolder("aa")));
+    assertEquals(0, new KnownLengthCustomCharAtStringHolder("aaa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aaa")));
+    assertEquals(-1, new KnownLengthCustomCharAtStringHolder("aa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aaa")));
+    assertEquals(1, new KnownLengthCustomCharAtStringHolder("aaa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aa")));
 
     assertEquals(0, new CustomCharAtStringHolder("").compareTo(new StringTurningCharAtStringHolder(
         "")));
@@ -415,8 +431,8 @@ public class CompareTest {
         new StringTurningCharAtStringHolder("ab")));
     assertEquals(1, new CustomCharAtStringHolder("ab").compareTo(
         new StringTurningCharAtStringHolder("aa")));
-    assertEquals(0, new CustomCharAtStringHolder("aab").compareTo(
-        new StringTurningCharAtStringHolder("aab")));
+    assertEquals(0, new CustomCharAtStringHolder("aaa").compareTo(
+        new StringTurningCharAtStringHolder("aaa")));
     assertEquals(-1, new CustomCharAtStringHolder("aaa").compareTo(
         new StringTurningCharAtStringHolder("aab")));
     assertEquals(1, new CustomCharAtStringHolder("aab").compareTo(
@@ -444,6 +460,13 @@ public class CompareTest {
         new CustomCharAtStringHolder("aab")));
     assertEquals(1, new StringTurningCharAtStringHolder("aab").compareTo(
         new CustomCharAtStringHolder("aaa")));
+
+    assertEquals(1, new CustomCharAtStringHolder(4, "aaaa").compareTo(
+        new KnownLengthCustomCharAtStringHolder("aaa")));
+    assertEquals(0, new KnownLengthCustomCharAtStringHolder("aaa").compareTo(
+        new CustomCharAtStringHolder(3, "aaa")));
+    assertEquals(-1, new KnownLengthCustomCharAtStringHolder("aaa").compareTo(
+        new CustomCharAtStringHolder(4, "aaaa")));
   }
 
   private static class CustomCharAtStringHolder extends StringHolder {
@@ -479,7 +502,11 @@ public class CompareTest {
   private static class KnownLengthCustomCharAtStringHolder extends CustomCharAtStringHolder {
 
     KnownLengthCustomCharAtStringHolder(String s) {
-      super(s.length(), s);
+      this(s.length(), s);
+    }
+
+    KnownLengthCustomCharAtStringHolder(int minLen, String s) {
+      super(minLen, s);
     }
 
     @Override
