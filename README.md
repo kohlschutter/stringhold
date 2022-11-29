@@ -106,6 +106,11 @@ A StringHolder using a String supplier and some length constraints:
 	h.isEmpty(); // false because we claim the string is at least 5 characters long
 	h.isString(); // not true yet
 
+A StringHolder that reads contents from a function that supplies StringReader instances:
+
+	StringHolder h = StringHolder.withReaderSupplier(() -> new StringReader("hello"), (
+        e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+
 A sequence of String(Holder)s, some are nested:
 
 	StringHolderSequence seq = new StringHolderSequence();
@@ -120,10 +125,15 @@ A sequence of String(Holder)s, some are nested:
 
 	seq.toString(); // "Hello World"
 
-A StringHolder that reads contents from a function that supplies StringReader instances:
+A sequence of String(Holder)s that can be assembled/appended out of order via scatter-gatter (speed up overall assembly time through parallelization):
 
-	StringHolder h = StringHolder.withReaderSupplier(() -> new StringReader("hello"), (
-        e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+	AsyncStringHolderSequence seq = new AsyncStringHolderSequence();
+	seq.append(veryComplexStringHolder);
+	seq.append(anotherStringHolder);
+	
+	// seq.toString() / seq.appendTo() may internally serialize the second StringHolder first.
+	// The final order is still guaranteed to be correct.
+	// This may save time at the cost of constructing temporary StringBuilders.
 
 ## The full API
 
@@ -140,7 +150,6 @@ TBD
 ## Future Improvements
 
 - Add optimizations for the `IntStream` API
-- Add support for Completable suppliers, etc.
 
 ## Frequently Asked Questions
 

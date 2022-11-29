@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Christian Kohlschütter
  */
 public class StringHolderSequence extends StringHolder implements Appendable {
-  private final List<Object> sequence;
+  final List<Object> sequence;
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
@@ -197,7 +197,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected final int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
     int len = 0;
     for (Object obj : sequence) {
       if (obj instanceof StringHolder) {
@@ -217,7 +217,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected final int appendToAndReturnLengthImpl(StringBuilder out) {
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
     out.ensureCapacity(out.length() + getMinimumLength());
 
     int len = 0;
@@ -239,7 +239,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected final int appendToAndReturnLengthImpl(StringBuffer out) {
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
     out.ensureCapacity(out.length() + getMinimumLength());
 
     int len = 0;
