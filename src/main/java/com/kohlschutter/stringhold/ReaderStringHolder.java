@@ -174,7 +174,7 @@ final class ReaderStringHolder extends StringHolder {
   }
 
   @Override
-  protected synchronized String getString() {
+  protected String getString() {
     StringBuilder sb = new StringBuilder();
     try (Reader r = newReader()) {
       readFully(r, sb);

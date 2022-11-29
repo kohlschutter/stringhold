@@ -292,7 +292,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected synchronized String getString() {
+  protected String getString() {
     StringBuilder sb = new StringBuilder(Math.max(16, getExpectedLength()));
     int len = appendToAndReturnLength(sb);
 
@@ -349,10 +349,8 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     }
 
     @Override
-    public synchronized void close() throws IOException {
-      if (!closed) {
-        closed = true;
-      }
+    public void close() throws IOException {
+      closed = true;
     }
 
     int ensureObject() {
