@@ -73,7 +73,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
     super(estimatedNumberOfAppends);
 
     this.asyncSupplier = executor == null ? CompletableFuture::supplyAsync : (
-        s) -> CompletableFuture.supplyAsync(s, executor);;
+        s) -> CompletableFuture.supplyAsync(s, executor);
   }
 
   @FunctionalInterface
