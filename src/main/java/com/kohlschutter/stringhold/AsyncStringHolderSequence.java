@@ -25,6 +25,8 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+
 /**
  * An appendable sequence of strings; {@link StringHolder}s are automatically converted upon append,
  * with appends being run asynchronously, using temporary intermediate storage, if
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
  *
  * @author Christian Kohlschütter
  */
-public class AsyncStringHolderSequence extends StringHolderSequence {
+public final class AsyncStringHolderSequence extends StringHolderSequence {
   private final Executor executor;
 
   /**
@@ -79,25 +81,37 @@ public class AsyncStringHolderSequence extends StringHolderSequence {
   }
 
   @Override
+  @ExcludeFromCodeCoverageGeneratedReport
   protected int appendToAndReturnLengthImpl(StringBuilder out) {
     try {
-      final int len = out.length();
-      return appendToAndReturnLengthImpl(out, out::append, (extraLen) -> out.ensureCapacity(len
-          + extraLen), true);
+      return appendToAndReturnLengthImpl1(out);
     } catch (IOException e) {
+      // unreachable
       throw new IllegalStateException(e);
     }
   }
 
+  private int appendToAndReturnLengthImpl1(StringBuilder out) throws IOException {
+    final int len = out.length();
+    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -> out.ensureCapacity(len
+        + extraLen), true);
+  }
+
   @Override
+  @ExcludeFromCodeCoverageGeneratedReport
   protected int appendToAndReturnLengthImpl(StringBuffer out) {
     try {
-      final int len = out.length();
-      return appendToAndReturnLengthImpl(out, out::append, (extraLen) -> out.ensureCapacity(len
-          + extraLen), true);
+      return appendToAndReturnLengthImpl1(out);
     } catch (IOException e) {
+      // unreachable
       throw new IllegalStateException(e);
     }
+  }
+
+  private int appendToAndReturnLengthImpl1(StringBuffer out) throws IOException {
+    final int len = out.length();
+    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -> out.ensureCapacity(len
+        + extraLen), true);
   }
 
   @SuppressWarnings("PMD.CognitiveComplexity")
