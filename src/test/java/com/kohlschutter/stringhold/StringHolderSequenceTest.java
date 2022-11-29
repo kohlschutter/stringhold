@@ -19,6 +19,7 @@ package com.kohlschutter.stringhold;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -266,4 +267,250 @@ public class StringHolderSequenceTest {
 
     assertEquals("Hello World", seq.toString());
   }
+
+  @Test
+  public void testCharAtStrings() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
+
+    seq.append("a");
+    seq.append("b");
+    seq.append("c");
+
+    assertEquals('a', seq.charAt(0));
+    assertEquals('b', seq.charAt(1));
+    assertEquals('c', seq.charAt(2));
+    assertEquals('a', seq.charAt(0));
+
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(3));
+  }
+
+  @Test
+  public void testCharAtStringHoldersSingleChars() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
+
+    StringHolder sh1 = StringHolder.withSupplier(() -> "a");
+    StringHolder sh2 = StringHolder.withSupplier(() -> "b");
+    StringHolder sh3 = StringHolder.withSupplier(() -> "c");
+
+    seq.append(sh1);
+    seq.append(sh2);
+    seq.append(sh3);
+
+    assertFalse(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('a', seq.charAt(0));
+    assertTrue(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('b', seq.charAt(1));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('c', seq.charAt(2));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('a', seq.charAt(0));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(3));
+  }
+
+  @Test
+  public void testCharAtStringHolders() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
+
+    StringHolder sh1 = StringHolder.withSupplier(() -> "aA");
+    StringHolder sh2 = StringHolder.withSupplier(() -> "bBBB");
+    StringHolder shEmpty = StringHolder.withSupplier(() -> "");
+    StringHolder sh3 = StringHolder.withSupplier(() -> "cCCCCC");
+
+    seq.append(sh1);
+    seq.append(sh2);
+    seq.append(shEmpty); // added because we didn't know it was empty
+    seq.append(sh3);
+
+    assertFalse(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('a', seq.charAt(0));
+    assertTrue(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('b', seq.charAt(2));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('c', seq.charAt(6));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('a', seq.charAt(0));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('C', seq.charAt(11));
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(12));
+  }
+
+  @Test
+  public void testCharAtStringHolders2() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
+
+    StringHolder sh1 = StringHolder.withSupplier(() -> "aA");
+    StringHolder sh2 = StringHolder.withSupplier(() -> "bBBB");
+    StringHolder sh3 = StringHolder.withSupplier(() -> "cCCCCC");
+
+    seq.append(sh1);
+    seq.append(sh2);
+    seq.append(sh3);
+
+    assertFalse(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('A', seq.charAt(1));
+    assertTrue(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('B', seq.charAt(3));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('C', seq.charAt(7));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('a', seq.charAt(0));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('c', seq.charAt(6));
+    assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(12));
+  }
+
+  @Test
+  public void testCharAtReversedOrder() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+
+    StringHolder sh1 = StringHolder.withSupplier(() -> "aA");
+    StringHolder sh2 = StringHolder.withSupplier(() -> "bBBB");
+    StringHolder sh3 = StringHolder.withSupplier(() -> "cCCCCC");
+
+    seq.append(sh1);
+    seq.append(sh2);
+    seq.append(sh3);
+
+    assertFalse(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('C', seq.charAt(7));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('B', seq.charAt(3));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('A', seq.charAt(1));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+  }
+
+  @Test
+  public void testCharAtReversedOrderMinimumLength() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+
+    StringHolder sh1 = StringHolder.withSupplierMinimumLength(2, () -> "aA");
+    StringHolder sh2 = StringHolder.withSupplierMinimumLength(4, () -> "bBBB");
+    StringHolder sh3 = StringHolder.withSupplierMinimumLength(6, () -> "cCCCCC");
+
+    seq.append(sh1);
+    seq.append(sh2);
+    seq.append(sh3);
+
+    assertFalse(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+
+    assertEquals('C', seq.charAt(7));
+    assertTrue(sh1.isString()); // minimum length still means we have to check the full string.
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('B', seq.charAt(3));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+
+    assertEquals('A', seq.charAt(1));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+  }
+
+  @Test
+  public void testCharAtReversedOrderFixedLength() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+
+    StringHolder sh1 = StringHolder.withSupplierFixedLength(2, () -> "aA");
+    StringHolder sh2 = StringHolder.withSupplierFixedLength(4, () -> "bBBB");
+    StringHolder sh3 = StringHolder.withSupplierFixedLength(6, () -> "cCCCCC");
+
+    seq.append(sh1);
+    seq.append(sh2);
+    seq.append(sh3);
+
+    assertFalse(sh1.isString());
+    assertFalse(sh2.isString());
+    assertFalse(sh3.isString());
+    assertFalse(seq.isString());
+
+    assertEquals('C', seq.charAt(7));
+    assertFalse(sh1.isString()); // fixed length: we skip over these results without conversion
+    assertFalse(sh2.isString());
+    assertTrue(sh3.isString());
+    assertFalse(seq.isString());
+
+    assertEquals('B', seq.charAt(3));
+    assertFalse(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+    assertFalse(seq.isString());
+
+    assertEquals('A', seq.charAt(1));
+    assertTrue(sh1.isString());
+    assertTrue(sh2.isString());
+    assertTrue(sh3.isString());
+    assertFalse(seq.isString()); // still three separate strings
+  }
+
 }

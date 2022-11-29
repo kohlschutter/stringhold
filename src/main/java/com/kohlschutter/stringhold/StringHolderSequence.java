@@ -439,4 +439,42 @@ public class StringHolderSequence extends StringHolder implements Appendable {
       return this;
     }
   }
+
+  @Override
+  @SuppressWarnings("PMD.CognitiveComplexity")
+  public char charAt(int index) {
+    int offset = 0;
+
+    if (index < 0) {
+      throw new IndexOutOfBoundsException();
+    }
+
+    for (Object obj : sequence) {
+      final int len;
+
+      if (obj instanceof StringHolder) {
+        StringHolder sh = (StringHolder) obj;
+        if (sh.isEmpty()) {
+          len = 0;
+        } else {
+          if (index == offset) {
+            return sh.charAt(index - offset);
+          }
+          len = sh.length();
+          if (index < offset + len) {
+            return sh.charAt(index - offset);
+          }
+        }
+      } else {
+        String s = (String) obj;
+        len = s.length();
+        if (index < offset + len) {
+          return s.charAt(index - offset);
+        }
+      }
+      offset += len;
+    }
+
+    throw new IndexOutOfBoundsException();
+  }
 }
