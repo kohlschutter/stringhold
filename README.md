@@ -124,6 +124,7 @@ A StringHolder that reads contents from a function that supplies StringReader in
 
 	StringHolder h = StringHolder.withReaderSupplier(() -> new StringReader("hello"), (
         e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+
 ## The full API
 
 (javadoc link here)
