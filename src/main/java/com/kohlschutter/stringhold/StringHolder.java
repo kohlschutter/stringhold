@@ -321,14 +321,16 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param obj The object.
    * @return The {@link StringHolder} instance.
    */
+  @SuppressWarnings("PMD.CognitiveComplexity")
   public static StringHolder withContent(Object obj) {
     if (obj == null) {
       return SimpleStringHolder.NULL_STRING;
     }
     if (obj instanceof String) {
       String s = (String) obj;
-      if (s.isEmpty()) {
-        return SimpleStringHolder.EMPTY_STRING;
+      StringHolder sh = SimpleStringHolder.COMMON_STRINGS.get(s);
+      if (sh != null) {
+        return sh;
       }
       return new SimpleStringHolder(s);
     } else if (obj instanceof StringHolder) {
@@ -338,10 +340,16 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
         if (CharSequenceReleaseShim.isEmpty((CharSequence) obj)) {
           return SimpleStringHolder.EMPTY_STRING;
         }
+      } else {
+        StringHolder sh = SimpleStringHolder.COMMON_STRINGS.get(obj);
+        if (sh != null) {
+          return sh;
+        }
       }
       String s = String.valueOf(obj);
-      if (s.isEmpty()) {
-        return SimpleStringHolder.EMPTY_STRING;
+      StringHolder sh = SimpleStringHolder.COMMON_STRINGS.get(s);
+      if (sh != null) {
+        return sh;
       }
       return new SimpleStringHolder(s);
     }

@@ -167,6 +167,18 @@ public class StringHolderTest {
   }
 
   @Test
+  public void testCachedCommonResults() throws Exception {
+    // cached common result
+    assertSame(StringHolder.withContent(null), StringHolder.withContent("null"));
+    assertSame(StringHolder.withContent('\n'), StringHolder.withContent("\n"));
+    assertSame(StringHolder.withContent(1), StringHolder.withContent("1"));
+    assertSame(StringHolder.withContent(true), StringHolder.withContent("true"));
+
+    // not a cached common result
+    assertNotSame(StringHolder.withContent(1234569), StringHolder.withContent("1234569"));
+  }
+
+  @Test
   public void testEqualitySmart() throws Exception {
     StringHolder longer = StringHolder.withSupplierMinimumLength(5, () -> "longer");
     assertNotEquals(StringHolder.withContent("long"), longer);
