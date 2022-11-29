@@ -22,28 +22,33 @@ import java.util.function.Supplier;
 class FixedLengthSuppliedStringHolder extends SuppliedStringHolder {
   private final int len;
 
-  FixedLengthSuppliedStringHolder(int len, Supplier&lt;String&gt; supplier) {
+  FixedLengthSuppliedStringHolder(int len, Supplier&lt;?&gt; supplier) {
 <span class="fc" id="L26">    super(len, len, supplier);</span>
 <span class="fc" id="L27">    this.len = len;</span>
 <span class="fc" id="L28">  }</span>
 
+  FixedLengthSuppliedStringHolder(int len, IOSupplier&lt;?&gt; supplier, IOExceptionHandler onError) {
+<span class="fc" id="L31">    super(len, len, supplier, onError);</span>
+<span class="fc" id="L32">    this.len = len;</span>
+<span class="fc" id="L33">  }</span>
+
   @Override
   public boolean isLengthKnown() {
-<span class="fc" id="L32">    return true;</span>
+<span class="fc" id="L37">    return true;</span>
   }
 
   @Override
   protected int computeLength() {
-<span class="fc" id="L37">    return len;</span>
+<span class="fc" id="L42">    return len;</span>
   }
 
   @Override
   protected void stringSanityCheck(String s) {
-<span class="fc bfc" id="L42" title="All 2 branches covered.">    if (s.length() != len) {</span>
-<span class="fc" id="L43">      setError();</span>
-<span class="fc" id="L44">      throw new IllegalStateException(&quot;String supplied with unexpected length: &quot; + s.length()</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">    if (s.length() != len) {</span>
+<span class="fc" id="L48">      setError();</span>
+<span class="fc" id="L49">      throw new IllegalStateException(&quot;String supplied with unexpected length: &quot; + s.length()</span>
           + &quot;; expected: &quot; + len);
     }
-<span class="fc" id="L47">  }</span>
+<span class="fc" id="L52">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

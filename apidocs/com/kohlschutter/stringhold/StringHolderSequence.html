@@ -97,11 +97,11 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></dd>
+<dd><code><a href="HasExpectedLength.html" title="interface in com.kohlschutter.stringhold">HasExpectedLength</a></code>, <code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code>, <code><a href="HasMinimumLength.html" title="interface in com.kohlschutter.stringhold">HasMinimumLength</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link">Appendable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="StringSequence.html" title="class in com.kohlschutter.stringhold">StringSequence</a></code></dd>
+<dd><code><a href="StringOnlySequence.html" title="class in com.kohlschutter.stringhold">StringOnlySequence</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StringHolderSequence</span>
@@ -125,6 +125,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">StringHolderSequence</a>()</code></div>
 <div class="col-last even-row-color">
+<div class="block">Constructs a new, empty <a href="StringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>StringHolderSequence</code></a>.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">StringHolderSequence</a><wbr>(int&nbsp;estimatedNumberOfAppends)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Constructs a new, empty <a href="StringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>StringHolderSequence</code></a>.</div>
 </div>
 </div>
@@ -198,6 +202,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="block">Append the contents of this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> to the given <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link"><code>StringBuilder</code></a>, and
  returns the number of characters appended.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#asContent()" class="member-name-link">asContent</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a simplified version of the contents of this sequence, if possible.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#charAt(int)" class="member-name-link">charAt</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getString()" class="member-name-link">getString</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -214,12 +226,18 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Constructs a new <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link"><code>Reader</code></a> providing the contents of this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#numberOfAppends()" class="member-name-link">numberOfAppends</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the number of appends (calls to <a href="#append(java.lang.Object)"><code>append(Object)</code></a>, etc.) made to this instance so
+ far, minus the number of calls that were decided avoidable (e.g., zero-length appends).</div>
+</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.kohlschutter.stringhold.StringHolder">Methods inherited from class&nbsp;com.kohlschutter.stringhold.<a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></h3>
-<code><a href="StringHolder.html#appendTo(java.io.Writer)">appendTo</a>, <a href="StringHolder.html#appendTo(java.lang.Appendable)">appendTo</a>, <a href="StringHolder.html#appendTo(java.lang.StringBuffer)">appendTo</a>, <a href="StringHolder.html#appendTo(java.lang.StringBuilder)">appendTo</a>, <a href="StringHolder.html#appendToAndReturnLength(java.io.Writer)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLength(java.lang.Appendable)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLength(java.lang.StringBuffer)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLength(java.lang.StringBuilder)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLengthImpl(java.io.Writer)">appendToAndReturnLengthImpl</a>, <a href="StringHolder.html#charAt(int)">charAt</a>, <a href="StringHolder.html#checkError()">checkError</a>, <a href="StringHolder.html#clearError()">clearError</a>, <a href="StringHolder.html#computeLength()">computeLength</a>, <a href="StringHolder.html#equals(java.lang.Object)">equals</a>, <a href="StringHolder.html#getExpectedLength()">getExpectedLength</a>, <a href="StringHolder.html#getMinimumLength()">getMinimumLength</a>, <a href="StringHolder.html#getScope()">getScope</a>, <a href="StringHolder.html#hashCode()">hashCode</a>, <a href="StringHolder.html#isEmpty()">isEmpty</a>, <a href="StringHolder.html#isKnownEmpty()">isKnownEmpty</a>, <a href="StringHolder.html#isLengthKnown()">isLengthKnown</a>, <a href="StringHolder.html#isString()">isString</a>, <a href="StringHolder.html#length()">length</a>, <a href="StringHolder.html#resizeBy(int,int)">resizeBy</a>, <a href="StringHolder.html#resizeTo(int,int)">resizeTo</a>, <a href="StringHolder.html#setError()">setError</a>, <a href="StringHolder.html#stringSanityCheck(java.lang.String)">stringSanityCheck</a>, <a href="StringHolder.html#subSequence(int,int)">subSequence</a>, <a href="StringHolder.html#toReader()">toReader</a>, <a href="StringHolder.html#toString()">toString</a>, <a href="StringHolder.html#uncache()">uncache</a>, <a href="StringHolder.html#updateScope(com.kohlschutter.stringhold.StringHolderScope)">updateScope</a>, <a href="StringHolder.html#withContent(java.lang.Object)">withContent</a>, <a href="StringHolder.html#withReaderSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplier</a>, <a href="StringHolder.html#withReaderSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplierExpectedLength</a>, <a href="StringHolder.html#withReaderSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplierMinimumAndExpectedLength</a>, <a href="StringHolder.html#withReaderSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplierMinimumLength</a>, <a href="StringHolder.html#withSupplier(java.util.function.Supplier)">withSupplier</a>, <a href="StringHolder.html#withSupplierExpectedLength(int,java.util.function.Supplier)">withSupplierExpectedLength</a>, <a href="StringHolder.html#withSupplierFixedLength(int,java.util.function.Supplier)">withSupplierFixedLength</a>, <a href="StringHolder.html#withSupplierMinimumAndExpectedLength(int,int,java.util.function.Supplier)">withSupplierMinimumAndExpectedLength</a>, <a href="StringHolder.html#withSupplierMinimumLength(int,java.util.function.Supplier)">withSupplierMinimumLength</a></code></div>
+<code><a href="StringHolder.html#appendTo(java.io.Writer)">appendTo</a>, <a href="StringHolder.html#appendTo(java.lang.Appendable)">appendTo</a>, <a href="StringHolder.html#appendTo(java.lang.StringBuffer)">appendTo</a>, <a href="StringHolder.html#appendTo(java.lang.StringBuilder)">appendTo</a>, <a href="StringHolder.html#appendToAndReturnLength(java.io.Writer)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLength(java.lang.Appendable)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLength(java.lang.StringBuffer)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLength(java.lang.StringBuilder)">appendToAndReturnLength</a>, <a href="StringHolder.html#appendToAndReturnLengthImpl(java.io.Writer)">appendToAndReturnLengthImpl</a>, <a href="StringHolder.html#checkError()">checkError</a>, <a href="StringHolder.html#clearError()">clearError</a>, <a href="StringHolder.html#compareTo(com.kohlschutter.stringhold.StringHolder)">compareTo</a>, <a href="StringHolder.html#compareTo(java.lang.CharSequence)">compareTo</a>, <a href="StringHolder.html#compareTo(java.lang.Object)">compareTo</a>, <a href="StringHolder.html#compareToDefault(com.kohlschutter.stringhold.StringHolder)">compareToDefault</a>, <a href="StringHolder.html#compareToDefault(java.lang.CharSequence)">compareToDefault</a>, <a href="StringHolder.html#computeLength()">computeLength</a>, <a href="StringHolder.html#equals(java.lang.Object)">equals</a>, <a href="StringHolder.html#getExpectedLength()">getExpectedLength</a>, <a href="StringHolder.html#getMinimumLength()">getMinimumLength</a>, <a href="StringHolder.html#getScope()">getScope</a>, <a href="StringHolder.html#hashCode()">hashCode</a>, <a href="StringHolder.html#isEmpty()">isEmpty</a>, <a href="StringHolder.html#isKnownEmpty()">isKnownEmpty</a>, <a href="StringHolder.html#isLengthKnown()">isLengthKnown</a>, <a href="StringHolder.html#isString()">isString</a>, <a href="StringHolder.html#length()">length</a>, <a href="StringHolder.html#resizeBy(int,int)">resizeBy</a>, <a href="StringHolder.html#resizeTo(int,int)">resizeTo</a>, <a href="StringHolder.html#setError()">setError</a>, <a href="StringHolder.html#setExpectedLength(int)">setExpectedLength</a>, <a href="StringHolder.html#stringSanityCheck(java.lang.String)">stringSanityCheck</a>, <a href="StringHolder.html#subSequence(int,int)">subSequence</a>, <a href="StringHolder.html#toReader()">toReader</a>, <a href="StringHolder.html#toString()">toString</a>, <a href="StringHolder.html#uncache()">uncache</a>, <a href="StringHolder.html#updateScope(com.kohlschutter.stringhold.StringHolderScope)">updateScope</a>, <a href="StringHolder.html#withContent(java.lang.Object)">withContent</a>, <a href="StringHolder.html#withReaderSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplier</a>, <a href="StringHolder.html#withReaderSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplierExpectedLength</a>, <a href="StringHolder.html#withReaderSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplierMinimumAndExpectedLength</a>, <a href="StringHolder.html#withReaderSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withReaderSupplierMinimumLength</a>, <a href="StringHolder.html#withSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withSupplier</a>, <a href="StringHolder.html#withSupplier(java.util.function.Supplier)">withSupplier</a>, <a href="StringHolder.html#withSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withSupplierExpectedLength</a>, <a href="StringHolder.html#withSupplierExpectedLength(int,java.util.function.Supplier)">withSupplierExpectedLength</a>, <a href="StringHolder.html#withSupplierFixedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withSupplierFixedLength</a>, <a href="StringHolder.html#withSupplierFixedLength(int,java.util.function.Supplier)">withSupplierFixedLength</a>, <a href="StringHolder.html#withSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withSupplierMinimumAndExpectedLength</a>, <a href="StringHolder.html#withSupplierMinimumAndExpectedLength(int,int,java.util.function.Supplier)">withSupplierMinimumAndExpectedLength</a>, <a href="StringHolder.html#withSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">withSupplierMinimumLength</a>, <a href="StringHolder.html#withSupplierMinimumLength(int,java.util.function.Supplier)">withSupplierMinimumLength</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -244,6 +262,17 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="block">Constructs a new, empty <a href="StringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>StringHolderSequence</code></a>.</div>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(int)">
+<h3>StringHolderSequence</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">StringHolderSequence</span><wbr><span class="parameters">(int&nbsp;estimatedNumberOfAppends)</span></div>
+<div class="block">Constructs a new, empty <a href="StringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>StringHolderSequence</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>estimatedNumberOfAppends</code> - Estimated number of calls to <a href="#append(java.lang.Object)"><code>append(Object)</code></a>, etc.</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -260,7 +289,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
  conversion via <a href="StringHolder.html#toString()"><code>StringHolder.toString()</code></a>) instead of adding it directly.
 
  This is false by default for all objects. Subclasses may override this selectively. If all
- objects should be converted to strings, use <a href="StringSequence.html" title="class in com.kohlschutter.stringhold"><code>StringSequence</code></a>.</div>
+ objects should be converted to strings, use <a href="StringOnlySequence.html" title="class in com.kohlschutter.stringhold"><code>StringOnlySequence</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>sh</code> - The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</dd>
@@ -269,7 +298,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="StringSequence.html" title="class in com.kohlschutter.stringhold"><code>StringSequence</code></a></li>
+<li><a href="StringOnlySequence.html" title="class in com.kohlschutter.stringhold"><code>StringOnlySequence</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -468,6 +497,56 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd><code><a href="StringHolder.html#newReader()">newReader</a></code>&nbsp;in class&nbsp;<code><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></dd>
 <dt>Returns:</dt>
 <dd>The reader.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="numberOfAppends()">
+<h3>numberOfAppends</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">numberOfAppends</span>()</div>
+<div class="block">Returns the number of appends (calls to <a href="#append(java.lang.Object)"><code>append(Object)</code></a>, etc.) made to this instance so
+ far, minus the number of calls that were decided avoidable (e.g., zero-length appends).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The number of appends.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="asContent()">
+<h3>asContent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">asContent</span>()</div>
+<div class="block">Returns a simplified version of the contents of this sequence, if possible.
+
+ <ol>
+ <li>If the content is a string already, the string is returned.</li>
+ <li>If there's no element stored, an empty string is returned.</li>
+ <li>If there is only a single element stored, its content is returned as if
+ <a href="#asContent()"><code>asContent()</code></a> was called on that element.</li>
+ </ol></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="StringHolder.html#asContent()">asContent</a></code>&nbsp;in class&nbsp;<code><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></dd>
+<dt>Returns:</dt>
+<dd>The "content" of this instance, which could be the instance itself, or something else.</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="StringHolder.html#withContent(java.lang.Object)"><code>StringHolder.withContent(Object)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="charAt(int)">
+<h3>charAt</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">char</span>&nbsp;<span class="element-name">charAt</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html#charAt(int)" title="class or interface in java.lang" class="external-link">charAt</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="StringHolder.html#charAt(int)">charAt</a></code>&nbsp;in class&nbsp;<code><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></dd>
 </dl>
 </section>
 </li>

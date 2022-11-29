@@ -148,7 +148,7 @@ final class ReaderStringHolder extends StringHolder {
 
 <span class="fc" id="L149">    setError();</span>
 
-<span class="fc bfc" id="L151" title="All 3 branches covered.">    switch (onError.onException(e)) {</span>
+<span class="fc bfc" id="L151" title="All 3 branches covered.">    switch (resp) {</span>
       case EXCEPTION_MESSAGE:
 <span class="fc" id="L153">        s = e.toString();</span>
         try {
@@ -157,7 +157,7 @@ final class ReaderStringHolder extends StringHolder {
           // ignore
 <span class="fc" id="L158">        }</span>
 <span class="fc" id="L159">        return s.length();</span>
-      case FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE:
+      case STACKTRACE:
 <span class="fc" id="L161">        StringWriter sw = new StringWriter();</span>
 <span class="fc" id="L162">        e.printStackTrace(new PrintWriter(sw));</span>
 <span class="fc" id="L163">        s = sw.toString();</span>
@@ -185,12 +185,12 @@ final class ReaderStringHolder extends StringHolder {
       }
 
 <span class="fc" id="L187">      setError();</span>
-<span class="fc bfc" id="L188" title="All 4 branches covered.">      switch (onError.onException(e)) {</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">      switch (resp) {</span>
         case FLUSH:
 <span class="fc" id="L190">          break;</span>
         case EXCEPTION_MESSAGE:
 <span class="fc" id="L192">          return e.toString();</span>
-        case FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE:
+        case STACKTRACE:
 <span class="fc" id="L194">          StringWriter sw = new StringWriter();</span>
 <span class="fc" id="L195">          e.printStackTrace(new PrintWriter(sw));</span>
 <span class="fc" id="L196">          sb.append(sw.toString());</span>

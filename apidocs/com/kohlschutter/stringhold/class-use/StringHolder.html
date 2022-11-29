@@ -65,7 +65,7 @@ loadScripts(document, 'script');</script>
 <div class="block">An <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link"><code>Appendable</code></a> sequence of strings or <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../StringSequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">StringSequence</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../StringOnlySequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">StringOnlySequence</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">An appendable sequence of strings; <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s are automatically converted upon append.</div>
 </div>
@@ -109,37 +109,77 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplier(java.util.function.Supplier)" class="member-name-link">withSupplier</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplier</a><wbr>(<a href="../IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="../IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, assuming a minimum
  length of 0.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplier(java.util.function.Supplier)" class="member-name-link">withSupplier</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, assuming a minimum
+ length of 0.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierExpectedLength</a><wbr>(int&nbsp;expectedLength,
+ <a href="../IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="../IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierExpectedLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierExpectedLength</a><wbr>(int&nbsp;expectedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierFixedLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierFixedLength</a><wbr>(int&nbsp;fixedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierFixedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierFixedLength</a><wbr>(int&nbsp;fixedLength,
+ <a href="../IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="../IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying the
  length the supplied string is going to have.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierFixedLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierFixedLength</a><wbr>(int&nbsp;fixedLength,
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying the
+ length the supplied string is going to have.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLength,
+ int&nbsp;expectedLength,
+ <a href="../IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="../IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierMinimumAndExpectedLength(int,int,java.util.function.Supplier)" class="member-name-link">withSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLength,
  int&nbsp;expectedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierMinimumLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierMinimumLength</a><wbr>(int&nbsp;minLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierMinimumLength</a><wbr>(int&nbsp;minLength,
+ <a href="../IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="../IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#withSupplierMinimumLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierMinimumLength</a><wbr>(int&nbsp;minLength,
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Constructs a new <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 </div>
@@ -167,6 +207,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Called upon a <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> leaving error state.</div>
 </div>
+<div class="col-first even-row-color"><code>int</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#compareTo(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">compareTo</a><wbr>(<a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Narrower implementation of <a href="../StringHolder.html#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a> for <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
+</div>
+<div class="col-first odd-row-color"><code>protected int</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringHolder.</span><code><a href="../StringHolder.html#compareToDefault(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">compareToDefault</a><wbr>(<a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Default implementation for comparing this instance with another <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code>protected boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">StringHolderSequence.</span><code><a href="../StringHolderSequence.html#needsStringConversion(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">needsStringConversion</a><wbr>(<a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;sh)</code></div>
 <div class="col-last even-row-color">
@@ -174,7 +224,7 @@ loadScripts(document, 'script');</script>
  conversion via <a href="../StringHolder.html#toString()"><code>toString()</code></a>) instead of adding it directly.</div>
 </div>
 <div class="col-first odd-row-color"><code>protected boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">StringSequence.</span><code><a href="../StringSequence.html#needsStringConversion(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">needsStringConversion</a><wbr>(<a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;sh)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StringOnlySequence.</span><code><a href="../StringOnlySequence.html#needsStringConversion(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">needsStringConversion</a><wbr>(<a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;sh)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">LimitedStringHolderScope.</span><code><a href="../LimitedStringHolderScope.html#remove(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">remove</a><wbr>(<a href="../StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;sh)</code></div>

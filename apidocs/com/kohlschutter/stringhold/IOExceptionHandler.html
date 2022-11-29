@@ -43,7 +43,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li><a href="#nested-class-summary">Nested</a></li>
-<li>Field</li>
+<li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -51,7 +51,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li>Field</li>
+<li><a href="#field-detail">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -63,13 +63,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -97,7 +97,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/FunctionalInterface.html" title="class or interface in java.lang" class="external-link">@FunctionalInterface</a>
 </span><span class="modifiers">public interface </span><span class="element-name type-name-label">IOExceptionHandler</span></div>
-<div class="block">An exception handler to handle <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a>s in String-building methods.</div>
+<div class="block">An exception handler to handle <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a>s in String-building methods.
+
+ NOTE: prefer the static versions over implementations. Only use implementations when you need
+ additional side effects.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Christian Kohlschütter</dd>
@@ -118,6 +121,44 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="IOExceptionHandler.ExceptionResponse.html" class="type-name-link" title="enum in com.kohlschutter.stringhold">IOExceptionHandler.ExceptionResponse</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">What to do when an exception is thrown.</div>
+</div>
+</div>
+</section>
+</li>
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></code></div>
+<div class="col-second even-row-color"><code><a href="#EMPTY" class="member-name-link">EMPTY</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Return an empty string (do not flush if possible), or at least don't add anything new.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#EXCEPTION_MESSAGE" class="member-name-link">EXCEPTION_MESSAGE</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Return the exception message (without stacktrace); if possible, do not flush/include what has
+ been written so far.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></code></div>
+<div class="col-second even-row-color"><code><a href="#FLUSH" class="member-name-link">FLUSH</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Return what has been written so far.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#ILLEGAL_STATE" class="member-name-link">ILLEGAL_STATE</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Throw an IllegalStateException, as this exception should not have happened.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></code></div>
+<div class="col-second even-row-color"><code><a href="#STACKTRACE" class="member-name-link">STACKTRACE</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Return what has been written so far, and add the exception message with stack trace.</div>
 </div>
 </div>
 </section>
@@ -147,6 +188,50 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="ILLEGAL_STATE">
+<h3>ILLEGAL_STATE</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></span>&nbsp;<span class="element-name">ILLEGAL_STATE</span></div>
+<div class="block">Throw an IllegalStateException, as this exception should not have happened.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="FLUSH">
+<h3>FLUSH</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></span>&nbsp;<span class="element-name">FLUSH</span></div>
+<div class="block">Return what has been written so far.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="EMPTY">
+<h3>EMPTY</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></span>&nbsp;<span class="element-name">EMPTY</span></div>
+<div class="block">Return an empty string (do not flush if possible), or at least don't add anything new.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="EXCEPTION_MESSAGE">
+<h3>EXCEPTION_MESSAGE</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></span>&nbsp;<span class="element-name">EXCEPTION_MESSAGE</span></div>
+<div class="block">Return the exception message (without stacktrace); if possible, do not flush/include what has
+ been written so far.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="STACKTRACE">
+<h3>STACKTRACE</h3>
+<div class="member-signature"><span class="modifiers">static final</span>&nbsp;<span class="return-type"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></span>&nbsp;<span class="element-name">STACKTRACE</span></div>
+<div class="block">Return what has been written so far, and add the exception message with stack trace.</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method-detail">

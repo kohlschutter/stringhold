@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></dd>
+<dd><code><a href="HasExpectedLength.html" title="interface in com.kohlschutter.stringhold">HasExpectedLength</a></code>, <code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code>, <code><a href="HasMinimumLength.html" title="interface in com.kohlschutter.stringhold">HasMinimumLength</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
@@ -104,7 +104,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">StringHolder</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></span></div>
+implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>, <a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a>, <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span></div>
 <div class="block">A <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> holds something that can <em>eventually</em> turn into a string.
 
  <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s may reduce string allocation in cases where the final string sequence is,
@@ -239,18 +239,48 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="block">Append the contents of this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> to the given <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link"><code>StringBuilder</code></a>, and
  returns the number of characters appended.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#charAt(int)" class="member-name-link">charAt</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkError()" class="member-name-link">checkError</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#asContent()" class="member-name-link">asContent</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns something that can be used in <a href="#withContent(java.lang.Object)"><code>withContent(Object)</code></a> which then
+ yields the same output when calling <a href="#toString()"><code>toString()</code></a> on either instance.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#charAt(int)" class="member-name-link">charAt</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkError()" class="member-name-link">checkError</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks if this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> had some kind of unexpected condition.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearError()" class="member-name-link">clearError</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearError()" class="member-name-link">clearError</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Clears the trouble state of this instance.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareTo(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">compareTo</a><wbr>(<a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Narrower implementation of <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a> for <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareTo(java.lang.CharSequence)" class="member-name-link">compareTo</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Narrower implementation of <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a> for <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareTo(java.lang.Object)" class="member-name-link">compareTo</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareToDefault(com.kohlschutter.stringhold.StringHolder)" class="member-name-link">compareToDefault</a><wbr>(<a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Default implementation for comparing this instance with another <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected final int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareToDefault(java.lang.CharSequence)" class="member-name-link">compareToDefault</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Default implementation for comparing this instance with another <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link"><code>CharSequence</code></a> that is
+ not a <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#computeLength()" class="member-name-link">computeLength</a>()</code></div>
@@ -287,7 +317,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if this instance is considered empty, i.e., equivalent to <code>length() == 0</code>.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isKnownEmpty()" class="member-name-link">isKnownEmpty</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -330,98 +362,143 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Signals that this instance had some kind of unexpected condition.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSanityCheck(java.lang.String)" class="member-name-link">stringSanityCheck</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setExpectedLength(int)" class="member-name-link">setExpectedLength</a><wbr>(int&nbsp;len)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Updates the current estimate of the length of the string in this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSanityCheck(java.lang.String)" class="member-name-link">stringSanityCheck</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called from within <a href="#toString()"><code>toString()</code></a> after updating/assigning the cached string but before
  returning it.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subSequence(int,int)" class="member-name-link">subSequence</a><wbr>(int&nbsp;start,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subSequence(int,int)" class="member-name-link">subSequence</a><wbr>(int&nbsp;start,
  int&nbsp;end)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toReader()" class="member-name-link">toReader</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toReader()" class="member-name-link">toReader</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Provides the contents of this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> as a <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link"><code>Reader</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uncache()" class="member-name-link">uncache</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#uncache()" class="member-name-link">uncache</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Un-caches the already-determined String.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold">StringHolderScope</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateScope(com.kohlschutter.stringhold.StringHolderScope)" class="member-name-link">updateScope</a><wbr>(<a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold">StringHolderScope</a>&nbsp;newScope)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold">StringHolderScope</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateScope(com.kohlschutter.stringhold.StringHolderScope)" class="member-name-link">updateScope</a><wbr>(<a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold">StringHolderScope</a>&nbsp;newScope)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the <a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold"><code>StringHolderScope</code></a> associated with this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withContent(java.lang.Object)" class="member-name-link">withContent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withContent(java.lang.Object)" class="member-name-link">withContent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with the given content.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplier</a><wbr>(<a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplier</a><wbr>(<a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplierExpectedLength</a><wbr>(int&nbsp;expectedLen,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
  <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplierExpectedLength</a><wbr>(int&nbsp;expectedLen,
- <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
- <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLen,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLen,
  int&nbsp;expectedLen,
  <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
  <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplierMinimumLength</a><wbr>(int&nbsp;minLen,
- <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
- <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplier(java.util.function.Supplier)" class="member-name-link">withSupplier</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withReaderSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withReaderSupplierMinimumLength</a><wbr>(int&nbsp;minLen,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link">Reader</a>&gt;&nbsp;readerSupply,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a <code>ReaderStringHolder</code> with the given Reader source.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplier</a><wbr>(<a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, assuming a minimum
+ length of 0.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplier(java.util.function.Supplier)" class="member-name-link">withSupplier</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, assuming a minimum
  length of 0.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierExpectedLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierExpectedLength</a><wbr>(int&nbsp;expectedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierExpectedLength</a><wbr>(int&nbsp;expectedLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierExpectedLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierExpectedLength</a><wbr>(int&nbsp;expectedLength,
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierFixedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierFixedLength</a><wbr>(int&nbsp;fixedLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying the
+ length the supplied string is going to have.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierFixedLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierFixedLength</a><wbr>(int&nbsp;fixedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying the
  length the supplied string is going to have.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierMinimumAndExpectedLength(int,int,java.util.function.Supplier)" class="member-name-link">withSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLength,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLength,
  int&nbsp;expectedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierMinimumAndExpectedLength(int,int,java.util.function.Supplier)" class="member-name-link">withSupplierMinimumAndExpectedLength</a><wbr>(int&nbsp;minLength,
+ int&nbsp;expectedLength,
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)" class="member-name-link">withSupplierMinimumLength</a><wbr>(int&nbsp;minLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withSupplierMinimumLength(int,java.util.function.Supplier)" class="member-name-link">withSupplierMinimumLength</a><wbr>(int&nbsp;minLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
@@ -490,7 +567,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <li>
 <section class="detail" id="withSupplier(java.util.function.Supplier)">
 <h3>withSupplier</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplier</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplier</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</span></div>
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, assuming a minimum
  length of 0.</div>
 <dl class="notes">
@@ -500,6 +577,27 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="withSupplier(com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">
+<h3>withSupplier</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplier</span><wbr><span class="parameters">(<a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</span></div>
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, assuming a minimum
+ length of 0.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>supplier</code> - The supplier (may throw an <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> upon <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html#get()" title="class or interface in java.util.function" class="external-link"><code>Supplier.get()</code></a>,
+          which is handled by the given exception handler).</dd>
+<dd><code>onError</code> - The exception handler.</dd>
+<dt>Returns:</dt>
+<dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -507,7 +605,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <section class="detail" id="withSupplierMinimumLength(int,java.util.function.Supplier)">
 <h3>withSupplierMinimumLength</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierMinimumLength</span><wbr><span class="parameters">(int&nbsp;minLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</span></div>
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 <dl class="notes">
@@ -518,6 +616,29 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="withSupplierMinimumLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">
+<h3>withSupplierMinimumLength</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierMinimumLength</span><wbr><span class="parameters">(int&nbsp;minLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</span></div>
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>minLength</code> - The minimum length, must not be larger than the actual length.</dd>
+<dd><code>supplier</code> - The supplier (may throw an <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> upon <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html#get()" title="class or interface in java.util.function" class="external-link"><code>Supplier.get()</code></a>,
+          which is handled by the given exception handler).</dd>
+<dd><code>onError</code> - The exception handler.</dd>
+<dt>Returns:</dt>
+<dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -525,7 +646,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <section class="detail" id="withSupplierExpectedLength(int,java.util.function.Supplier)">
 <h3>withSupplierExpectedLength</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierExpectedLength</span><wbr><span class="parameters">(int&nbsp;expectedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</span></div>
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 <dl class="notes">
@@ -536,6 +657,29 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="withSupplierExpectedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">
+<h3>withSupplierExpectedLength</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierExpectedLength</span><wbr><span class="parameters">(int&nbsp;expectedLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</span></div>
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>expectedLength</code> - The expected length, may be larger than the actual length.</dd>
+<dd><code>supplier</code> - The supplier (may throw an <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> upon <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html#get()" title="class or interface in java.util.function" class="external-link"><code>Supplier.get()</code></a>,
+          which is handled by the given exception handler).</dd>
+<dd><code>onError</code> - The exception handler.</dd>
+<dt>Returns:</dt>
+<dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -544,7 +688,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <h3>withSupplierMinimumAndExpectedLength</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierMinimumAndExpectedLength</span><wbr><span class="parameters">(int&nbsp;minLength,
  int&nbsp;expectedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</span></div>
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
  minimum of the estimated length.</div>
 <dl class="notes">
@@ -556,6 +700,31 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="withSupplierMinimumAndExpectedLength(int,int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">
+<h3>withSupplierMinimumAndExpectedLength</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierMinimumAndExpectedLength</span><wbr><span class="parameters">(int&nbsp;minLength,
+ int&nbsp;expectedLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</span></div>
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying a
+ minimum of the estimated length.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>minLength</code> - The minimum length, must not be larger than the actual length.</dd>
+<dd><code>expectedLength</code> - The expected length, may be larger than the actual length.</dd>
+<dd><code>supplier</code> - The supplier (may throw an <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> upon <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html#get()" title="class or interface in java.util.function" class="external-link"><code>Supplier.get()</code></a>,
+          which is handled by the given exception handler).</dd>
+<dd><code>onError</code> - The exception handler.</dd>
+<dt>Returns:</dt>
+<dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if minLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -563,7 +732,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <section class="detail" id="withSupplierFixedLength(int,java.util.function.Supplier)">
 <h3>withSupplierFixedLength</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierFixedLength</span><wbr><span class="parameters">(int&nbsp;fixedLength,
- <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;supplier)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;?&gt;&nbsp;supplier)</span></div>
 <div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying the
  length the supplied string is going to have. An <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link"><code>IllegalStateException</code></a> will be thrown
  once a string is supplied that does not match this length.</div>
@@ -575,6 +744,30 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if fixedLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="withSupplierFixedLength(int,com.kohlschutter.stringhold.IOSupplier,com.kohlschutter.stringhold.IOExceptionHandler)">
+<h3>withSupplierFixedLength</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></span>&nbsp;<span class="element-name">withSupplierFixedLength</span><wbr><span class="parameters">(int&nbsp;fixedLength,
+ <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;?&gt;&nbsp;supplier,
+ <a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a>&nbsp;onError)</span></div>
+<div class="block">Constructs a new <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> with content from the given supplier, specifying the
+ length the supplied string is going to have. An <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link"><code>IllegalStateException</code></a> will be thrown
+ once a string is supplied that does not match this length.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fixedLength</code> - The exact length of the string.</dd>
+<dd><code>supplier</code> - The supplier (may throw an <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> upon <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html#get()" title="class or interface in java.util.function" class="external-link"><code>Supplier.get()</code></a>,
+          which is handled by the given exception handler).</dd>
+<dd><code>onError</code> - The exception handler.</dd>
+<dt>Returns:</dt>
+<dd>The <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instance.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/IllegalStateException.html" title="class or interface in java.lang" class="external-link">IllegalStateException</a></code> - if fixedLength is negative.</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -590,6 +783,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd><code>onError</code> - The exception handler.</dd>
 <dt>Returns:</dt>
 <dd>The <code>ReaderStringHolder</code>.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -607,6 +802,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd><code>onError</code> - The exception handler.</dd>
 <dt>Returns:</dt>
 <dd>The <code>ReaderStringHolder</code>.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -624,6 +821,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd><code>onError</code> - The exception handler.</dd>
 <dt>Returns:</dt>
 <dd>The <code>ReaderStringHolder</code>.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -643,6 +842,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dd><code>onError</code> - The exception handler.</dd>
 <dt>Returns:</dt>
 <dd>The <code>ReaderStringHolder</code>.</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if supplier was <code>null</code>.</dd>
 </dl>
 </section>
 </li>
@@ -674,6 +875,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
  sure to also check <a href="#checkError()"><code>checkError()</code></a>. When that method returns <code>true</code>, the minimum
  length can actually not be guaranteed.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="HasLength.html#getMinimumLength()">getMinimumLength</a></code>&nbsp;in interface&nbsp;<code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="HasMinimumLength.html#getMinimumLength()">getMinimumLength</a></code>&nbsp;in interface&nbsp;<code><a href="HasMinimumLength.html" title="interface in com.kohlschutter.stringhold">HasMinimumLength</a></code></dd>
 <dt>Returns:</dt>
 <dd>The minimum length (but be sure to see <a href="#checkError()"><code>checkError()</code></a>).</dd>
 </dl>
@@ -688,8 +893,27 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 
  This is equivalent to <a href="#length()"><code>length()</code></a> if <a href="#isString()"><code>isString()</code></a> is <code>true</code>.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="HasExpectedLength.html#getExpectedLength()">getExpectedLength</a></code>&nbsp;in interface&nbsp;<code><a href="HasExpectedLength.html" title="interface in com.kohlschutter.stringhold">HasExpectedLength</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="HasLength.html#getExpectedLength()">getExpectedLength</a></code>&nbsp;in interface&nbsp;<code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="HasMinimumLength.html#getExpectedLength()">getExpectedLength</a></code>&nbsp;in interface&nbsp;<code><a href="HasMinimumLength.html" title="interface in com.kohlschutter.stringhold">HasMinimumLength</a></code></dd>
 <dt>Returns:</dt>
 <dd>The currently expected length.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setExpectedLength(int)">
+<h3>setExpectedLength</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setExpectedLength</span><wbr><span class="parameters">(int&nbsp;len)</span></div>
+<div class="block">Updates the current estimate of the length of the string in this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>.
+
+ The value will be rounded to <a href="#getMinimumLength()"><code>getMinimumLength()</code></a> if necessary.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>len</code> - The new expected length</dd>
 </dl>
 </section>
 </li>
@@ -741,6 +965,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html#length()" title="class or interface in java.lang" class="external-link">length</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="HasLength.html#length()">length</a></code>&nbsp;in interface&nbsp;<code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code></dd>
 <dt>Returns:</dt>
 <dd>The actual length.</dd>
 </dl>
@@ -778,6 +1004,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isKnownEmpty</span>()</div>
 <div class="block">Checks if this <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> is known to yield an empty <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="HasLength.html#isKnownEmpty()">isKnownEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code></dd>
 <dt>Returns:</dt>
 <dd><code>true</code> if known non-empty.</dd>
 </dl>
@@ -787,9 +1015,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <section class="detail" id="isEmpty()">
 <h3>isEmpty</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEmpty</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="HasLength.html#isEmpty()">HasLength</a></code></span></div>
+<div class="block">Checks if this instance is considered empty, i.e., equivalent to <code>length() == 0</code>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html#isEmpty()" title="class or interface in java.lang" class="external-link">isEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="HasLength.html#isEmpty()">isEmpty</a></code>&nbsp;in interface&nbsp;<code><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></code></dd>
+<dt>Returns:</dt>
+<dd><code>true</code> if empty.</dd>
 </dl>
 </section>
 </li>
@@ -804,6 +1038,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
  override this check. When they do, they must include a check for <code>||</code>
  <a href="#isString()"><code>isString()</code></a>.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="HasExpectedLength.html#isLengthKnown()">isLengthKnown</a></code>&nbsp;in interface&nbsp;<code><a href="HasExpectedLength.html" title="interface in com.kohlschutter.stringhold">HasExpectedLength</a></code></dd>
 <dt>Returns:</dt>
 <dd><code>true</code> if the length in this holder is known.</dd>
 <dt>See Also:</dt>
@@ -1165,7 +1401,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
  associated scope is removed from this instance and returned.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>newScope</code> - The new scope, or <code>null</code> to set "no scope".</dd>
+<dd><code>newScope</code> - The new scope, or <code>null</code>/<a href="StringHolderScope.html#NONE"><code>StringHolderScope.NONE</code></a> to set "no
+          scope".</dd>
 <dt>Returns:</dt>
 <dd>The old scope, or <code>null</code> if none was set before.</dd>
 </dl>
@@ -1189,6 +1426,94 @@ implements <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html#subSequence(int,int)" title="class or interface in java.lang" class="external-link">subSequence</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="asContent()">
+<h3>asContent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">asContent</span>()</div>
+<div class="block">Returns something that can be used in <a href="#withContent(java.lang.Object)"><code>withContent(Object)</code></a> which then
+ yields the same output when calling <a href="#toString()"><code>toString()</code></a> on either instance.
+
+ The returned object usually is this instance itself. However, this method may return a
+ simplified version of the content stored in this instance. For example, if the content already
+ is a string, the string is returned.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The "content" of this instance, which could be the instance itself, or something else.</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="#withContent(java.lang.Object)"><code>withContent(Object)</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="compareTo(java.lang.Object)">
+<h3>compareTo</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareTo</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html#compareTo(T)" title="class or interface in java.lang" class="external-link">compareTo</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="compareTo(java.lang.CharSequence)">
+<h3>compareTo</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareTo</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;o)</span></div>
+<div class="block">Narrower implementation of <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a> for <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>o</code> - The other object.</dd>
+<dt>Returns:</dt>
+<dd>The comparison result, as defined by <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="compareTo(com.kohlschutter.stringhold.StringHolder)">
+<h3>compareTo</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareTo</span><wbr><span class="parameters">(<a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;o)</span></div>
+<div class="block">Narrower implementation of <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a> for <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>o</code> - The other object.</dd>
+<dt>Returns:</dt>
+<dd>The comparison result, as defined by <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="compareToDefault(java.lang.CharSequence)">
+<h3>compareToDefault</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareToDefault</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;o)</span></div>
+<div class="block">Default implementation for comparing this instance with another <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link"><code>CharSequence</code></a> that is
+ not a <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>. Certain trivial checks were already performed, such as one or both
+ being known empty.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>o</code> - The other object.</dd>
+<dt>Returns:</dt>
+<dd>The comparison result, as defined by <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a>.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="compareToDefault(com.kohlschutter.stringhold.StringHolder)">
+<h3>compareToDefault</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareToDefault</span><wbr><span class="parameters">(<a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a>&nbsp;o)</span></div>
+<div class="block">Default implementation for comparing this instance with another <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>. Certain
+ trivial checks were already performed, such as one or both being known empty or known being
+ string.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>o</code> - The other object.</dd>
+<dt>Returns:</dt>
+<dd>The comparison result, as defined by <a href="#compareTo(java.lang.Object)"><code>compareTo(Object)</code></a>.</dd>
 </dl>
 </section>
 </li>

@@ -24,7 +24,7 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
  *
  * @author Christian Kohlschütter
  */
-final class SimpleStringHolder extends StringHolder {
+final class SimpleStringHolder extends StringHolder implements HasKnownLength {
 <span class="fc" id="L28">  static final StringHolder EMPTY_STRING = new SimpleStringHolder(&quot;&quot;);</span>
 
   SimpleStringHolder(String s) {
