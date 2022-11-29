@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
  * @author Christian Kohlschütter
  */
 public final class AsyncStringHolderSequence extends StringHolderSequence {
-  private final Executor executor;
+  private final Function<Supplier<Integer>, CompletableFuture<Integer>> asyncSupplier;
 
   /**
    * Constructs a new, empty {@link AsyncStringHolderSequence}.
@@ -57,11 +58,22 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
    * Constructs a new, empty {@link AsyncStringHolderSequence}.
    *
    * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
+   */
+  public AsyncStringHolderSequence(int estimatedNumberOfAppends) {
+    this(estimatedNumberOfAppends, null);
+  }
+
+  /**
+   * Constructs a new, empty {@link AsyncStringHolderSequence}.
+   *
+   * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
    * @param executor The executor to use.
    */
   public AsyncStringHolderSequence(int estimatedNumberOfAppends, Executor executor) {
     super(estimatedNumberOfAppends);
-    this.executor = executor;
+
+    this.asyncSupplier = executor == null ? CompletableFuture::supplyAsync : (
+        s) -> CompletableFuture.supplyAsync(s, executor);;
   }
 
   @FunctionalInterface
@@ -157,14 +169,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
           }
 
           Supplier<Integer> suppl = () -> holder.appendToAndReturnLength(sb);
-
-          CompletableFuture<Integer> future;
-          if (executor == null) {
-            future = CompletableFuture.supplyAsync(suppl);
-          } else {
-            future = CompletableFuture.supplyAsync(suppl, executor);
-          }
-
+          CompletableFuture<Integer> future = asyncSupplier.apply(suppl);
           futures.add(future);
         }
       } else {
