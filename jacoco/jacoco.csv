@@ -7,7 +7,7 @@ stringhold,com.kohlschutter.stringhold,StringHolderSequence.StringSequenceReader
 stringhold,com.kohlschutter.stringhold,ReaderStringHolder,0,302,0,21,0,87,0,21,0,9
 stringhold,com.kohlschutter.stringhold,CharSequenceReleaseShim,0,13,0,2,0,3,0,4,0,3
 stringhold,com.kohlschutter.stringhold,SuppliedStringHolder,0,356,0,48,0,101,0,39,0,14
-stringhold,com.kohlschutter.stringhold,AsyncStringHolderSequence,12,259,0,28,4,63,0,26,0,12
+stringhold,com.kohlschutter.stringhold,AsyncStringHolderSequence,0,259,0,28,0,63,0,26,0,12
 stringhold,com.kohlschutter.stringhold,StringHolderSequence,0,598,0,82,0,161,0,62,0,21
 stringhold,com.kohlschutter.stringhold,SimpleStringHolder,0,14,0,0,0,4,0,2,0,2
 stringhold,com.kohlschutter.stringhold,LazyInitReader.KickstartPlaceholder,0,68,0,0,0,16,0,11,0,11

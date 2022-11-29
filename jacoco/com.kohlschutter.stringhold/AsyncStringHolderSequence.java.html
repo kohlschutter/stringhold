@@ -25,6 +25,8 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+
 /**
  * An appendable sequence of strings; {@link StringHolder}s are automatically converted upon append,
  * with appends being run asynchronously, using temporary intermediate storage, if
@@ -32,15 +34,15 @@ import java.util.stream.Collectors;
  *
  * @author Christian Kohlschütter
  */
-public class AsyncStringHolderSequence extends StringHolderSequence {
+public final class AsyncStringHolderSequence extends StringHolderSequence {
   private final Executor executor;
 
   /**
    * Constructs a new, empty {@link AsyncStringHolderSequence}.
    */
   public AsyncStringHolderSequence() {
-<span class="fc" id="L42">    this(null);</span>
-<span class="fc" id="L43">  }</span>
+<span class="fc" id="L44">    this(null);</span>
+<span class="fc" id="L45">  }</span>
 
   /**
    * Constructs a new, empty {@link AsyncStringHolderSequence}.
@@ -48,8 +50,8 @@ public class AsyncStringHolderSequence extends StringHolderSequence {
    * @param executor The executor to use.
    */
   public AsyncStringHolderSequence(Executor executor) {
-<span class="fc" id="L51">    this(10, executor);</span>
-<span class="fc" id="L52">  }</span>
+<span class="fc" id="L53">    this(10, executor);</span>
+<span class="fc" id="L54">  }</span>
 
   /**
    * Constructs a new, empty {@link AsyncStringHolderSequence}.
@@ -58,9 +60,9 @@ public class AsyncStringHolderSequence extends StringHolderSequence {
    * @param executor The executor to use.
    */
   public AsyncStringHolderSequence(int estimatedNumberOfAppends, Executor executor) {
-<span class="fc" id="L61">    super(estimatedNumberOfAppends);</span>
-<span class="fc" id="L62">    this.executor = executor;</span>
-<span class="fc" id="L63">  }</span>
+<span class="fc" id="L63">    super(estimatedNumberOfAppends);</span>
+<span class="fc" id="L64">    this.executor = executor;</span>
+<span class="fc" id="L65">  }</span>
 
   @FunctionalInterface
   private interface Append {
@@ -74,111 +76,123 @@ public class AsyncStringHolderSequence extends StringHolderSequence {
 
   @Override
   protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
-<span class="fc" id="L77">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; {</span>
-<span class="fc" id="L78">    }, false);</span>
+<span class="fc" id="L79">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; {</span>
+<span class="fc" id="L80">    }, false);</span>
   }
 
   @Override
+  @ExcludeFromCodeCoverageGeneratedReport
   protected int appendToAndReturnLengthImpl(StringBuilder out) {
     try {
-<span class="fc" id="L84">      final int len = out.length();</span>
-<span class="fc" id="L85">      return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; out.ensureCapacity(len</span>
-          + extraLen), true);
-<span class="nc" id="L87">    } catch (IOException e) {</span>
-<span class="nc" id="L88">      throw new IllegalStateException(e);</span>
+      return appendToAndReturnLengthImpl1(out);
+    } catch (IOException e) {
+      // unreachable
+      throw new IllegalStateException(e);
     }
   }
 
+  private int appendToAndReturnLengthImpl1(StringBuilder out) throws IOException {
+<span class="fc" id="L95">    final int len = out.length();</span>
+<span class="fc" id="L96">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; out.ensureCapacity(len</span>
+        + extraLen), true);
+  }
+
   @Override
+  @ExcludeFromCodeCoverageGeneratedReport
   protected int appendToAndReturnLengthImpl(StringBuffer out) {
     try {
-<span class="fc" id="L95">      final int len = out.length();</span>
-<span class="fc" id="L96">      return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; out.ensureCapacity(len</span>
-          + extraLen), true);
-<span class="nc" id="L98">    } catch (IOException e) {</span>
-<span class="nc" id="L99">      throw new IllegalStateException(e);</span>
+      return appendToAndReturnLengthImpl1(out);
+    } catch (IOException e) {
+      // unreachable
+      throw new IllegalStateException(e);
     }
+  }
+
+  private int appendToAndReturnLengthImpl1(StringBuffer out) throws IOException {
+<span class="fc" id="L112">    final int len = out.length();</span>
+<span class="fc" id="L113">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; out.ensureCapacity(len</span>
+        + extraLen), true);
   }
 
   @SuppressWarnings(&quot;PMD.CognitiveComplexity&quot;)
   private int appendToAndReturnLengthImpl(Appendable out, Append append,
       EnsureCapacity ensureCapacity, boolean reuseFirst) throws IOException {
-<span class="fc" id="L106">    ensureCapacity.ensureExtraCapacity(getMinimumLength());</span>
+<span class="fc" id="L120">    ensureCapacity.ensureExtraCapacity(getMinimumLength());</span>
 
-<span class="fc" id="L108">    Object[] tempBuilds = new Object[sequence.size()];</span>
-<span class="fc bfc" id="L109" title="All 2 branches covered.">    if (reuseFirst) {</span>
-<span class="fc" id="L110">      tempBuilds[0] = out;</span>
+<span class="fc" id="L122">    Object[] tempBuilds = new Object[sequence.size()];</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">    if (reuseFirst) {</span>
+<span class="fc" id="L124">      tempBuilds[0] = out;</span>
     }
 
-<span class="fc" id="L113">    List&lt;CompletableFuture&lt;Integer&gt;&gt; futures = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L127">    List&lt;CompletableFuture&lt;Integer&gt;&gt; futures = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L115">    int len = 0;</span>
-<span class="fc" id="L116">    int i = 0;</span>
-<span class="fc" id="L117">    int tempBuildMax = 0;</span>
-<span class="fc" id="L118">    boolean needScatterGather = false;</span>
-<span class="fc bfc" id="L119" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L121">        StringHolder holder = (StringHolder) obj;</span>
-<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
-<span class="fc" id="L123">          continue;</span>
-<span class="fc bfc" id="L124" title="All 2 branches covered.">        } else if (holder.isString()) {</span>
-<span class="fc" id="L125">          String s = holder.toString();</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">          if (needScatterGather) {</span>
-<span class="fc" id="L127">            tempBuildMax = i;</span>
-<span class="fc" id="L128">            tempBuilds[i] = s;</span>
+<span class="fc" id="L129">    int len = 0;</span>
+<span class="fc" id="L130">    int i = 0;</span>
+<span class="fc" id="L131">    int tempBuildMax = 0;</span>
+<span class="fc" id="L132">    boolean needScatterGather = false;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L135">        StringHolder holder = (StringHolder) obj;</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
+<span class="fc" id="L137">          continue;</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        } else if (holder.isString()) {</span>
+<span class="fc" id="L139">          String s = holder.toString();</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">          if (needScatterGather) {</span>
+<span class="fc" id="L141">            tempBuildMax = i;</span>
+<span class="fc" id="L142">            tempBuilds[i] = s;</span>
           } else {
-<span class="fc" id="L130">            append.append(s);</span>
+<span class="fc" id="L144">            append.append(s);</span>
           }
-<span class="fc" id="L132">          len += s.length();</span>
-<span class="fc" id="L133">        } else {</span>
-<span class="fc" id="L134">          needScatterGather = true;</span>
-<span class="fc" id="L135">          tempBuildMax = i;</span>
+<span class="fc" id="L146">          len += s.length();</span>
+<span class="fc" id="L147">        } else {</span>
+<span class="fc" id="L148">          needScatterGather = true;</span>
+<span class="fc" id="L149">          tempBuildMax = i;</span>
 
           StringBuilder sb;
-<span class="fc bfc" id="L138" title="All 4 branches covered.">          if (i &gt; 0 || !reuseFirst) {</span>
-<span class="fc" id="L139">            sb = new StringBuilder(holder.getMinimumLength());</span>
-<span class="fc" id="L140">            tempBuilds[i] = sb;</span>
+<span class="fc bfc" id="L152" title="All 4 branches covered.">          if (i &gt; 0 || !reuseFirst) {</span>
+<span class="fc" id="L153">            sb = new StringBuilder(holder.getMinimumLength());</span>
+<span class="fc" id="L154">            tempBuilds[i] = sb;</span>
           } else {
-<span class="fc" id="L142">            sb = (StringBuilder) tempBuilds[0];</span>
+<span class="fc" id="L156">            sb = (StringBuilder) tempBuilds[0];</span>
           }
 
-<span class="fc" id="L145">          Supplier&lt;Integer&gt; suppl = () -&gt; holder.appendToAndReturnLength(sb);</span>
+<span class="fc" id="L159">          Supplier&lt;Integer&gt; suppl = () -&gt; holder.appendToAndReturnLength(sb);</span>
 
           CompletableFuture&lt;Integer&gt; future;
-<span class="fc bfc" id="L148" title="All 2 branches covered.">          if (executor == null) {</span>
-<span class="fc" id="L149">            future = CompletableFuture.supplyAsync(suppl);</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">          if (executor == null) {</span>
+<span class="fc" id="L163">            future = CompletableFuture.supplyAsync(suppl);</span>
           } else {
-<span class="fc" id="L151">            future = CompletableFuture.supplyAsync(suppl, executor);</span>
+<span class="fc" id="L165">            future = CompletableFuture.supplyAsync(suppl, executor);</span>
           }
 
-<span class="fc" id="L154">          futures.add(future);</span>
+<span class="fc" id="L168">          futures.add(future);</span>
         }
-<span class="fc" id="L156">      } else {</span>
-<span class="fc" id="L157">        String s = (String) obj;</span>
-<span class="fc" id="L158">        len += s.length();</span>
-<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (needScatterGather) {</span>
-<span class="fc" id="L160">          tempBuildMax = i;</span>
-<span class="fc" id="L161">          tempBuilds[i] = s;</span>
+<span class="fc" id="L170">      } else {</span>
+<span class="fc" id="L171">        String s = (String) obj;</span>
+<span class="fc" id="L172">        len += s.length();</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (needScatterGather) {</span>
+<span class="fc" id="L174">          tempBuildMax = i;</span>
+<span class="fc" id="L175">          tempBuilds[i] = s;</span>
         } else {
-<span class="fc" id="L163">          append.append(s);</span>
+<span class="fc" id="L177">          append.append(s);</span>
         }
       }
-<span class="fc" id="L166">      i++;</span>
-<span class="fc" id="L167">    }</span>
+<span class="fc" id="L180">      i++;</span>
+<span class="fc" id="L181">    }</span>
 
-<span class="fc bfc" id="L169" title="All 2 branches covered.">    if (!futures.isEmpty()) {</span>
-<span class="fc" id="L170">      len += futures.stream().map(CompletableFuture::join).collect(Collectors.summingInt((s) -&gt; s));</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    if (!futures.isEmpty()) {</span>
+<span class="fc" id="L184">      len += futures.stream().map(CompletableFuture::join).collect(Collectors.summingInt((s) -&gt; s));</span>
     }
 
-<span class="fc" id="L173">    ensureCapacity.ensureExtraCapacity(len);</span>
-<span class="fc bfc" id="L174" title="All 4 branches covered.">    for (i = reuseFirst ? 1 : 0; i &lt;= tempBuildMax; i++) {</span>
-<span class="fc" id="L175">      CharSequence sb = (CharSequence) tempBuilds[i];</span>
-<span class="fc bfc" id="L176" title="All 2 branches covered.">      if (sb != null) {</span>
-<span class="fc" id="L177">        append.append(sb);</span>
+<span class="fc" id="L187">    ensureCapacity.ensureExtraCapacity(len);</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">    for (i = reuseFirst ? 1 : 0; i &lt;= tempBuildMax; i++) {</span>
+<span class="fc" id="L189">      CharSequence sb = (CharSequence) tempBuilds[i];</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">      if (sb != null) {</span>
+<span class="fc" id="L191">        append.append(sb);</span>
       }
     }
 
-<span class="fc" id="L181">    return len;</span>
+<span class="fc" id="L195">    return len;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
