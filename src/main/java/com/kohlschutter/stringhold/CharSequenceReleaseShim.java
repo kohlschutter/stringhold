@@ -23,7 +23,7 @@ abstract class CharSequenceReleaseShim implements CharSequence {
     return length() == 0;
   }
 
-  static boolean isEmpty(CharSequence c) {
+  static final boolean isEmpty(CharSequence c) {
     return c.isEmpty();
   }
 }

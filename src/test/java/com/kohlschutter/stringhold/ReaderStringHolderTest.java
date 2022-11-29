@@ -175,8 +175,7 @@ public class ReaderStringHolderTest {
             e) -> IOExceptionHandler.ExceptionResponse.EXCEPTION_MESSAGE).appendTo(cantAppendable));
 
     assertThrows(IOException.class, () -> ReaderStringHolder.withReaderSupplierMinimumLength(5,
-        () -> new StringReader("hello"), (
-            e) -> IOExceptionHandler.ExceptionResponse.FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE)
+        () -> new StringReader("hello"), (e) -> IOExceptionHandler.ExceptionResponse.STACKTRACE)
         .appendTo(cantAppendable));
   }
 
@@ -278,7 +277,7 @@ public class ReaderStringHolderTest {
 
     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> {
       throw new MyIOException("No reader");
-    }, (e) -> IOExceptionHandler.ExceptionResponse.FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE);
+    }, (e) -> IOExceptionHandler.ExceptionResponse.STACKTRACE);
     assertNotEquals("", rsh.toString());
     assertTrue(rsh.toString().contains(MyIOException.class.getName()));
     assertTrue(rsh.toString().contains(ReaderStringHolderTest.class.getName()));
@@ -503,7 +502,7 @@ public class ReaderStringHolderTest {
       public void close() throws IOException {
       }
 
-    }, (e) -> IOExceptionHandler.ExceptionResponse.FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE);
+    }, (e) -> IOExceptionHandler.ExceptionResponse.STACKTRACE);
 
     // first round: not a String
     // second round: a String

@@ -124,7 +124,13 @@ public class StringHolderScopeTest {
     StringHolder sh = StringHolder.withContent("test");
     sh.updateScope(sc);
 
-    StringHolder shLengthNotKnown = StringHolder.withSupplier(() -> "Hello");
+    StringHolder shLengthNotKnown = new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "Hello";
+      }
+    };
     assertThrows(UnsupportedOperationException.class, () -> shLengthNotKnown.updateScope(sc));
   }
 

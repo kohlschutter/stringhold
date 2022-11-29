@@ -19,13 +19,45 @@ package com.kohlschutter.stringhold;
 
 import java.io.IOException;
 
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+
 /**
  * An exception handler to handle {@link IOException}s in String-building methods.
+ *
+ * NOTE: prefer the static versions over implementations. Only use implementations when you need
+ * additional side effects.
  *
  * @author Christian Kohlschütter
  */
 @FunctionalInterface
+@ExcludeFromCodeCoverageGeneratedReport // jacoco doesn't properly detect coverage here
 public interface IOExceptionHandler {
+  /**
+   * Throw an IllegalStateException, as this exception should not have happened.
+   */
+  IOExceptionHandler ILLEGAL_STATE = (e) -> ExceptionResponse.ILLEGAL_STATE;
+
+  /**
+   * Return what has been written so far.
+   */
+  IOExceptionHandler FLUSH = (e) -> ExceptionResponse.FLUSH;
+
+  /**
+   * Return an empty string (do not flush if possible), or at least don't add anything new.
+   */
+  IOExceptionHandler EMPTY = (e) -> ExceptionResponse.EMPTY;
+
+  /**
+   * Return the exception message (without stacktrace); if possible, do not flush/include what has
+   * been written so far.
+   */
+  IOExceptionHandler EXCEPTION_MESSAGE = (e) -> ExceptionResponse.EXCEPTION_MESSAGE;
+
+  /**
+   * Return what has been written so far, and add the exception message with stack trace.
+   */
+  IOExceptionHandler STACKTRACE = (e) -> ExceptionResponse.STACKTRACE;
+
   /**
    * Determines what to do when the given exception is caught.
    *
@@ -62,6 +94,6 @@ public interface IOExceptionHandler {
     /**
      * Return what has been written so far, and add the exception message with stack trace.
      */
-    FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE
+    STACKTRACE
   }
 }

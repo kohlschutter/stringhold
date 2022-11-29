@@ -19,6 +19,7 @@ package com.kohlschutter.stringhold;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -950,4 +951,47 @@ public class StringHolderTest {
     assertEquals(3, sh.getMinimumLength());
   }
 
+  @Test
+  public void testSetExpectedLength() throws Exception {
+    StringHolder sh = StringHolder.withContent("test");
+    assertEquals(4, sh.getExpectedLength());
+    sh.setExpectedLength(10); // ignored because we know it's a string
+    assertEquals(4, sh.getExpectedLength());
+  }
+
+  @Test
+  public void testAsContent() throws Exception {
+    StringHolder sh;
+    Object content;
+
+    sh = StringHolder.withContent("test");
+    content = sh.asContent();
+    assertInstanceOf(String.class, content);
+    assertEquals("test", content);
+
+    sh = new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "test";
+      }
+    };
+    content = sh.asContent();
+    assertInstanceOf(StringHolder.class, content);
+    assertEquals("test", content.toString());
+  }
+
+  @Test
+  public void testComputeLength() throws Exception {
+    StringHolder sh = new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "test";
+      }
+    };
+    assertFalse(sh.isString());
+    assertEquals(4, sh.length());
+    assertTrue(sh.isString());
+  }
 }

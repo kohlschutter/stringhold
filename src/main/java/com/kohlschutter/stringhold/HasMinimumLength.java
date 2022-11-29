@@ -17,31 +17,22 @@
  */
 package com.kohlschutter.stringhold;
 
-import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
-
 /**
- * A StringHolder that holds a String, plain and simple.
+ * Describes something that can return its minimum length.
  *
  * @author Christian Kohlschütter
  */
-final class SimpleStringHolder extends StringHolder implements HasKnownLength {
-  static final StringHolder EMPTY_STRING = new SimpleStringHolder("");
-
-  SimpleStringHolder(String s) {
-    super(s.length());
-    this.theString = s;
-  }
-
-  @Override
-  @ExcludeFromCodeCoverageGeneratedReport
-  protected String getString() {
-    // should not be reachable; just defensive a measure
-    return theString;
-  }
+@FunctionalInterface
+public interface HasMinimumLength extends HasExpectedLength {
+  /**
+   * Returns the minimum length.
+   *
+   * @return The minimum length.
+   */
+  int getMinimumLength();
 
   @Override
-  @ExcludeFromCodeCoverageGeneratedReport
-  protected void uncache() {
-    // should not be reachable; just defensive a measure
+  default int getExpectedLength() {
+    return getMinimumLength();
   }
 }

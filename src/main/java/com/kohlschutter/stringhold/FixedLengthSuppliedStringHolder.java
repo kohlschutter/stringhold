@@ -22,8 +22,13 @@ import java.util.function.Supplier;
 class FixedLengthSuppliedStringHolder extends SuppliedStringHolder {
   private final int len;
 
-  FixedLengthSuppliedStringHolder(int len, Supplier<String> supplier) {
+  FixedLengthSuppliedStringHolder(int len, Supplier<?> supplier) {
     super(len, len, supplier);
+    this.len = len;
+  }
+
+  FixedLengthSuppliedStringHolder(int len, IOSupplier<?> supplier, IOExceptionHandler onError) {
+    super(len, len, supplier, onError);
     this.len = len;
   }
 

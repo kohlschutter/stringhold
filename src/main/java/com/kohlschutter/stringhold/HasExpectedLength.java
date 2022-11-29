@@ -17,31 +17,27 @@
  */
 package com.kohlschutter.stringhold;
 
-import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
-
 /**
- * A StringHolder that holds a String, plain and simple.
+ * Describes something that can return its expected length.
  *
  * @author Christian Kohlschütter
  */
-final class SimpleStringHolder extends StringHolder implements HasKnownLength {
-  static final StringHolder EMPTY_STRING = new SimpleStringHolder("");
+@FunctionalInterface
+public interface HasExpectedLength {
 
-  SimpleStringHolder(String s) {
-    super(s.length());
-    this.theString = s;
-  }
+  /**
+   * Returns the expected length.
+   *
+   * @return The expected length.
+   */
+  int getExpectedLength();
 
-  @Override
-  @ExcludeFromCodeCoverageGeneratedReport
-  protected String getString() {
-    // should not be reachable; just defensive a measure
-    return theString;
-  }
-
-  @Override
-  @ExcludeFromCodeCoverageGeneratedReport
-  protected void uncache() {
-    // should not be reachable; just defensive a measure
+  /**
+   * Checks if the length is known, i.e., available without additional computation.
+   *
+   * @return {@code true} if length is known.
+   */
+  default boolean isLengthKnown() {
+    return false;
   }
 }

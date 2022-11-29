@@ -17,31 +17,24 @@
  */
 package com.kohlschutter.stringhold;
 
-import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
-
 /**
- * A StringHolder that holds a String, plain and simple.
+ * Describes something that can return its exact length without additional computation (i.e.,
+ * without resorting to something like {@code toString().length()}).
  *
  * @author Christian Kohlschütter
  */
-final class SimpleStringHolder extends StringHolder implements HasKnownLength {
-  static final StringHolder EMPTY_STRING = new SimpleStringHolder("");
-
-  SimpleStringHolder(String s) {
-    super(s.length());
-    this.theString = s;
-  }
+@FunctionalInterface
+public interface HasKnownLength extends HasLength {
+  /**
+   * Returns the exact length, without triggering additional computation.
+   *
+   * @return The exact length.
+   */
+  @Override
+  int length();
 
   @Override
-  @ExcludeFromCodeCoverageGeneratedReport
-  protected String getString() {
-    // should not be reachable; just defensive a measure
-    return theString;
-  }
-
-  @Override
-  @ExcludeFromCodeCoverageGeneratedReport
-  protected void uncache() {
-    // should not be reachable; just defensive a measure
+  default boolean isLengthKnown() {
+    return true;
   }
 }

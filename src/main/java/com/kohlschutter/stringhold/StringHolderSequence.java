@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Christian Kohlschütter
  */
 public class StringHolderSequence extends StringHolder implements Appendable {
-  private List<Object> sequence;
+  private final List<Object> sequence;
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
@@ -59,17 +59,6 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     uncache();
     sequence.add(o);
     resizeBy(len, len);
-  }
-
-  private void addSequence(StringHolder o, int minLen, int expLen) {
-    if (o.isString() || needsStringConversion(o)) {
-      addSequence(o.toString());
-      return;
-    }
-
-    uncache();
-    sequence.add(o);
-    resizeBy(minLen, expLen);
   }
 
   /**
@@ -129,9 +118,17 @@ public class StringHolderSequence extends StringHolder implements Appendable {
    * @return This instance.
    */
   public StringHolderSequence append(StringHolder s) {
-    if (!s.isKnownEmpty()) {
-      addSequence(s, s.getMinimumLength(), s.getExpectedLength());
+    if (s.isKnownEmpty()) {
+      return this;
+    } else if (s.isString() || needsStringConversion(s)) {
+      addSequence(s.toString());
+      return this;
     }
+
+    uncache();
+    sequence.add(s);
+    resizeBy(s.getMinimumLength(), s.getExpectedLength());
+
     return this;
   }
 
@@ -299,17 +296,14 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     StringBuilder sb = new StringBuilder(Math.max(16, getExpectedLength()));
     int len = appendToAndReturnLength(sb);
 
-    List<Object> list = new ArrayList<>();
-
     final String s;
     if (len == 0) {
       s = "";
+      sequence.clear();
     } else {
       s = sb.toString();
-      list.add(s);
+      sequence.add(s);
     }
-
-    sequence = list;
 
     return s;
   }
@@ -404,6 +398,45 @@ public class StringHolderSequence extends StringHolder implements Appendable {
         return -1;
       }
       return currentString.charAt(currentPos++);
+    }
+  }
+
+  /**
+   * Returns the number of appends (calls to {@link #append(Object)}, etc.) made to this instance so
+   * far, minus the number of calls that were decided avoidable (e.g., zero-length appends).
+   *
+   * @return The number of appends.
+   */
+  public int numberOfAppends() {
+    return sequence.size();
+  }
+
+  /**
+   * Returns a simplified version of the contents of this sequence, if possible.
+   *
+   * <ol>
+   * <li>If the content is a string already, the string is returned.</li>
+   * <li>If there's no element stored, an empty string is returned.</li>
+   * <li>If there is only a single element stored, its content is returned as if
+   * {@link #asContent()} was called on that element.</li>
+   * </ol>
+   */
+  @Override
+  public Object asContent() {
+    if (isString()) {
+      return toString();
+    }
+    if (sequence.isEmpty()) {
+      return "";
+    } else if (sequence.size() == 1) {
+      Object obj = sequence.get(0);
+      if (obj instanceof String) {
+        return obj;
+      }
+      StringHolder sc = (StringHolder) obj;
+      return sc.asContent();
+    } else {
+      return this;
     }
   }
 }

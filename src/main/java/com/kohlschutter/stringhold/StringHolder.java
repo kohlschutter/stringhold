@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
+import com.kohlschutter.util.ComparisonUtil;
 
 /**
  * A {@link StringHolder} holds something that can <em>eventually</em> turn into a string.
@@ -44,8 +45,10 @@ import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
  *
  * @author Christian Kohlschütter
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity"})
-public abstract class StringHolder extends CharSequenceReleaseShim implements CharSequence {
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ExcessiveClassLength"})
+public abstract class StringHolder extends CharSequenceReleaseShim implements CharSequence,
+    HasLength, Comparable<Object> {
+
   String theString;
 
   private int minLength;
@@ -96,9 +99,25 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param supplier The supplier.
    * @return The {@link StringHolder} instance.
    * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
    */
-  public static StringHolder withSupplier(Supplier<String> supplier) {
+  public static StringHolder withSupplier(Supplier<?> supplier) {
     return withSupplierMinimumLength(0, supplier);
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, assuming a minimum
+   * length of 0.
+   *
+   * @param supplier The supplier (may throw an {@link IOException} upon {@link Supplier#get()},
+   *          which is handled by the given exception handler).
+   * @param onError The exception handler.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
+   */
+  public static StringHolder withSupplier(IOSupplier<?> supplier, IOExceptionHandler onError) {
+    return withSupplierMinimumLength(0, supplier, onError);
   }
 
   /**
@@ -109,8 +128,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param supplier The supplier.
    * @return The {@link StringHolder} instance.
    * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
    */
-  public static StringHolder withSupplierMinimumLength(int minLength, Supplier<String> supplier) {
+  public static StringHolder withSupplierMinimumLength(int minLength, Supplier<?> supplier) {
     return new SuppliedStringHolder(minLength, minLength, supplier);
   }
 
@@ -118,14 +138,48 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
    * minimum of the estimated length.
    *
+   * @param minLength The minimum length, must not be larger than the actual length.
+   * @param supplier The supplier (may throw an {@link IOException} upon {@link Supplier#get()},
+   *          which is handled by the given exception handler).
+   * @param onError The exception handler.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
+   */
+  public static StringHolder withSupplierMinimumLength(int minLength, IOSupplier<?> supplier,
+      IOExceptionHandler onError) {
+    return new SuppliedStringHolder(minLength, minLength, supplier, onError);
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
+   * minimum of the estimated length.
+   *
    * @param expectedLength The expected length, may be larger than the actual length.
    * @param supplier The supplier.
    * @return The {@link StringHolder} instance.
    * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
    */
-  public static StringHolder withSupplierExpectedLength(int expectedLength,
-      Supplier<String> supplier) {
+  public static StringHolder withSupplierExpectedLength(int expectedLength, Supplier<?> supplier) {
     return new SuppliedStringHolder(0, expectedLength, supplier);
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
+   * minimum of the estimated length.
+   *
+   * @param expectedLength The expected length, may be larger than the actual length.
+   * @param supplier The supplier (may throw an {@link IOException} upon {@link Supplier#get()},
+   *          which is handled by the given exception handler).
+   * @param onError The exception handler.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
+   */
+  public static StringHolder withSupplierExpectedLength(int expectedLength, IOSupplier<?> supplier,
+      IOExceptionHandler onError) {
+    return new SuppliedStringHolder(0, expectedLength, supplier, onError);
   }
 
   /**
@@ -137,10 +191,29 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param supplier The supplier.
    * @return The {@link StringHolder} instance.
    * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
    */
   public static StringHolder withSupplierMinimumAndExpectedLength(int minLength, int expectedLength,
-      Supplier<String> supplier) {
+      Supplier<?> supplier) {
     return new SuppliedStringHolder(minLength, expectedLength, supplier);
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying a
+   * minimum of the estimated length.
+   *
+   * @param minLength The minimum length, must not be larger than the actual length.
+   * @param expectedLength The expected length, may be larger than the actual length.
+   * @param supplier The supplier (may throw an {@link IOException} upon {@link Supplier#get()},
+   *          which is handled by the given exception handler).
+   * @param onError The exception handler.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if minLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
+   */
+  public static StringHolder withSupplierMinimumAndExpectedLength(int minLength, int expectedLength,
+      IOSupplier<?> supplier, IOExceptionHandler onError) {
+    return new SuppliedStringHolder(minLength, expectedLength, supplier, onError);
   }
 
   /**
@@ -152,12 +225,34 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param supplier The supplier.
    * @return The {@link StringHolder} instance.
    * @throws IllegalStateException if fixedLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
    */
-  public static StringHolder withSupplierFixedLength(int fixedLength, Supplier<String> supplier) {
+  public static StringHolder withSupplierFixedLength(int fixedLength, Supplier<?> supplier) {
     if (fixedLength == 0) {
       return SimpleStringHolder.EMPTY_STRING;
     }
     return new FixedLengthSuppliedStringHolder(fixedLength, supplier);
+  }
+
+  /**
+   * Constructs a new {@link StringHolder} with content from the given supplier, specifying the
+   * length the supplied string is going to have. An {@link IllegalStateException} will be thrown
+   * once a string is supplied that does not match this length.
+   *
+   * @param fixedLength The exact length of the string.
+   * @param supplier The supplier (may throw an {@link IOException} upon {@link Supplier#get()},
+   *          which is handled by the given exception handler).
+   * @param onError The exception handler.
+   * @return The {@link StringHolder} instance.
+   * @throws IllegalStateException if fixedLength is negative.
+   * @throws NullPointerException if supplier was {@code null}.
+   */
+  public static StringHolder withSupplierFixedLength(int fixedLength, IOSupplier<?> supplier,
+      IOExceptionHandler onError) {
+    if (fixedLength == 0) {
+      return SimpleStringHolder.EMPTY_STRING;
+    }
+    return new FixedLengthSuppliedStringHolder(fixedLength, supplier, onError);
   }
 
   /**
@@ -166,6 +261,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param readerSupply The supply of {@link Reader} instances for the content.
    * @param onError The exception handler.
    * @return The {@link ReaderStringHolder}.
+   * @throws NullPointerException if supplier was {@code null}.
    */
   public static StringHolder withReaderSupplier(IOSupplier<Reader> readerSupply,
       IOExceptionHandler onError) {
@@ -179,6 +275,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param readerSupply The supply of {@link Reader} instances for the content.
    * @param onError The exception handler.
    * @return The {@link ReaderStringHolder}.
+   * @throws NullPointerException if supplier was {@code null}.
    */
   public static StringHolder withReaderSupplierMinimumLength(int minLen,
       IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
@@ -192,6 +289,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param readerSupply The supply of {@link Reader} instances for the content.
    * @param onError The exception handler.
    * @return The {@link ReaderStringHolder}.
+   * @throws NullPointerException if supplier was {@code null}.
    */
   public static StringHolder withReaderSupplierExpectedLength(int expectedLen,
       IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
@@ -206,6 +304,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param readerSupply The supply of {@link Reader} instances for the content.
    * @param onError The exception handler.
    * @return The {@link ReaderStringHolder}.
+   * @throws NullPointerException if supplier was {@code null}.
    */
   public static StringHolder withReaderSupplierMinimumAndExpectedLength(int minLen, int expectedLen,
       IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
@@ -258,6 +357,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    *
    * @return The minimum length (but be sure to see {@link #checkError()}).
    */
+  @Override
   public final int getMinimumLength() {
     return minLength;
   }
@@ -270,8 +370,20 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    *
    * @return The currently expected length.
    */
+  @Override
   public final int getExpectedLength() {
     return expectedLength;
+  }
+
+  /**
+   * Updates the current estimate of the length of the string in this {@link StringHolder}.
+   *
+   * The value will be rounded to {@link #getMinimumLength()} if necessary.
+   *
+   * @param len The new expected length
+   */
+  public void setExpectedLength(int len) {
+    resizeTo(getMinimumLength(), len);
   }
 
   /**
@@ -292,6 +404,11 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
     int oldMin = this.minLength;
     int oldExpected = this.expectedLength;
 
+    if (!fromToString && isString()) {
+      // unchanged
+      return oldExpected;
+    }
+
     if (min < oldMin) {
       if (checkError()) {
         // throw away our previous expectations upon error
@@ -306,6 +423,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
         }
       }
     }
+
     int el = (this.expectedLength = Math.max((this.minLength = min), expected));
 
     StringHolderScope sc = this.scope;
@@ -402,6 +520,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    *
    * @return {@code true} if known non-empty.
    */
+  @Override
   public final boolean isKnownEmpty() {
     if (minLength > 0) {
       return false;
@@ -430,6 +549,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return {@code true} if the length in this holder is known.
    * @see #isKnownEmpty()
    */
+  @Override
   public boolean isLengthKnown() {
     return isString();
   }
@@ -689,8 +809,17 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
       return s;
     }
     synchronized (this) {
-      theString = s = Objects.requireNonNull(getString());
-      resizeTo(s.length(), 0, true);
+      try {
+        theString = s = Objects.requireNonNull(getString());
+        resizeTo(s.length(), 0, true);
+      } catch (RuntimeException e) {
+        s = theString;
+        if (s != null) {
+          resizeTo(s.length(), 0, true);
+        }
+        setError();
+        throw e;
+      }
 
       stringSanityCheck(s);
       return s;
@@ -839,5 +968,206 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
       return this;
     }
     return toString().subSequence(start, end);
+  }
+
+  /**
+   * Returns something that can be used in {@link StringHolder#withContent(Object)} which then
+   * yields the same output when calling {@link #toString()} on either instance.
+   *
+   * The returned object usually is this instance itself. However, this method may return a
+   * simplified version of the content stored in this instance. For example, if the content already
+   * is a string, the string is returned.
+   *
+   * @return The "content" of this instance, which could be the instance itself, or something else.
+   * @see #withContent(Object)
+   */
+  public Object asContent() {
+    if (isString()) {
+      return toString();
+    }
+    return this;
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    if (o instanceof StringHolder) {
+      return compareTo((StringHolder) o);
+    } else if (o instanceof CharSequence) {
+      return compareTo((CharSequence) o);
+    } else {
+      throw new ClassCastException("Cannot compare " + o.getClass());
+    }
+  }
+
+  /**
+   * Narrower implementation of {@link #compareTo(Object)} for {@link String}s.
+   *
+   * @param o The other object.
+   * @return The comparison result, as defined by {@link #compareTo(Object)}.
+   */
+  public int compareTo(CharSequence o) {
+    if (o instanceof StringHolder) {
+      return compareTo((StringHolder) o);
+    }
+
+    if (isKnownEmpty()) {
+      if (CharSequenceReleaseShim.isEmpty(o)) {
+        return 0;
+      } else {
+        return -1;
+      }
+    }
+
+    return compareToDefault(o);
+  }
+
+  /**
+   * Narrower implementation of {@link #compareTo(Object)} for {@link StringHolder}s.
+   *
+   * @param o The other object.
+   * @return The comparison result, as defined by {@link #compareTo(Object)}.
+   */
+  public int compareTo(StringHolder o) {
+    if (o.isKnownEmpty()) {
+      if (isKnownEmpty()) {
+        return 0;
+      }
+    } else if (o.isString()) {
+      if (isString()) {
+        return toString().compareTo(o.toString());
+      } else {
+        return compareTo(o.toString());
+      }
+    } else if (isString()) {
+      return ComparisonUtil.reverseComparisonResult(o.compareTo(toString()));
+    }
+
+    return compareToDefault(o);
+  }
+
+  /**
+   * Default implementation for comparing this instance with another {@link CharSequence} that is
+   * not a {@link StringHolder}. Certain trivial checks were already performed, such as one or both
+   * being known empty.
+   *
+   * @param o The other object.
+   * @return The comparison result, as defined by {@link #compareTo(Object)}.
+   */
+  protected final int compareToDefault(CharSequence o) {
+    int k = 0;
+
+    if (getMinimumLength() > 0 && CharSequenceReleaseShim.isEmpty(o)) {
+      // NOTE: we trust the StringHolder claim of minimum length
+      return 1;
+    }
+    int len2 = o.length();
+
+    int lim;
+    char c1;
+    try {
+      c1 = charAt(k);
+    } catch (IndexOutOfBoundsException e) {
+      if (len2 == 0) {
+        return 0;
+      } else {
+        return -1;
+      }
+    }
+    if (isString()) {
+      if (o instanceof String) {
+        return toString().compareTo((String) o);
+      }
+      lim = Math.min(length(), len2);
+    } else {
+      lim = len2;
+    }
+
+    while (k < lim) {
+      char c2 = o.charAt(k);
+      if (c1 != c2) {
+        return c1 - c2;
+      }
+      k++;
+      if (k < lim) {
+        try {
+          c1 = charAt(k);
+        } catch (IndexOutOfBoundsException e) {
+          return -1;
+        }
+      }
+    }
+    if (getMinimumLength() > k) {
+      return 1;
+    }
+    try {
+      charAt(k);
+      return 1;
+    } catch (IndexOutOfBoundsException e) {
+      return 0;
+    }
+  }
+
+  /**
+   * Default implementation for comparing this instance with another {@link StringHolder}. Certain
+   * trivial checks were already performed, such as one or both being known empty or known being
+   * string.
+   *
+   * @param o The other object.
+   * @return The comparison result, as defined by {@link #compareTo(Object)}.
+   */
+  protected int compareToDefault(StringHolder o) {
+    int k = 0;
+
+    char c1;
+    char c2;
+    try {
+      c1 = charAt(k);
+    } catch (IndexOutOfBoundsException e) {
+      try {
+        o.charAt(k);
+        return -1;
+      } catch (IndexOutOfBoundsException e2) {
+        return 0;
+      }
+    }
+    try {
+      c2 = o.charAt(k);
+    } catch (IndexOutOfBoundsException e) {
+      return 1;
+    }
+
+    if (c1 != c2) {
+      return c1 - c2;
+    }
+
+    if (isString()) {
+      return ComparisonUtil.reverseComparisonResult(o.compareTo(toString()));
+    } else if (o.isString()) {
+      return compareTo(o.toString());
+    }
+
+    while (true) {
+      k++;
+
+      try {
+        c1 = charAt(k);
+      } catch (IndexOutOfBoundsException e) {
+        try {
+          o.charAt(k);
+          return -1;
+        } catch (IndexOutOfBoundsException e2) {
+          return 0;
+        }
+      }
+      try {
+        c2 = o.charAt(k);
+      } catch (IndexOutOfBoundsException e) {
+        return 1;
+      }
+
+      if (c1 != c2) {
+        return c1 - c2;
+      }
+    }
   }
 }

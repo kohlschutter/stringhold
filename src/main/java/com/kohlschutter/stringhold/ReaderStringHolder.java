@@ -148,7 +148,7 @@ final class ReaderStringHolder extends StringHolder {
 
     setError();
 
-    switch (onError.onException(e)) {
+    switch (resp) {
       case EXCEPTION_MESSAGE:
         s = e.toString();
         try {
@@ -157,7 +157,7 @@ final class ReaderStringHolder extends StringHolder {
           // ignore
         }
         return s.length();
-      case FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE:
+      case STACKTRACE:
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         s = sw.toString();
@@ -185,12 +185,12 @@ final class ReaderStringHolder extends StringHolder {
       }
 
       setError();
-      switch (onError.onException(e)) {
+      switch (resp) {
         case FLUSH:
           break;
         case EXCEPTION_MESSAGE:
           return e.toString();
-        case FLUSH_AND_ADD_EXCEPTION_MESSAGE_WITH_STACKTRACE:
+        case STACKTRACE:
           StringWriter sw = new StringWriter();
           e.printStackTrace(new PrintWriter(sw));
           sb.append(sw.toString());
