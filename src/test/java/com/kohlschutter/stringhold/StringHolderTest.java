@@ -151,7 +151,7 @@ public class StringHolderTest {
   @Test
   public void testIdentity() throws Exception {
     assertSame(StringHolder.withContent(""), StringHolder.withContent(""));
-    assertSame(StringHolder.withContent(null), StringHolder.withContent(""));
+    assertSame(StringHolder.withContent(null), StringHolder.withContent(null));
 
     StringHolder x = StringHolder.withContent("X");
     assertSame(StringHolder.withContent(x), x);
@@ -182,7 +182,7 @@ public class StringHolderTest {
 
   @Test
   public void testNull() throws Exception {
-    assertEquals("", StringHolder.withContent(null).toString());
+    assertEquals("null", StringHolder.withContent(null).toString());
   }
 
   @Test

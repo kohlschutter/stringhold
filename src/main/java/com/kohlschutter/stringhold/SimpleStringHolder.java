@@ -26,6 +26,7 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
  */
 final class SimpleStringHolder extends StringHolder implements HasKnownLength {
   static final StringHolder EMPTY_STRING = new SimpleStringHolder("");
+  static final StringHolder NULL_STRING = new SimpleStringHolder("null");
 
   SimpleStringHolder(String s) {
     super(s.length());

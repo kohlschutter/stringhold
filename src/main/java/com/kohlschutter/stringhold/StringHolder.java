@@ -315,14 +315,15 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * Constructs a {@link StringHolder} with the given content.
    *
    * Unless the object already is a {@link StringHolder}, or is known to be empty, its contents are
-   * converted to String.
+   * converted to String. {@code null} objects are converted to {@code "null"}, in accordance with
+   * {@link String#valueOf(Object)}.
    *
    * @param obj The object.
    * @return The {@link StringHolder} instance.
    */
   public static StringHolder withContent(Object obj) {
     if (obj == null) {
-      return SimpleStringHolder.EMPTY_STRING;
+      return SimpleStringHolder.NULL_STRING;
     }
     if (obj instanceof String) {
       String s = (String) obj;
