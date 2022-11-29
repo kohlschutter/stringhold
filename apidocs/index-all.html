@@ -126,6 +126,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Append the contents of this <a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> to the given <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/StringBuilder.html" title="class or interface in java.lang" class="external-link"><code>StringBuilder</code></a>, and
  returns the number of characters appended.</div>
 </dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html#appendToAndReturnLengthDefaultImpl(java.lang.Appendable)" class="member-name-link">appendToAndReturnLengthDefaultImpl(Appendable)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/kohlschutter/stringhold/StringHolder.html#appendToAndReturnLengthDefaultImpl(java.lang.Appendable)" class="member-name-link">appendToAndReturnLengthDefaultImpl(Appendable)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></dt>
 <dd>
 <div class="block">Append the contents of this <a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> to the given <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link"><code>Appendable</code></a> (which is
@@ -139,12 +141,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Append the contents of this <a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> to the given <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Writer.html" title="class or interface in java.io" class="external-link"><code>Writer</code></a>, and returns the
  number of characters appended.</div>
 </dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html#appendToAndReturnLengthImpl(java.lang.StringBuffer)" class="member-name-link">appendToAndReturnLengthImpl(StringBuffer)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/kohlschutter/stringhold/StringHolder.html#appendToAndReturnLengthImpl(java.lang.StringBuffer)" class="member-name-link">appendToAndReturnLengthImpl(StringBuffer)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></dt>
 <dd>
 <div class="block">Append the contents of this <a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> to the given <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/StringBuffer.html" title="class or interface in java.lang" class="external-link"><code>StringBuffer</code></a>, and returns
  the number of characters appended.</div>
 </dd>
 <dt><a href="com/kohlschutter/stringhold/StringHolderSequence.html#appendToAndReturnLengthImpl(java.lang.StringBuffer)" class="member-name-link">appendToAndReturnLengthImpl(StringBuffer)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/StringHolderSequence.html" title="class in com.kohlschutter.stringhold">StringHolderSequence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html#appendToAndReturnLengthImpl(java.lang.StringBuilder)" class="member-name-link">appendToAndReturnLengthImpl(StringBuilder)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/kohlschutter/stringhold/StringHolder.html#appendToAndReturnLengthImpl(java.lang.StringBuilder)" class="member-name-link">appendToAndReturnLengthImpl(StringBuilder)</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></dt>
 <dd>
@@ -161,6 +167,24 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/kohlschutter/stringhold/StringHolderSequence.html#asContent()" class="member-name-link">asContent()</a> - Method in class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/StringHolderSequence.html" title="class in com.kohlschutter.stringhold">StringHolderSequence</a></dt>
 <dd>
 <div class="block">Returns a simplified version of the contents of this sequence, if possible.</div>
+</dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a> - Class in <a href="com/kohlschutter/stringhold/package-summary.html">com.kohlschutter.stringhold</a></dt>
+<dd>
+<div class="block">An appendable sequence of strings; <a href="com/kohlschutter/stringhold/StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s are automatically converted upon append,
+ with appends being run asynchronously, using temporary intermediate storage, if
+ possible/necessary.</div>
+</dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html#%3Cinit%3E()" class="member-name-link">AsyncStringHolderSequence()</a> - Constructor for class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></dt>
+<dd>
+<div class="block">Constructs a new, empty <a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>AsyncStringHolderSequence</code></a>.</div>
+</dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html#%3Cinit%3E(int,java.util.concurrent.Executor)" class="member-name-link">AsyncStringHolderSequence(int, Executor)</a> - Constructor for class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></dt>
+<dd>
+<div class="block">Constructs a new, empty <a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>AsyncStringHolderSequence</code></a>.</div>
+</dd>
+<dt><a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html#%3Cinit%3E(java.util.concurrent.Executor)" class="member-name-link">AsyncStringHolderSequence(Executor)</a> - Constructor for class com.kohlschutter.stringhold.<a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></dt>
+<dd>
+<div class="block">Constructs a new, empty <a href="com/kohlschutter/stringhold/AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold"><code>AsyncStringHolderSequence</code></a>.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>

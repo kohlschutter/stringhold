@@ -60,13 +60,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../StringHolderSequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">StringHolderSequence</a></code></div>
+<div class="col-second even-row-color"><code><a href="../AsyncStringHolderSequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">An <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link"><code>Appendable</code></a> sequence of strings or <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
+<div class="block">An appendable sequence of strings; <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s are automatically converted upon append,
+ with appends being run asynchronously, using temporary intermediate storage, if
+ possible/necessary.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../StringOnlySequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">StringOnlySequence</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../StringHolderSequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">StringHolderSequence</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">An <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link"><code>Appendable</code></a> sequence of strings or <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../StringOnlySequence.html" class="type-name-link" title="class in com.kohlschutter.stringhold">StringOnlySequence</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">An appendable sequence of strings; <a href="../StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s are automatically converted upon append.</div>
 </div>
 </div>

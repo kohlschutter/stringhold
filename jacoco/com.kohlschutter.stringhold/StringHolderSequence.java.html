@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Christian Kohlschütter
  */
 public class StringHolderSequence extends StringHolder implements Appendable {
-  private final List&lt;Object&gt; sequence;
+  final List&lt;Object&gt; sequence;
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
@@ -197,7 +197,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected final int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
 <span class="fc" id="L201">    int len = 0;</span>
 <span class="fc bfc" id="L202" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
 <span class="fc bfc" id="L203" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
@@ -217,7 +217,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected final int appendToAndReturnLengthImpl(StringBuilder out) {
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
 <span class="fc" id="L221">    out.ensureCapacity(out.length() + getMinimumLength());</span>
 
 <span class="fc" id="L223">    int len = 0;</span>
@@ -239,7 +239,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected final int appendToAndReturnLengthImpl(StringBuffer out) {
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
 <span class="fc" id="L243">    out.ensureCapacity(out.length() + getMinimumLength());</span>
 
 <span class="fc" id="L245">    int len = 0;</span>
@@ -292,7 +292,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   @Override
-  protected synchronized String getString() {
+  protected String getString() {
 <span class="fc" id="L296">    StringBuilder sb = new StringBuilder(Math.max(16, getExpectedLength()));</span>
 <span class="fc" id="L297">    int len = appendToAndReturnLength(sb);</span>
 
@@ -349,55 +349,53 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     }
 
     @Override
-    public synchronized void close() throws IOException {
-<span class="fc bfc" id="L353" title="All 2 branches covered.">      if (!closed) {</span>
-<span class="fc" id="L354">        closed = true;</span>
-      }
-<span class="fc" id="L356">    }</span>
+    public void close() throws IOException {
+<span class="fc" id="L353">      closed = true;</span>
+<span class="fc" id="L354">    }</span>
 
     int ensureObject() {
-<span class="fc bfc" id="L359" title="All 2 branches covered.">      if (currentString != null) {</span>
-<span class="fc" id="L360">        int len = currentString.length();</span>
-<span class="fc bfc" id="L361" title="All 2 branches covered.">        if (currentPos &gt;= len) {</span>
-<span class="fc" id="L362">          currentString = null;</span>
-<span class="fc" id="L363">          return ensureObject();</span>
+<span class="fc bfc" id="L357" title="All 2 branches covered.">      if (currentString != null) {</span>
+<span class="fc" id="L358">        int len = currentString.length();</span>
+<span class="fc bfc" id="L359" title="All 2 branches covered.">        if (currentPos &gt;= len) {</span>
+<span class="fc" id="L360">          currentString = null;</span>
+<span class="fc" id="L361">          return ensureObject();</span>
         } else {
-<span class="fc" id="L365">          return len;</span>
+<span class="fc" id="L363">          return len;</span>
         }
       } else {
-<span class="fc bfc" id="L368" title="All 2 branches covered.">        while (flatObjectIterator.hasNext()) {</span>
-<span class="fc" id="L369">          currentString = flatObjectIterator.next().toString();</span>
-<span class="fc" id="L370">          currentPos = 0;</span>
-<span class="fc" id="L371">          int len = currentString.length();</span>
-<span class="fc bfc" id="L372" title="All 2 branches covered.">          if (len &gt; 0) {</span>
-<span class="fc" id="L373">            return len;</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        while (flatObjectIterator.hasNext()) {</span>
+<span class="fc" id="L367">          currentString = flatObjectIterator.next().toString();</span>
+<span class="fc" id="L368">          currentPos = 0;</span>
+<span class="fc" id="L369">          int len = currentString.length();</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">          if (len &gt; 0) {</span>
+<span class="fc" id="L371">            return len;</span>
           }
-<span class="fc" id="L375">        }</span>
-<span class="fc" id="L376">        currentString = null;</span>
-<span class="fc" id="L377">        return 0;</span>
+<span class="fc" id="L373">        }</span>
+<span class="fc" id="L374">        currentString = null;</span>
+<span class="fc" id="L375">        return 0;</span>
       }
     }
 
     @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
-<span class="fc" id="L383">      int currentLen = ensureObject();</span>
-<span class="fc bfc" id="L384" title="All 2 branches covered.">      if (currentLen == 0) {</span>
-<span class="fc" id="L385">        return -1;</span>
+<span class="fc" id="L381">      int currentLen = ensureObject();</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">      if (currentLen == 0) {</span>
+<span class="fc" id="L383">        return -1;</span>
       }
 
-<span class="fc" id="L388">      len = Math.min(currentLen - currentPos, Math.min(cbuf.length - off, len));</span>
-<span class="fc" id="L389">      currentString.getChars(currentPos, currentPos + len, cbuf, off);</span>
-<span class="fc" id="L390">      currentPos += len;</span>
-<span class="fc" id="L391">      return len;</span>
+<span class="fc" id="L386">      len = Math.min(currentLen - currentPos, Math.min(cbuf.length - off, len));</span>
+<span class="fc" id="L387">      currentString.getChars(currentPos, currentPos + len, cbuf, off);</span>
+<span class="fc" id="L388">      currentPos += len;</span>
+<span class="fc" id="L389">      return len;</span>
     }
 
     @Override
     public int read() throws IOException {
-<span class="fc" id="L396">      int currentLen = ensureObject();</span>
-<span class="fc bfc" id="L397" title="All 2 branches covered.">      if (currentLen == 0) {</span>
-<span class="fc" id="L398">        return -1;</span>
+<span class="fc" id="L394">      int currentLen = ensureObject();</span>
+<span class="fc bfc" id="L395" title="All 2 branches covered.">      if (currentLen == 0) {</span>
+<span class="fc" id="L396">        return -1;</span>
       }
-<span class="fc" id="L400">      return currentString.charAt(currentPos++);</span>
+<span class="fc" id="L398">      return currentString.charAt(currentPos++);</span>
     }
   }
 
@@ -408,7 +406,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
    * @return The number of appends.
    */
   public int numberOfAppends() {
-<span class="fc" id="L411">    return sequence.size();</span>
+<span class="fc" id="L409">    return sequence.size();</span>
   }
 
   /**
@@ -423,59 +421,59 @@ public class StringHolderSequence extends StringHolder implements Appendable {
    */
   @Override
   public Object asContent() {
-<span class="fc bfc" id="L426" title="All 2 branches covered.">    if (isString()) {</span>
-<span class="fc" id="L427">      return toString();</span>
+<span class="fc bfc" id="L424" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L425">      return toString();</span>
     }
-<span class="fc bfc" id="L429" title="All 2 branches covered.">    if (sequence.isEmpty()) {</span>
-<span class="fc" id="L430">      return &quot;&quot;;</span>
-<span class="fc bfc" id="L431" title="All 2 branches covered.">    } else if (sequence.size() == 1) {</span>
-<span class="fc" id="L432">      Object obj = sequence.get(0);</span>
-<span class="fc bfc" id="L433" title="All 2 branches covered.">      if (obj instanceof String) {</span>
-<span class="fc" id="L434">        return obj;</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">    if (sequence.isEmpty()) {</span>
+<span class="fc" id="L428">      return &quot;&quot;;</span>
+<span class="fc bfc" id="L429" title="All 2 branches covered.">    } else if (sequence.size() == 1) {</span>
+<span class="fc" id="L430">      Object obj = sequence.get(0);</span>
+<span class="fc bfc" id="L431" title="All 2 branches covered.">      if (obj instanceof String) {</span>
+<span class="fc" id="L432">        return obj;</span>
       }
-<span class="fc" id="L436">      StringHolder sc = (StringHolder) obj;</span>
-<span class="fc" id="L437">      return sc.asContent();</span>
+<span class="fc" id="L434">      StringHolder sc = (StringHolder) obj;</span>
+<span class="fc" id="L435">      return sc.asContent();</span>
     } else {
-<span class="fc" id="L439">      return this;</span>
+<span class="fc" id="L437">      return this;</span>
     }
   }
 
   @Override
   @SuppressWarnings(&quot;PMD.CognitiveComplexity&quot;)
   public char charAt(int index) {
-<span class="fc" id="L446">    int offset = 0;</span>
+<span class="fc" id="L444">    int offset = 0;</span>
 
-<span class="fc bfc" id="L448" title="All 2 branches covered.">    if (index &lt; 0) {</span>
-<span class="fc" id="L449">      throw new IndexOutOfBoundsException();</span>
+<span class="fc bfc" id="L446" title="All 2 branches covered.">    if (index &lt; 0) {</span>
+<span class="fc" id="L447">      throw new IndexOutOfBoundsException();</span>
     }
 
-<span class="fc bfc" id="L452" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L450" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
       final int len;
 
-<span class="fc bfc" id="L455" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L456">        StringHolder sh = (StringHolder) obj;</span>
-<span class="fc bfc" id="L457" title="All 2 branches covered.">        if (sh.isEmpty()) {</span>
-<span class="fc" id="L458">          len = 0;</span>
+<span class="fc bfc" id="L453" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L454">        StringHolder sh = (StringHolder) obj;</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">        if (sh.isEmpty()) {</span>
+<span class="fc" id="L456">          len = 0;</span>
         } else {
-<span class="fc bfc" id="L460" title="All 2 branches covered.">          if (index == offset) {</span>
-<span class="fc" id="L461">            return sh.charAt(index - offset);</span>
+<span class="fc bfc" id="L458" title="All 2 branches covered.">          if (index == offset) {</span>
+<span class="fc" id="L459">            return sh.charAt(index - offset);</span>
           }
-<span class="fc" id="L463">          len = sh.length();</span>
-<span class="fc bfc" id="L464" title="All 2 branches covered.">          if (index &lt; offset + len) {</span>
-<span class="fc" id="L465">            return sh.charAt(index - offset);</span>
+<span class="fc" id="L461">          len = sh.length();</span>
+<span class="fc bfc" id="L462" title="All 2 branches covered.">          if (index &lt; offset + len) {</span>
+<span class="fc" id="L463">            return sh.charAt(index - offset);</span>
           }
         }
-<span class="fc" id="L468">      } else {</span>
-<span class="fc" id="L469">        String s = (String) obj;</span>
-<span class="fc" id="L470">        len = s.length();</span>
-<span class="fc bfc" id="L471" title="All 2 branches covered.">        if (index &lt; offset + len) {</span>
-<span class="fc" id="L472">          return s.charAt(index - offset);</span>
+<span class="fc" id="L466">      } else {</span>
+<span class="fc" id="L467">        String s = (String) obj;</span>
+<span class="fc" id="L468">        len = s.length();</span>
+<span class="fc bfc" id="L469" title="All 2 branches covered.">        if (index &lt; offset + len) {</span>
+<span class="fc" id="L470">          return s.charAt(index - offset);</span>
         }
       }
-<span class="fc" id="L475">      offset += len;</span>
-<span class="fc" id="L476">    }</span>
+<span class="fc" id="L473">      offset += len;</span>
+<span class="fc" id="L474">    }</span>
 
-<span class="fc" id="L478">    throw new IndexOutOfBoundsException();</span>
+<span class="fc" id="L476">    throw new IndexOutOfBoundsException();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

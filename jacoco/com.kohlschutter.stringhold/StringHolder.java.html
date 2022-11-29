@@ -810,19 +810,23 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
     }
 <span class="fc" id="L811">    synchronized (this) {</span>
       try {
-<span class="fc" id="L813">        theString = s = Objects.requireNonNull(getString());</span>
-<span class="fc" id="L814">        resizeTo(s.length(), 0, true);</span>
-<span class="fc" id="L815">      } catch (RuntimeException e) {</span>
-<span class="fc" id="L816">        s = theString;</span>
-<span class="fc bfc" id="L817" title="All 2 branches covered.">        if (s != null) {</span>
-<span class="fc" id="L818">          resizeTo(s.length(), 0, true);</span>
+<span class="fc bfc" id="L813" title="All 2 branches covered.">        if (isKnownEmpty()) {</span>
+<span class="fc" id="L814">          theString = s = &quot;&quot;;</span>
+        } else {
+<span class="fc" id="L816">          theString = s = Objects.requireNonNull(getString());</span>
         }
-<span class="fc" id="L820">        setError();</span>
-<span class="fc" id="L821">        throw e;</span>
-<span class="fc" id="L822">      }</span>
+<span class="fc" id="L818">        resizeTo(s.length(), 0, true);</span>
+<span class="fc" id="L819">      } catch (RuntimeException e) {</span>
+<span class="fc" id="L820">        s = theString;</span>
+<span class="fc bfc" id="L821" title="All 2 branches covered.">        if (s != null) {</span>
+<span class="fc" id="L822">          resizeTo(s.length(), 0, true);</span>
+        }
+<span class="fc" id="L824">        setError();</span>
+<span class="fc" id="L825">        throw e;</span>
+<span class="fc" id="L826">      }</span>
 
-<span class="fc" id="L824">      stringSanityCheck(s);</span>
-<span class="fc" id="L825">      return s;</span>
+<span class="fc" id="L828">      stringSanityCheck(s);</span>
+<span class="fc" id="L829">      return s;</span>
     }
   }
 
@@ -833,7 +837,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param s The string.
    */
   protected void stringSanityCheck(String s) {
-<span class="fc" id="L836">  }</span>
+<span class="fc" id="L840">  }</span>
 
   /**
    * Retrieves the string.
@@ -846,8 +850,8 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * Un-caches the already-determined String. This can be used to implement mutable data structures.
    */
   protected void uncache() {
-<span class="fc" id="L849">    theString = null;</span>
-<span class="fc" id="L850">  }</span>
+<span class="fc" id="L853">    theString = null;</span>
+<span class="fc" id="L854">  }</span>
 
   /**
    * Provides the contents of this {@link StringHolder} as a {@link Reader}.
@@ -856,11 +860,11 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @throws IOException on error.
    */
   public final Reader toReader() throws IOException {
-<span class="fc" id="L859">    String s = theString;</span>
-<span class="fc bfc" id="L860" title="All 2 branches covered.">    if (s != null) {</span>
-<span class="fc" id="L861">      return new StringReader(s);</span>
+<span class="fc" id="L863">    String s = theString;</span>
+<span class="fc bfc" id="L864" title="All 2 branches covered.">    if (s != null) {</span>
+<span class="fc" id="L865">      return new StringReader(s);</span>
     } else {
-<span class="fc" id="L863">      return newReader();</span>
+<span class="fc" id="L867">      return newReader();</span>
     }
   }
 
@@ -872,7 +876,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return {@code true} if trouble was detected.
    */
   public final boolean checkError() {
-<span class="fc" id="L875">    return trouble;</span>
+<span class="fc" id="L879">    return trouble;</span>
   }
 
   /**
@@ -882,12 +886,12 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @see #clearError()
    */
   protected final void setError() {
-<span class="fc" id="L885">    trouble = true;</span>
-<span class="fc" id="L886">    StringHolderScope sc = scope;</span>
-<span class="fc bfc" id="L887" title="All 2 branches covered.">    if (sc != null) {</span>
-<span class="fc" id="L888">      sc.setError(this);</span>
+<span class="fc" id="L889">    trouble = true;</span>
+<span class="fc" id="L890">    StringHolderScope sc = scope;</span>
+<span class="fc bfc" id="L891" title="All 2 branches covered.">    if (sc != null) {</span>
+<span class="fc" id="L892">      sc.setError(this);</span>
     }
-<span class="fc" id="L890">  }</span>
+<span class="fc" id="L894">  }</span>
 
   /**
    * Clears the trouble state of this instance.
@@ -896,12 +900,12 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @see #setError()
    */
   protected final void clearError() {
-<span class="fc" id="L899">    trouble = false;</span>
-<span class="fc" id="L900">    StringHolderScope sc = scope;</span>
-<span class="fc bfc" id="L901" title="All 2 branches covered.">    if (sc != null) {</span>
-<span class="fc" id="L902">      sc.clearError(this);</span>
+<span class="fc" id="L903">    trouble = false;</span>
+<span class="fc" id="L904">    StringHolderScope sc = scope;</span>
+<span class="fc bfc" id="L905" title="All 2 branches covered.">    if (sc != null) {</span>
+<span class="fc" id="L906">      sc.clearError(this);</span>
     }
-<span class="fc" id="L904">  }</span>
+<span class="fc" id="L908">  }</span>
 
   /**
    * Constructs a new {@link Reader} providing the contents of this {@link StringHolder}.
@@ -910,7 +914,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @throws IOException on error.
    */
   protected Reader newReader() throws IOException {
-<span class="fc" id="L913">    return LazyInitReader.withSupplier(() -&gt; new StringReader(StringHolder.this.toString()));</span>
+<span class="fc" id="L917">    return LazyInitReader.withSupplier(() -&gt; new StringReader(StringHolder.this.toString()));</span>
   }
 
   /**
@@ -920,7 +924,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return The scope, or {@code null}.
    */
   public final StringHolderScope getScope() {
-<span class="fc" id="L923">    return scope;</span>
+<span class="fc" id="L927">    return scope;</span>
   }
 
   /**
@@ -932,42 +936,42 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return The old scope, or {@code null} if none was set before.
    */
   public final StringHolderScope updateScope(StringHolderScope newScope) {
-<span class="fc bfc" id="L935" title="All 2 branches covered.">    if (newScope == StringHolderScope.NONE) { // NOPMD</span>
-<span class="fc" id="L936">      newScope = null;</span>
+<span class="fc bfc" id="L939" title="All 2 branches covered.">    if (newScope == StringHolderScope.NONE) { // NOPMD</span>
+<span class="fc" id="L940">      newScope = null;</span>
     }
-<span class="fc" id="L938">    StringHolderScope oldScope = this.scope;</span>
-<span class="fc bfc" id="L939" title="All 2 branches covered.">    if (oldScope != null) {</span>
+<span class="fc" id="L942">    StringHolderScope oldScope = this.scope;</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">    if (oldScope != null) {</span>
       try {
-<span class="fc" id="L941">        oldScope.remove(this);</span>
-<span class="fc" id="L942">      } catch (RuntimeException | Error e) {</span>
-<span class="fc" id="L943">        setError();</span>
-<span class="fc" id="L944">        throw e;</span>
-<span class="fc" id="L945">      }</span>
+<span class="fc" id="L945">        oldScope.remove(this);</span>
+<span class="fc" id="L946">      } catch (RuntimeException | Error e) {</span>
+<span class="fc" id="L947">        setError();</span>
+<span class="fc" id="L948">        throw e;</span>
+<span class="fc" id="L949">      }</span>
     }
 
-<span class="fc bfc" id="L948" title="All 2 branches covered.">    if (newScope != null) {</span>
+<span class="fc bfc" id="L952" title="All 2 branches covered.">    if (newScope != null) {</span>
       try {
-<span class="fc" id="L950">        newScope.add(this);</span>
-<span class="fc" id="L951">      } catch (RuntimeException | Error e) {</span>
-<span class="fc" id="L952">        setError();</span>
-<span class="fc" id="L953">        throw e;</span>
-<span class="fc" id="L954">      }</span>
+<span class="fc" id="L954">        newScope.add(this);</span>
+<span class="fc" id="L955">      } catch (RuntimeException | Error e) {</span>
+<span class="fc" id="L956">        setError();</span>
+<span class="fc" id="L957">        throw e;</span>
+<span class="fc" id="L958">      }</span>
     }
-<span class="fc" id="L956">    this.scope = newScope;</span>
-<span class="fc" id="L957">    return oldScope;</span>
+<span class="fc" id="L960">    this.scope = newScope;</span>
+<span class="fc" id="L961">    return oldScope;</span>
   }
 
   @Override
   public char charAt(int index) {
-<span class="fc" id="L962">    return toString().charAt(index);</span>
+<span class="fc" id="L966">    return toString().charAt(index);</span>
   }
 
   @Override
   public CharSequence subSequence(int start, int end) {
-<span class="fc bfc" id="L967" title="All 4 branches covered.">    if (start == 0 &amp;&amp; end == length()) {</span>
-<span class="fc" id="L968">      return this;</span>
+<span class="fc bfc" id="L971" title="All 4 branches covered.">    if (start == 0 &amp;&amp; end == length()) {</span>
+<span class="fc" id="L972">      return this;</span>
     }
-<span class="fc" id="L970">    return toString().subSequence(start, end);</span>
+<span class="fc" id="L974">    return toString().subSequence(start, end);</span>
   }
 
   /**
@@ -982,20 +986,20 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @see #withContent(Object)
    */
   public Object asContent() {
-<span class="fc bfc" id="L985" title="All 2 branches covered.">    if (isString()) {</span>
-<span class="fc" id="L986">      return toString();</span>
+<span class="fc bfc" id="L989" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L990">      return toString();</span>
     }
-<span class="fc" id="L988">    return this;</span>
+<span class="fc" id="L992">    return this;</span>
   }
 
   @Override
   public int compareTo(Object o) {
-<span class="fc bfc" id="L993" title="All 2 branches covered.">    if (o instanceof StringHolder) {</span>
-<span class="fc" id="L994">      return compareTo((StringHolder) o);</span>
-<span class="fc bfc" id="L995" title="All 2 branches covered.">    } else if (o instanceof CharSequence) {</span>
-<span class="fc" id="L996">      return compareTo((CharSequence) o);</span>
+<span class="fc bfc" id="L997" title="All 2 branches covered.">    if (o instanceof StringHolder) {</span>
+<span class="fc" id="L998">      return compareTo((StringHolder) o);</span>
+<span class="fc bfc" id="L999" title="All 2 branches covered.">    } else if (o instanceof CharSequence) {</span>
+<span class="fc" id="L1000">      return compareTo((CharSequence) o);</span>
     } else {
-<span class="fc" id="L998">      throw new ClassCastException(&quot;Cannot compare &quot; + o.getClass());</span>
+<span class="fc" id="L1002">      throw new ClassCastException(&quot;Cannot compare &quot; + o.getClass());</span>
     }
   }
 
@@ -1006,19 +1010,19 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return The comparison result, as defined by {@link #compareTo(Object)}.
    */
   public int compareTo(CharSequence o) {
-<span class="fc bfc" id="L1009" title="All 2 branches covered.">    if (o instanceof StringHolder) {</span>
-<span class="fc" id="L1010">      return compareTo((StringHolder) o);</span>
+<span class="fc bfc" id="L1013" title="All 2 branches covered.">    if (o instanceof StringHolder) {</span>
+<span class="fc" id="L1014">      return compareTo((StringHolder) o);</span>
     }
 
-<span class="fc bfc" id="L1013" title="All 2 branches covered.">    if (isKnownEmpty()) {</span>
-<span class="fc bfc" id="L1014" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(o)) {</span>
-<span class="fc" id="L1015">        return 0;</span>
+<span class="fc bfc" id="L1017" title="All 2 branches covered.">    if (isKnownEmpty()) {</span>
+<span class="fc bfc" id="L1018" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(o)) {</span>
+<span class="fc" id="L1019">        return 0;</span>
       } else {
-<span class="fc" id="L1017">        return -1;</span>
+<span class="fc" id="L1021">        return -1;</span>
       }
     }
 
-<span class="fc" id="L1021">    return compareToDefault(o);</span>
+<span class="fc" id="L1025">    return compareToDefault(o);</span>
   }
 
   /**
@@ -1028,21 +1032,21 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return The comparison result, as defined by {@link #compareTo(Object)}.
    */
   public int compareTo(StringHolder o) {
-<span class="fc bfc" id="L1031" title="All 2 branches covered.">    if (o.isKnownEmpty()) {</span>
-<span class="fc bfc" id="L1032" title="All 2 branches covered.">      if (isKnownEmpty()) {</span>
-<span class="fc" id="L1033">        return 0;</span>
+<span class="fc bfc" id="L1035" title="All 2 branches covered.">    if (o.isKnownEmpty()) {</span>
+<span class="fc bfc" id="L1036" title="All 2 branches covered.">      if (isKnownEmpty()) {</span>
+<span class="fc" id="L1037">        return 0;</span>
       }
-<span class="fc bfc" id="L1035" title="All 2 branches covered.">    } else if (o.isString()) {</span>
-<span class="fc bfc" id="L1036" title="All 2 branches covered.">      if (isString()) {</span>
-<span class="fc" id="L1037">        return toString().compareTo(o.toString());</span>
+<span class="fc bfc" id="L1039" title="All 2 branches covered.">    } else if (o.isString()) {</span>
+<span class="fc bfc" id="L1040" title="All 2 branches covered.">      if (isString()) {</span>
+<span class="fc" id="L1041">        return toString().compareTo(o.toString());</span>
       } else {
-<span class="fc" id="L1039">        return compareTo(o.toString());</span>
+<span class="fc" id="L1043">        return compareTo(o.toString());</span>
       }
-<span class="fc bfc" id="L1041" title="All 2 branches covered.">    } else if (isString()) {</span>
-<span class="fc" id="L1042">      return ComparisonUtil.reverseComparisonResult(o.compareTo(toString()));</span>
+<span class="fc bfc" id="L1045" title="All 2 branches covered.">    } else if (isString()) {</span>
+<span class="fc" id="L1046">      return ComparisonUtil.reverseComparisonResult(o.compareTo(toString()));</span>
     }
 
-<span class="fc" id="L1045">    return compareToDefault(o);</span>
+<span class="fc" id="L1049">    return compareToDefault(o);</span>
   }
 
   /**
@@ -1053,57 +1057,70 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param o The other object.
    * @return The comparison result, as defined by {@link #compareTo(Object)}.
    */
+  @SuppressWarnings({&quot;PMD.CognitiveComplexity&quot;})
   protected final int compareToDefault(CharSequence o) {
-<span class="fc" id="L1057">    int k = 0;</span>
+<span class="fc" id="L1062">    int k = 0;</span>
 
-<span class="fc bfc" id="L1059" title="All 4 branches covered.">    if (getMinimumLength() &gt; 0 &amp;&amp; CharSequenceReleaseShim.isEmpty(o)) {</span>
+<span class="fc bfc" id="L1064" title="All 4 branches covered.">    if (getMinimumLength() &gt; 0 &amp;&amp; CharSequenceReleaseShim.isEmpty(o)) {</span>
       // NOTE: we trust the StringHolder claim of minimum length
-<span class="fc" id="L1061">      return 1;</span>
+<span class="fc" id="L1066">      return 1;</span>
     }
-<span class="fc" id="L1063">    int len2 = o.length();</span>
+<span class="fc" id="L1068">    int len2 = o.length();</span>
 
     int lim;
     char c1;
     try {
-<span class="fc" id="L1068">      c1 = charAt(k);</span>
-<span class="fc" id="L1069">    } catch (IndexOutOfBoundsException e) {</span>
-<span class="fc bfc" id="L1070" title="All 2 branches covered.">      if (len2 == 0) {</span>
-<span class="fc" id="L1071">        return 0;</span>
+<span class="fc" id="L1073">      c1 = charAt(k);</span>
+<span class="fc" id="L1074">    } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc bfc" id="L1075" title="All 2 branches covered.">      if (len2 == 0) {</span>
+<span class="fc" id="L1076">        return 0;</span>
       } else {
-<span class="fc" id="L1073">        return -1;</span>
+<span class="fc" id="L1078">        return -1;</span>
       }
-<span class="fc" id="L1075">    }</span>
-<span class="fc bfc" id="L1076" title="All 2 branches covered.">    if (isString()) {</span>
-<span class="fc bfc" id="L1077" title="All 2 branches covered.">      if (o instanceof String) {</span>
-<span class="fc" id="L1078">        return toString().compareTo((String) o);</span>
+<span class="fc" id="L1080">    }</span>
+
+    int len1;
+<span class="fc bfc" id="L1083" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc bfc" id="L1084" title="All 2 branches covered.">      if (o instanceof String) {</span>
+<span class="fc" id="L1085">        return toString().compareTo((String) o);</span>
       }
-<span class="fc" id="L1080">      lim = Math.min(length(), len2);</span>
+<span class="fc" id="L1087">      len1 = length();</span>
+<span class="fc" id="L1088">      lim = Math.min(len1, len2);</span>
     } else {
-<span class="fc" id="L1082">      lim = len2;</span>
+<span class="fc bfc" id="L1090" title="All 2 branches covered.">      if (isLengthKnown()) {</span>
+<span class="fc" id="L1091">        len1 = length();</span>
+<span class="fc" id="L1092">        lim = Math.min(len1, len2);</span>
+      } else {
+<span class="fc" id="L1094">        len1 = Integer.MAX_VALUE;</span>
+<span class="fc" id="L1095">        lim = len2;</span>
+      }
     }
 
-<span class="fc bfc" id="L1085" title="All 2 branches covered.">    while (k &lt; lim) {</span>
-<span class="fc" id="L1086">      char c2 = o.charAt(k);</span>
-<span class="fc bfc" id="L1087" title="All 2 branches covered.">      if (c1 != c2) {</span>
-<span class="fc" id="L1088">        return c1 - c2;</span>
+<span class="fc bfc" id="L1099" title="All 2 branches covered.">    while (k &lt; lim) {</span>
+<span class="fc" id="L1100">      char c2 = o.charAt(k);</span>
+<span class="fc bfc" id="L1101" title="All 2 branches covered.">      if (c1 != c2) {</span>
+<span class="fc" id="L1102">        return c1 - c2;</span>
       }
-<span class="fc" id="L1090">      k++;</span>
-<span class="fc bfc" id="L1091" title="All 2 branches covered.">      if (k &lt; lim) {</span>
+<span class="fc" id="L1104">      k++;</span>
+<span class="fc bfc" id="L1105" title="All 2 branches covered.">      if (k &lt; lim) {</span>
         try {
-<span class="fc" id="L1093">          c1 = charAt(k);</span>
-<span class="fc" id="L1094">        } catch (IndexOutOfBoundsException e) {</span>
-<span class="fc" id="L1095">          return -1;</span>
-<span class="fc" id="L1096">        }</span>
+<span class="fc" id="L1107">          c1 = charAt(k);</span>
+<span class="fc" id="L1108">        } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1109">          return -1;</span>
+<span class="fc" id="L1110">        }</span>
       }
-<span class="fc" id="L1098">    }</span>
-<span class="fc bfc" id="L1099" title="All 2 branches covered.">    if (getMinimumLength() &gt; k) {</span>
-<span class="fc" id="L1100">      return 1;</span>
+<span class="fc" id="L1112">    }</span>
+
+<span class="fc bfc" id="L1114" title="All 2 branches covered.">    if (getMinimumLength() &gt; k) {</span>
+<span class="fc" id="L1115">      return 1;</span>
+<span class="fc bfc" id="L1116" title="All 2 branches covered.">    } else if (len1 == k) {</span>
+<span class="fc" id="L1117">      return len1 - len2;</span>
     }
     try {
-<span class="fc" id="L1103">      charAt(k);</span>
-<span class="fc" id="L1104">      return 1;</span>
-<span class="fc" id="L1105">    } catch (IndexOutOfBoundsException e) {</span>
-<span class="fc" id="L1106">      return 0;</span>
+<span class="fc" id="L1120">      charAt(k);</span>
+<span class="fc" id="L1121">      return 1;</span>
+<span class="fc" id="L1122">    } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1123">      return 0;</span>
     }
   }
 
@@ -1115,58 +1132,150 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @param o The other object.
    * @return The comparison result, as defined by {@link #compareTo(Object)}.
    */
+  @SuppressWarnings({&quot;PMD.NPathComplexity&quot;, &quot;PMD.CognitiveComplexity&quot;})
   protected int compareToDefault(StringHolder o) {
-<span class="fc" id="L1119">    int k = 0;</span>
+<span class="fc" id="L1137">    int k = 0;</span>
 
     char c1;
     char c2;
     try {
-<span class="fc" id="L1124">      c1 = charAt(k);</span>
-<span class="fc" id="L1125">    } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1142">      c1 = charAt(k);</span>
+<span class="fc" id="L1143">    } catch (IndexOutOfBoundsException e) {</span>
       try {
-<span class="fc" id="L1127">        o.charAt(k);</span>
-<span class="fc" id="L1128">        return -1;</span>
-<span class="fc" id="L1129">      } catch (IndexOutOfBoundsException e2) {</span>
-<span class="fc" id="L1130">        return 0;</span>
+<span class="fc" id="L1145">        o.charAt(k);</span>
+<span class="fc" id="L1146">        return -1;</span>
+<span class="fc" id="L1147">      } catch (IndexOutOfBoundsException e2) {</span>
+<span class="fc" id="L1148">        return 0;</span>
       }
-<span class="fc" id="L1132">    }</span>
+<span class="fc" id="L1150">    }</span>
     try {
-<span class="fc" id="L1134">      c2 = o.charAt(k);</span>
-<span class="fc" id="L1135">    } catch (IndexOutOfBoundsException e) {</span>
-<span class="fc" id="L1136">      return 1;</span>
-<span class="fc" id="L1137">    }</span>
+<span class="fc" id="L1152">      c2 = o.charAt(k);</span>
+<span class="fc" id="L1153">    } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1154">      return 1;</span>
+<span class="fc" id="L1155">    }</span>
 
-<span class="fc bfc" id="L1139" title="All 2 branches covered.">    if (c1 != c2) {</span>
-<span class="fc" id="L1140">      return c1 - c2;</span>
+<span class="fc bfc" id="L1157" title="All 2 branches covered.">    if (c1 != c2) {</span>
+<span class="fc" id="L1158">      return c1 - c2;</span>
     }
 
-<span class="fc bfc" id="L1143" title="All 2 branches covered.">    if (isString()) {</span>
-<span class="fc" id="L1144">      return ComparisonUtil.reverseComparisonResult(o.compareTo(toString()));</span>
-<span class="fc bfc" id="L1145" title="All 2 branches covered.">    } else if (o.isString()) {</span>
-<span class="fc" id="L1146">      return compareTo(o.toString());</span>
+<span class="fc bfc" id="L1161" title="All 2 branches covered.">    if (isString()) {</span>
+<span class="fc" id="L1162">      return ComparisonUtil.reverseComparisonResult(o.compareTo(toString()));</span>
+<span class="fc bfc" id="L1163" title="All 2 branches covered.">    } else if (o.isString()) {</span>
+<span class="fc" id="L1164">      return compareTo(o.toString());</span>
     }
 
+<span class="fc" id="L1167">    boolean len1Known = isLengthKnown();</span>
+<span class="fc" id="L1168">    boolean len2Known = o.isLengthKnown();</span>
+
+<span class="fc bfc" id="L1170" title="All 4 branches covered.">    if (len1Known &amp;&amp; len2Known) {</span>
+<span class="fc" id="L1171">      return compareBothLengthsKnown(o, k, length(), o.length());</span>
+<span class="fc bfc" id="L1172" title="All 2 branches covered.">    } else if (len1Known) {</span>
+<span class="fc" id="L1173">      return compareOurLengthKnown(o, k, length());</span>
+<span class="fc bfc" id="L1174" title="All 2 branches covered.">    } else if (len2Known) {</span>
+<span class="fc" id="L1175">      return compareOtherLengthKnown(o, k, o.length());</span>
+    } else {
+<span class="fc" id="L1177">      return compareBothLengthsUnknown(o, k);</span>
+    }
+  }
+
+  private int compareBothLengthsKnown(StringHolder o, int k, int len1, int len2) {
+<span class="fc" id="L1182">    int lim = Math.min(len1, len2);</span>
+
+    char c1;
+    char c2;
+
+<span class="fc bfc" id="L1187" title="All 2 branches covered.">    while (k &lt; lim) {</span>
+<span class="fc" id="L1188">      c1 = charAt(k);</span>
+<span class="fc" id="L1189">      c2 = o.charAt(k);</span>
+<span class="fc bfc" id="L1190" title="All 2 branches covered.">      if (c1 != c2) {</span>
+<span class="fc" id="L1191">        return c1 - c2;</span>
+      }
+<span class="fc" id="L1193">      k++;</span>
+    }
+
+<span class="fc" id="L1196">    return len1 - len2;</span>
+  }
+
+  private int compareOurLengthKnown(StringHolder o, int k, int len1) {
+    char c1;
+    char c2;
+
+<span class="fc bfc" id="L1203" title="All 2 branches covered.">    while (k &lt; len1) {</span>
+<span class="fc" id="L1204">      c1 = charAt(k);</span>
+      try {
+<span class="fc" id="L1206">        c2 = o.charAt(k);</span>
+<span class="fc" id="L1207">      } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1208">        return 1;</span>
+<span class="fc" id="L1209">      }</span>
+<span class="fc bfc" id="L1210" title="All 2 branches covered.">      if (c1 != c2) {</span>
+<span class="fc" id="L1211">        return c1 - c2;</span>
+      }
+<span class="fc" id="L1213">      k++;</span>
+    }
+
+    try {
+<span class="fc bfc" id="L1217" title="All 2 branches covered.">      if (o.getMinimumLength() &gt; k) {</span>
+<span class="fc" id="L1218">        return -1;</span>
+      }
+<span class="fc" id="L1220">      o.charAt(k);</span>
+<span class="fc" id="L1221">      return -1;</span>
+<span class="fc" id="L1222">    } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1223">      return 0;</span>
+    }
+  }
+
+  private int compareOtherLengthKnown(StringHolder o, int k, int len2) {
+    char c1;
+    char c2;
+
+<span class="fc bfc" id="L1231" title="All 2 branches covered.">    while (k &lt; len2) {</span>
+      try {
+<span class="fc" id="L1233">        c1 = charAt(k);</span>
+<span class="fc" id="L1234">      } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1235">        return -1;</span>
+<span class="fc" id="L1236">      }</span>
+<span class="fc" id="L1237">      c2 = o.charAt(k);</span>
+<span class="fc bfc" id="L1238" title="All 2 branches covered.">      if (c1 != c2) {</span>
+<span class="fc" id="L1239">        return c1 - c2;</span>
+      }
+<span class="fc" id="L1241">      k++;</span>
+    }
+
+    try {
+<span class="fc bfc" id="L1245" title="All 2 branches covered.">      if (getMinimumLength() &gt; k) {</span>
+<span class="fc" id="L1246">        return 1;</span>
+      }
+<span class="fc" id="L1248">      charAt(k);</span>
+<span class="fc" id="L1249">      return 1;</span>
+<span class="fc" id="L1250">    } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1251">      return 0;</span>
+    }
+  }
+
+  private int compareBothLengthsUnknown(StringHolder o, int k) {
+    char c1;
+    char c2;
     while (true) {
-<span class="fc" id="L1150">      k++;</span>
+<span class="fc" id="L1259">      k++;</span>
 
       try {
-<span class="fc" id="L1153">        c1 = charAt(k);</span>
-<span class="fc" id="L1154">      } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1262">        c1 = charAt(k);</span>
+<span class="fc" id="L1263">      } catch (IndexOutOfBoundsException e) {</span>
         try {
-<span class="fc" id="L1156">          o.charAt(k);</span>
-<span class="fc" id="L1157">          return -1;</span>
-<span class="fc" id="L1158">        } catch (IndexOutOfBoundsException e2) {</span>
-<span class="fc" id="L1159">          return 0;</span>
+<span class="fc" id="L1265">          o.charAt(k);</span>
+<span class="fc" id="L1266">          return -1;</span>
+<span class="fc" id="L1267">        } catch (IndexOutOfBoundsException e2) {</span>
+<span class="fc" id="L1268">          return 0;</span>
         }
-<span class="fc" id="L1161">      }</span>
+<span class="fc" id="L1270">      }</span>
       try {
-<span class="fc" id="L1163">        c2 = o.charAt(k);</span>
-<span class="fc" id="L1164">      } catch (IndexOutOfBoundsException e) {</span>
-<span class="fc" id="L1165">        return 1;</span>
-<span class="fc" id="L1166">      }</span>
+<span class="fc" id="L1272">        c2 = o.charAt(k);</span>
+<span class="fc" id="L1273">      } catch (IndexOutOfBoundsException e) {</span>
+<span class="fc" id="L1274">        return 1;</span>
+<span class="fc" id="L1275">      }</span>
 
-<span class="fc bfc" id="L1168" title="All 2 branches covered.">      if (c1 != c2) {</span>
-<span class="fc" id="L1169">        return c1 - c2;</span>
+<span class="fc bfc" id="L1277" title="All 2 branches covered.">      if (c1 != c2) {</span>
+<span class="fc" id="L1278">        return c1 - c2;</span>
       }
     }
   }

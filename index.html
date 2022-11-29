@@ -158,6 +158,11 @@ h.toString(); // doesn't Supplier.get() a second time, string is cached
 h.isEmpty(); // false because we claim the string is at least 5 characters long
 h.isString(); // not true yet
 </code></pre></div>
+<p>A StringHolder that reads contents from a function that supplies StringReader instances:</p>
+
+<div class="source"><pre class="prettyprint"><code>StringHolder h = StringHolder.withReaderSupplier(() -&gt; new StringReader(&quot;hello&quot;), (
+    e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+</code></pre></div>
 <p>A sequence of String(Holder)s, some are nested:</p>
 
 <div class="source"><pre class="prettyprint"><code>StringHolderSequence seq = new StringHolderSequence();
@@ -172,10 +177,15 @@ try (Writer out = new FileWriter(new File(&quot;/tmp/out&quot;))) {
 
 seq.toString(); // &quot;Hello World&quot;
 </code></pre></div>
-<p>A StringHolder that reads contents from a function that supplies StringReader instances:</p>
+<p>A sequence of String(Holder)s that can be assembled/appended out of order via scatter-gatter (speed up overall assembly time through parallelization):</p>
 
-<div class="source"><pre class="prettyprint"><code>StringHolder h = StringHolder.withReaderSupplier(() -&gt; new StringReader(&quot;hello&quot;), (
-    e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+<div class="source"><pre class="prettyprint"><code>AsyncStringHolderSequence seq = new AsyncStringHolderSequence();
+seq.append(veryComplexStringHolder);
+seq.append(anotherStringHolder);
+
+// seq.toString() / seq.appendTo() may internally serialize the second StringHolder first.
+// The final order is still guaranteed to be correct.
+// This may save time at the cost of constructing temporary StringBuilders.
 </code></pre></div></section><section>
 <h2><a name="The_full_API"></a>The full API</h2>
 <p>(javadoc link here)</p>
@@ -187,7 +197,6 @@ seq.toString(); // &quot;Hello World&quot;
 <ul>
 
 <li>Add optimizations for the <code>IntStream</code> API</li>
-<li>Add support for Completable suppliers, etc.</li>
 </ul></section><section>
 <h2><a name="Frequently_Asked_Questions"></a>Frequently Asked Questions</h2>
 <p>Q: Is this an accidental implementation of half of Lisp?</p>

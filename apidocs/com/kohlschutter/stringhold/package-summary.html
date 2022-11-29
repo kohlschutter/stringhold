@@ -82,62 +82,68 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="CachedIOSupplier.html" title="class in com.kohlschutter.stringhold">CachedIOSupplier</a>&lt;T&gt;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AsyncStringHolderSequence.html" title="class in com.kohlschutter.stringhold">AsyncStringHolderSequence</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">An appendable sequence of strings; <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s are automatically converted upon append,
+ with appends being run asynchronously, using temporary intermediate storage, if
+ possible/necessary.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="CachedIOSupplier.html" title="class in com.kohlschutter.stringhold">CachedIOSupplier</a>&lt;T&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A thread-safe <a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold"><code>IOSupplier</code></a> that has a cached version of the first supply.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="HasExpectedLength.html" title="interface in com.kohlschutter.stringhold">HasExpectedLength</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="HasExpectedLength.html" title="interface in com.kohlschutter.stringhold">HasExpectedLength</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Describes something that can return its expected length.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="HasKnownLength.html" title="interface in com.kohlschutter.stringhold">HasKnownLength</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="HasKnownLength.html" title="interface in com.kohlschutter.stringhold">HasKnownLength</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Describes something that can return its exact length without additional computation (i.e.,
  without resorting to something like <code>toString().length()</code>).</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="HasLength.html" title="interface in com.kohlschutter.stringhold">HasLength</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">Describes something that can return its exact length.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="HasMinimumLength.html" title="interface in com.kohlschutter.stringhold">HasMinimumLength</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="HasMinimumLength.html" title="interface in com.kohlschutter.stringhold">HasMinimumLength</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Describes something that can return its minimum length.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IOExceptionHandler.html" title="interface in com.kohlschutter.stringhold">IOExceptionHandler</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">An exception handler to handle <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a>s in String-building methods.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab3"><a href="IOExceptionHandler.ExceptionResponse.html" title="enum in com.kohlschutter.stringhold">IOExceptionHandler.ExceptionResponse</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab3">
+<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="IOExceptionHandler.ExceptionResponse.html" title="enum in com.kohlschutter.stringhold">IOExceptionHandler.ExceptionResponse</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab3">
 <div class="block">What to do when an exception is thrown.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;T&gt;</div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="IOSupplier.html" title="interface in com.kohlschutter.stringhold">IOSupplier</a>&lt;T&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">A <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link"><code>Supplier</code></a> that may throw an <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link"><code>IOException</code></a> upon <a href="IOSupplier.html#get()"><code>IOSupplier.get()</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LazyInitReader.html" title="class in com.kohlschutter.stringhold">LazyInitReader</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LazyInitReader.html" title="class in com.kohlschutter.stringhold">LazyInitReader</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A lazy-initialized <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Reader.html" title="class or interface in java.io" class="external-link"><code>Reader</code></a> that is supplied with some Reader upon the first method call.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LimitedStringHolderScope.html" title="class in com.kohlschutter.stringhold">LimitedStringHolderScope</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LimitedStringHolderScope.html" title="class in com.kohlschutter.stringhold">LimitedStringHolderScope</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold"><code>StringHolderScope</code></a> that keeps track of the aggregate minimum length of all associated
  <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s and, optionally, invokes a given callback whenever the limit is exceeded.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StringHolder.html" title="class in com.kohlschutter.stringhold">StringHolder</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> holds something that can <em>eventually</em> turn into a string.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold">StringHolderScope</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="StringHolderScope.html" title="interface in com.kohlschutter.stringhold">StringHolderScope</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">A scope that can be associated with <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a> instances.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StringHolderSequence.html" title="class in com.kohlschutter.stringhold">StringHolderSequence</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StringHolderSequence.html" title="class in com.kohlschutter.stringhold">StringHolderSequence</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">An <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Appendable.html" title="class or interface in java.lang" class="external-link"><code>Appendable</code></a> sequence of strings or <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StringOnlySequence.html" title="class in com.kohlschutter.stringhold">StringOnlySequence</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StringOnlySequence.html" title="class in com.kohlschutter.stringhold">StringOnlySequence</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">An appendable sequence of strings; <a href="StringHolder.html" title="class in com.kohlschutter.stringhold"><code>StringHolder</code></a>s are automatically converted upon append.</div>
 </div>
 </div>

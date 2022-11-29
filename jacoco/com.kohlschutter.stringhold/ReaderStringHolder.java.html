@@ -174,7 +174,7 @@ final class ReaderStringHolder extends StringHolder {
   }
 
   @Override
-  protected synchronized String getString() {
+  protected String getString() {
 <span class="fc" id="L178">    StringBuilder sb = new StringBuilder();</span>
 <span class="fc" id="L179">    try (Reader r = newReader()) {</span>
 <span class="fc" id="L180">      readFully(r, sb);</span>

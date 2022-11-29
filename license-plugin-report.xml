@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1669682617382">
+<licensePluginReport goal="CHECK" timestamp="1669737680749">
     <module artifactId="stringhold" groupId="com.kohlschutter.stringhold" version="1.0.0-SNAPSHOT"/>
     <files>
+        <file path="src/main/java/com/kohlschutter/stringhold/AsyncStringHolderSequence.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CachedIOSupplier.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/FixedLengthSuppliedStringHolder.java" result="PRESENT"/>
@@ -23,6 +24,7 @@
         <file path="src/main/java/com/kohlschutter/stringhold/SuppliedStringHolder.java" result="PRESENT"/>
         <file path="src/main/java14/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
         <file path="src/main/java9/com/kohlschutter/stringhold/LazyInitReaderReleaseShim.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/AsyncStringHolderSequenceTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/CachedIOSupplierTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/CompareTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/HasLengthTest.java" result="PRESENT"/>

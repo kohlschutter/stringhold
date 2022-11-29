@@ -39,7 +39,7 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * @author Christian Kohlschütter</em>
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="StringHolderSequence" href="../../../com/kohlschutter/stringhold/StringHolderSequence.html#StringHolderSequence">StringHolderSequence</a> <strong class="jxr_keyword">extends</strong> StringHolder <strong class="jxr_keyword">implements</strong> Appendable {
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> List&lt;Object&gt; sequence;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">final</strong> List&lt;Object&gt; sequence;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">   * Constructs a new, empty {@link StringHolderSequence}.</em>
@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>   }
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> 
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>   @Override
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> appendToAndReturnLengthDefaultImpl(Appendable out) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> appendToAndReturnLengthDefaultImpl(Appendable out) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>     <strong class="jxr_keyword">int</strong> len = 0;
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>     <strong class="jxr_keyword">for</strong> (Object obj : sequence) {
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>       <strong class="jxr_keyword">if</strong> (obj instanceof StringHolder) {
@@ -225,7 +225,7 @@
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>   }
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>   @Override
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> appendToAndReturnLengthImpl(StringBuilder out) {
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> appendToAndReturnLengthImpl(StringBuilder out) {
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>     out.ensureCapacity(out.length() + getMinimumLength());
 <a class="jxr_linenumber" name="L222" href="#L222">222</a> 
 <a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">int</strong> len = 0;
@@ -247,7 +247,7 @@
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>   }
 <a class="jxr_linenumber" name="L240" href="#L240">240</a> 
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>   @Override
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> appendToAndReturnLengthImpl(StringBuffer out) {
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> appendToAndReturnLengthImpl(StringBuffer out) {
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>     out.ensureCapacity(out.length() + getMinimumLength());
 <a class="jxr_linenumber" name="L244" href="#L244">244</a> 
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">int</strong> len = 0;
@@ -300,7 +300,7 @@
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>   }
 <a class="jxr_linenumber" name="L293" href="#L293">293</a> 
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>   @Override
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">synchronized</strong> String getString() {
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>   <strong class="jxr_keyword">protected</strong> String getString() {
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder(Math.max(16, getExpectedLength()));
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>     <strong class="jxr_keyword">int</strong> len = appendToAndReturnLength(sb);
 <a class="jxr_linenumber" name="L298" href="#L298">298</a> 
@@ -357,135 +357,133 @@
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>     }
 <a class="jxr_linenumber" name="L350" href="#L350">350</a> 
 <a class="jxr_linenumber" name="L351" href="#L351">351</a>     @Override
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> close() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>       <strong class="jxr_keyword">if</strong> (!closed) {
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>         closed = <strong class="jxr_keyword">true</strong>;
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>       }
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>     }
-<a class="jxr_linenumber" name="L357" href="#L357">357</a> 
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>     <strong class="jxr_keyword">int</strong> ensureObject() {
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>       <strong class="jxr_keyword">if</strong> (currentString != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>         <strong class="jxr_keyword">int</strong> len = currentString.length();
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>         <strong class="jxr_keyword">if</strong> (currentPos &gt;= len) {
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>           currentString = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>           <strong class="jxr_keyword">return</strong> ensureObject();
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>           <strong class="jxr_keyword">return</strong> len;
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>         }
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L368" href="#L368">368</a>         <strong class="jxr_keyword">while</strong> (flatObjectIterator.hasNext()) {
-<a class="jxr_linenumber" name="L369" href="#L369">369</a>           currentString = flatObjectIterator.next().toString();
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>           currentPos = 0;
-<a class="jxr_linenumber" name="L371" href="#L371">371</a>           <strong class="jxr_keyword">int</strong> len = currentString.length();
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>           <strong class="jxr_keyword">if</strong> (len &gt; 0) {
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>             <strong class="jxr_keyword">return</strong> len;
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>           }
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>         }
-<a class="jxr_linenumber" name="L376" href="#L376">376</a>         currentString = <strong class="jxr_keyword">null</strong>;
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>         <strong class="jxr_keyword">return</strong> 0;
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>       }
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>     }
-<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>     @Override
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read(<strong class="jxr_keyword">char</strong>[] cbuf, <strong class="jxr_keyword">int</strong> off, <strong class="jxr_keyword">int</strong> len) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>       <strong class="jxr_keyword">int</strong> currentLen = ensureObject();
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>       <strong class="jxr_keyword">if</strong> (currentLen == 0) {
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>         <strong class="jxr_keyword">return</strong> -1;
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>       }
-<a class="jxr_linenumber" name="L387" href="#L387">387</a> 
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>       len = Math.min(currentLen - currentPos, Math.min(cbuf.length - off, len));
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>       currentString.getChars(currentPos, currentPos + len, cbuf, off);
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>       currentPos += len;
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>       <strong class="jxr_keyword">return</strong> len;
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>     }
-<a class="jxr_linenumber" name="L393" href="#L393">393</a> 
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>     @Override
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>       <strong class="jxr_keyword">int</strong> currentLen = ensureObject();
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>       <strong class="jxr_keyword">if</strong> (currentLen == 0) {
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>         <strong class="jxr_keyword">return</strong> -1;
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>       }
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>       <strong class="jxr_keyword">return</strong> currentString.charAt(currentPos++);
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>     }
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>   }
-<a class="jxr_linenumber" name="L403" href="#L403">403</a> 
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">   * Returns the number of appends (calls to {@link #append(Object)}, etc.) made to this instance so</em>
-<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">   * far, minus the number of calls that were decided avoidable (e.g., zero-length appends).</em>
-<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">   * @return The number of appends.</em>
-<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> numberOfAppends() {
-<a class="jxr_linenumber" name="L411" href="#L411">411</a>     <strong class="jxr_keyword">return</strong> sequence.size();
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>   }
-<a class="jxr_linenumber" name="L413" href="#L413">413</a> 
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">   * Returns a simplified version of the contents of this sequence, if possible.</em>
-<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">   * &lt;ol&gt;</em>
-<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">   * &lt;li&gt;If the content is a string already, the string is returned.&lt;/li&gt;</em>
-<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">   * &lt;li&gt;If there's no element stored, an empty string is returned.&lt;/li&gt;</em>
-<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">   * &lt;li&gt;If there is only a single element stored, its content is returned as if</em>
-<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">   * {@link #asContent()} was called on that element.&lt;/li&gt;</em>
-<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">   * &lt;/ol&gt;</em>
-<a class="jxr_linenumber" name="L423" href="#L423">423</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L424" href="#L424">424</a>   @Override
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>   <strong class="jxr_keyword">public</strong> Object asContent() {
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>     <strong class="jxr_keyword">if</strong> (isString()) {
-<a class="jxr_linenumber" name="L427" href="#L427">427</a>       <strong class="jxr_keyword">return</strong> toString();
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>     }
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>     <strong class="jxr_keyword">if</strong> (sequence.isEmpty()) {
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (sequence.size() == 1) {
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>       Object obj = sequence.get(0);
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>       <strong class="jxr_keyword">if</strong> (obj instanceof String) {
-<a class="jxr_linenumber" name="L434" href="#L434">434</a>         <strong class="jxr_keyword">return</strong> obj;
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>       }
-<a class="jxr_linenumber" name="L436" href="#L436">436</a>       StringHolder sc = (StringHolder) obj;
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>       <strong class="jxr_keyword">return</strong> sc.asContent();
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>     }
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>   }
-<a class="jxr_linenumber" name="L442" href="#L442">442</a> 
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>   @Override
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>   @SuppressWarnings(<span class="jxr_string">"PMD.CognitiveComplexity"</span>)
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">char</strong> charAt(<strong class="jxr_keyword">int</strong> index) {
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>     <strong class="jxr_keyword">int</strong> offset = 0;
-<a class="jxr_linenumber" name="L447" href="#L447">447</a> 
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>     <strong class="jxr_keyword">if</strong> (index &lt; 0) {
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IndexOutOfBoundsException();
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>     }
-<a class="jxr_linenumber" name="L451" href="#L451">451</a> 
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>     <strong class="jxr_keyword">for</strong> (Object obj : sequence) {
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> len;
-<a class="jxr_linenumber" name="L454" href="#L454">454</a> 
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>       <strong class="jxr_keyword">if</strong> (obj instanceof StringHolder) {
-<a class="jxr_linenumber" name="L456" href="#L456">456</a>         StringHolder sh = (StringHolder) obj;
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>         <strong class="jxr_keyword">if</strong> (sh.isEmpty()) {
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>           len = 0;
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>           <strong class="jxr_keyword">if</strong> (index == offset) {
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>             <strong class="jxr_keyword">return</strong> sh.charAt(index - offset);
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>           }
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>           len = sh.length();
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>           <strong class="jxr_keyword">if</strong> (index &lt; offset + len) {
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>             <strong class="jxr_keyword">return</strong> sh.charAt(index - offset);
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>           }
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>         }
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>         String s = (String) obj;
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>         len = s.length();
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>         <strong class="jxr_keyword">if</strong> (index &lt; offset + len) {
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>           <strong class="jxr_keyword">return</strong> s.charAt(index - offset);
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>         }
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>       }
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>       offset += len;
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>     }
-<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IndexOutOfBoundsException();
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>   }
-<a class="jxr_linenumber" name="L480" href="#L480">480</a> }
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>       closed = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>     }
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> 
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>     <strong class="jxr_keyword">int</strong> ensureObject() {
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>       <strong class="jxr_keyword">if</strong> (currentString != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>         <strong class="jxr_keyword">int</strong> len = currentString.length();
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>         <strong class="jxr_keyword">if</strong> (currentPos &gt;= len) {
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>           currentString = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>           <strong class="jxr_keyword">return</strong> ensureObject();
+<a class="jxr_linenumber" name="L362" href="#L362">362</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>           <strong class="jxr_keyword">return</strong> len;
+<a class="jxr_linenumber" name="L364" href="#L364">364</a>         }
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>         <strong class="jxr_keyword">while</strong> (flatObjectIterator.hasNext()) {
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>           currentString = flatObjectIterator.next().toString();
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>           currentPos = 0;
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>           <strong class="jxr_keyword">int</strong> len = currentString.length();
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>           <strong class="jxr_keyword">if</strong> (len &gt; 0) {
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>             <strong class="jxr_keyword">return</strong> len;
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>           }
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>         }
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         currentString = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>         <strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>       }
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>     }
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> 
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     @Override
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read(<strong class="jxr_keyword">char</strong>[] cbuf, <strong class="jxr_keyword">int</strong> off, <strong class="jxr_keyword">int</strong> len) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>       <strong class="jxr_keyword">int</strong> currentLen = ensureObject();
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>       <strong class="jxr_keyword">if</strong> (currentLen == 0) {
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>       }
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> 
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>       len = Math.min(currentLen - currentPos, Math.min(cbuf.length - off, len));
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>       currentString.getChars(currentPos, currentPos + len, cbuf, off);
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>       currentPos += len;
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>       <strong class="jxr_keyword">return</strong> len;
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     }
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> 
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>     @Override
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>       <strong class="jxr_keyword">int</strong> currentLen = ensureObject();
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>       <strong class="jxr_keyword">if</strong> (currentLen == 0) {
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>         <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>       }
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>       <strong class="jxr_keyword">return</strong> currentString.charAt(currentPos++);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>     }
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>   }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">   * Returns the number of appends (calls to {@link #append(Object)}, etc.) made to this instance so</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">   * far, minus the number of calls that were decided avoidable (e.g., zero-length appends).</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">   * @return The number of appends.</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> numberOfAppends() {
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>     <strong class="jxr_keyword">return</strong> sequence.size();
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>   }
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> 
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">   * Returns a simplified version of the contents of this sequence, if possible.</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">   * &lt;ol&gt;</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">   * &lt;li&gt;If the content is a string already, the string is returned.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">   * &lt;li&gt;If there's no element stored, an empty string is returned.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> <em class="jxr_javadoccomment">   * &lt;li&gt;If there is only a single element stored, its content is returned as if</em>
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">   * {@link #asContent()} was called on that element.&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">   * &lt;/ol&gt;</em>
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>   @Override
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>   <strong class="jxr_keyword">public</strong> Object asContent() {
+<a class="jxr_linenumber" name="L424" href="#L424">424</a>     <strong class="jxr_keyword">if</strong> (isString()) {
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>       <strong class="jxr_keyword">return</strong> toString();
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>     }
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>     <strong class="jxr_keyword">if</strong> (sequence.isEmpty()) {
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (sequence.size() == 1) {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>       Object obj = sequence.get(0);
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>       <strong class="jxr_keyword">if</strong> (obj instanceof String) {
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         <strong class="jxr_keyword">return</strong> obj;
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>       }
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>       StringHolder sc = (StringHolder) obj;
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>       <strong class="jxr_keyword">return</strong> sc.asContent();
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>       <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>     }
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>   }
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>   @Override
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>   @SuppressWarnings(<span class="jxr_string">"PMD.CognitiveComplexity"</span>)
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">char</strong> charAt(<strong class="jxr_keyword">int</strong> index) {
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>     <strong class="jxr_keyword">int</strong> offset = 0;
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> 
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>     <strong class="jxr_keyword">if</strong> (index &lt; 0) {
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IndexOutOfBoundsException();
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>     }
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> 
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>     <strong class="jxr_keyword">for</strong> (Object obj : sequence) {
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>       <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> len;
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> 
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>       <strong class="jxr_keyword">if</strong> (obj instanceof StringHolder) {
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>         StringHolder sh = (StringHolder) obj;
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         <strong class="jxr_keyword">if</strong> (sh.isEmpty()) {
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>           len = 0;
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>           <strong class="jxr_keyword">if</strong> (index == offset) {
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>             <strong class="jxr_keyword">return</strong> sh.charAt(index - offset);
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>           }
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>           len = sh.length();
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>           <strong class="jxr_keyword">if</strong> (index &lt; offset + len) {
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>             <strong class="jxr_keyword">return</strong> sh.charAt(index - offset);
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>           }
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         }
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>       } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         String s = (String) obj;
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         len = s.length();
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>         <strong class="jxr_keyword">if</strong> (index &lt; offset + len) {
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>           <strong class="jxr_keyword">return</strong> s.charAt(index - offset);
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         }
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>       }
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>       offset += len;
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>     }
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> 
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IndexOutOfBoundsException();
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>   }
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014&#x2013;2022 <a href="https://www.kohlschutter.com/">Kohlschütter Search Intelligence</a>. All rights reserved.</div>
