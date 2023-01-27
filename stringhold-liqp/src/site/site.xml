@@ -18,10 +18,7 @@
   </custom>
 
   <bannerLeft>
-    <name>stringhold — A java.lang.String holder</name>
-    <!-- <name>${project.name}</name> -->
-    <!-- <src>https://project-website.example/images/project-logo.png</src>
-      <href>https://project-website.example/</href> -->
+    <name>stringhold-liqp</name>
   </bannerLeft>
 
   <edit>${project.scm.url}</edit>
@@ -29,16 +26,16 @@
   <body>
     <!-- <menu ref="parent" /> -->
 
-    <menu name="Overview">
-      <item name="Welcome" href="index.html" />
+    <menu name="Parent project">
+      <item name="Welcome" href="../index.html" />
       <!-- <item name="FAQ" href="faq.html" /> -->
     </menu>
 
     <menu name="Reference">
-      <item name="Common API Javadoc" href="stringhold-common/apidocs/index.html" />
-      <item name="Common Source xref" href="stringhold-common/xref/index.html" />
-      <item name="Common Test xref" href="stringhold-common/xref-test/index.html" />
-      <item name="Code Coverage" href="stringhold-codecoverage/jacoco-aggregate/index.html" />
+      <item name="API Javadoc" href="apidocs/index.html" />
+      <item name="Source xref" href="xref/index.html" />
+      <item name="Test xref" href="xref-test/index.html" />
+      <item name="Code Coverage" href="../stringhold-codecoverage/jacoco-aggregate/stringhold-liqp/index.html" />
     </menu>
 
     <menu ref="modules" />
