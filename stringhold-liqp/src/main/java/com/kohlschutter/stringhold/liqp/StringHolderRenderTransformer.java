@@ -9,6 +9,11 @@ import liqp.RenderTransformer;
 import liqp.RenderTransformer.ObjectAppender.Controller;
 import liqp.TemplateContext;
 
+/**
+ * A {@link RenderTransformer} that uses {@link StringHolder} instances for appending.
+ * 
+ * @author Christian Kohlschütter
+ */
 public final class StringHolderRenderTransformer implements RenderTransformer {
   static final String SCOPE_KEY = StringHolderScope.class.getName();
 

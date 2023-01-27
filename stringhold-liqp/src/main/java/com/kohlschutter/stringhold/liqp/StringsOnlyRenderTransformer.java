@@ -9,6 +9,11 @@ import liqp.RenderTransformer;
 import liqp.RenderTransformer.ObjectAppender.Controller;
 import liqp.TemplateContext;
 
+/**
+ * A {@link RenderTransformer} that uses {@link StringOnlySequence} instances for appending.
+ * 
+ * @author Christian Kohlschütter
+ */
 public final class StringsOnlyRenderTransformer implements RenderTransformer {
   private static final StringsOnlyRenderTransformer INSTANCE = new StringsOnlyRenderTransformer();
 
@@ -20,8 +25,7 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
   }
 
   @Override
-  public Controller newObjectAppender(TemplateContext context,
-      int estimatedNumberOfAppends) {
+  public Controller newObjectAppender(TemplateContext context, int estimatedNumberOfAppends) {
     return new Controller() {
       private Object result = "";
       private ObjectAppender appender = (o) -> {
