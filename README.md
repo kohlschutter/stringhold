@@ -140,7 +140,7 @@ A sequence of String(Holder)s that can be assembled/appended out of order via sc
 * [API JavaDoc](https://kohlschutter.github.io/stringhold/apidocs/index.html)
 * [Source code](https://kohlschutter.github.io/stringhold/xref/index.html)
 * [Test code](https://kohlschutter.github.io/stringhold/xref-test/index.html)
-* [Code coverage](https://kohlschutter.github.io/stringhold/jacoco/index.html)
+* [Code coverage](https://kohlschutter.github.io/stringhold/stringhold-codecoverage/jacoco-aggregate/index.html)
 * [Project website](https://kohlschutter.github.io/stringhold/)
 
 ## Benchmarks
