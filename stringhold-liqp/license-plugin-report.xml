@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1674837201693">
+<licensePluginReport goal="CHECK" timestamp="1674839906052">
     <module artifactId="stringhold-liqp" groupId="com.kohlschutter.stringhold" version="1.0.0-SNAPSHOT"/>
     <files>
-        <file path="src/main/java/com/kohlschutter/stringhold/liqp/StringHolderRenderTransformer.java" result="MISSING"/>
-        <file path="src/main/java/com/kohlschutter/stringhold/liqp/StringsOnlyRenderTransformer.java" result="MISSING"/>
-        <file path="src/test/java/com/kohlschutter/stringhold/liqp/StringHolderRenderTransformerTest.java" result="MISSING"/>
-        <file path="src/test/java/com/kohlschutter/stringhold/liqp/StringsOnlyRenderTransformerTest.java" result="MISSING"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/liqp/StringHolderRenderTransformer.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/liqp/StringsOnlyRenderTransformer.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/liqp/StringHolderRenderTransformerTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/liqp/StringsOnlyRenderTransformerTest.java" result="PRESENT"/>
     </files>
 </licensePluginReport>
