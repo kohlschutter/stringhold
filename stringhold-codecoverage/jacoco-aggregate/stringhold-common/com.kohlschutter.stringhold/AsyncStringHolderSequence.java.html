@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AsyncStringHolderSequence.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">stringhold-codecoverage</a> &gt; <a href="../index.html" class="el_bundle">stringhold-common</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold</a> &gt; <span class="el_source">AsyncStringHolderSequence.java</span></div><h1>AsyncStringHolderSequence.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+
+/**
+ * An appendable sequence of strings; {@link StringHolder}s are automatically converted upon append,
+ * with appends being run asynchronously, using temporary intermediate storage, if
+ * possible/necessary.
+ *
+ * @author Christian Kohlschütter
+ */
+public final class AsyncStringHolderSequence extends StringHolderSequence {
+  private final Function&lt;Supplier&lt;Integer&gt;, CompletableFuture&lt;Integer&gt;&gt; asyncSupplier;
+
+  /**
+   * Constructs a new, empty {@link AsyncStringHolderSequence}.
+   */
+  public AsyncStringHolderSequence() {
+<span class="fc" id="L45">    this(null);</span>
+<span class="fc" id="L46">  }</span>
+
+  /**
+   * Constructs a new, empty {@link AsyncStringHolderSequence}.
+   *
+   * @param executor The executor to use.
+   */
+  public AsyncStringHolderSequence(Executor executor) {
+<span class="fc" id="L54">    this(10, executor);</span>
+<span class="fc" id="L55">  }</span>
+
+  /**
+   * Constructs a new, empty {@link AsyncStringHolderSequence}.
+   *
+   * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
+   */
+  public AsyncStringHolderSequence(int estimatedNumberOfAppends) {
+<span class="fc" id="L63">    this(estimatedNumberOfAppends, null);</span>
+<span class="fc" id="L64">  }</span>
+
+  /**
+   * Constructs a new, empty {@link AsyncStringHolderSequence}.
+   *
+   * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
+   * @param executor The executor to use.
+   */
+  public AsyncStringHolderSequence(int estimatedNumberOfAppends, Executor executor) {
+<span class="fc" id="L73">    super(estimatedNumberOfAppends);</span>
+
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    this.asyncSupplier = executor == null ? CompletableFuture::supplyAsync : (</span>
+<span class="fc" id="L76">        s) -&gt; CompletableFuture.supplyAsync(s, executor);</span>
+<span class="fc" id="L77">  }</span>
+
+  @FunctionalInterface
+  private interface Append {
+    void append(CharSequence s) throws IOException;
+  }
+
+  @FunctionalInterface
+  private interface EnsureCapacity {
+    void ensureExtraCapacity(int extraLen);
+  }
+
+  @Override
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
+<span class="fc" id="L91">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; {</span>
+<span class="fc" id="L92">    }, false);</span>
+  }
+
+  @Override
+  @ExcludeFromCodeCoverageGeneratedReport
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
+    try {
+      return appendToAndReturnLengthImpl1(out);
+    } catch (IOException e) {
+      // unreachable
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private int appendToAndReturnLengthImpl1(StringBuilder out) throws IOException {
+<span class="fc" id="L107">    final int len = out.length();</span>
+<span class="fc" id="L108">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; out.ensureCapacity(len</span>
+        + extraLen), true);
+  }
+
+  @Override
+  @ExcludeFromCodeCoverageGeneratedReport
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
+    try {
+      return appendToAndReturnLengthImpl1(out);
+    } catch (IOException e) {
+      // unreachable
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private int appendToAndReturnLengthImpl1(StringBuffer out) throws IOException {
+<span class="fc" id="L124">    final int len = out.length();</span>
+<span class="fc" id="L125">    return appendToAndReturnLengthImpl(out, out::append, (extraLen) -&gt; out.ensureCapacity(len</span>
+        + extraLen), true);
+  }
+
+  @SuppressWarnings(&quot;PMD.CognitiveComplexity&quot;)
+  private int appendToAndReturnLengthImpl(Appendable out, Append append,
+      EnsureCapacity ensureCapacity, boolean reuseFirst) throws IOException {
+<span class="fc" id="L132">    ensureCapacity.ensureExtraCapacity(getMinimumLength());</span>
+
+<span class="fc" id="L134">    Object[] tempBuilds = new Object[sequence.size()];</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">    if (reuseFirst) {</span>
+<span class="fc" id="L136">      tempBuilds[0] = out;</span>
+    }
+
+<span class="fc" id="L139">    List&lt;CompletableFuture&lt;Integer&gt;&gt; futures = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L141">    int len = 0;</span>
+<span class="fc" id="L142">    int i = 0;</span>
+<span class="fc" id="L143">    int tempBuildMax = 0;</span>
+<span class="fc" id="L144">    boolean needScatterGather = false;</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">    for (Object obj : sequence) {</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">      if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L147">        StringHolder holder = (StringHolder) obj;</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (holder.isKnownEmpty()) {</span>
+<span class="fc" id="L149">          continue;</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        } else if (holder.isString()) {</span>
+<span class="fc" id="L151">          String s = holder.toString();</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">          if (needScatterGather) {</span>
+<span class="fc" id="L153">            tempBuildMax = i;</span>
+<span class="fc" id="L154">            tempBuilds[i] = s;</span>
+          } else {
+<span class="fc" id="L156">            append.append(s);</span>
+          }
+<span class="fc" id="L158">          len += s.length();</span>
+<span class="fc" id="L159">        } else {</span>
+<span class="fc" id="L160">          needScatterGather = true;</span>
+<span class="fc" id="L161">          tempBuildMax = i;</span>
+
+          StringBuilder sb;
+<span class="fc bfc" id="L164" title="All 4 branches covered.">          if (i &gt; 0 || !reuseFirst) {</span>
+<span class="fc" id="L165">            sb = new StringBuilder(holder.getMinimumLength());</span>
+<span class="fc" id="L166">            tempBuilds[i] = sb;</span>
+          } else {
+<span class="fc" id="L168">            sb = (StringBuilder) tempBuilds[0];</span>
+          }
+
+<span class="fc" id="L171">          Supplier&lt;Integer&gt; suppl = () -&gt; holder.appendToAndReturnLength(sb);</span>
+<span class="fc" id="L172">          CompletableFuture&lt;Integer&gt; future = asyncSupplier.apply(suppl);</span>
+<span class="fc" id="L173">          futures.add(future);</span>
+        }
+<span class="fc" id="L175">      } else {</span>
+<span class="fc" id="L176">        String s = (String) obj;</span>
+<span class="fc" id="L177">        len += s.length();</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (needScatterGather) {</span>
+<span class="fc" id="L179">          tempBuildMax = i;</span>
+<span class="fc" id="L180">          tempBuilds[i] = s;</span>
+        } else {
+<span class="fc" id="L182">          append.append(s);</span>
+        }
+      }
+<span class="fc" id="L185">      i++;</span>
+<span class="fc" id="L186">    }</span>
+
+<span class="fc bfc" id="L188" title="All 2 branches covered.">    if (!futures.isEmpty()) {</span>
+<span class="fc" id="L189">      len += futures.stream().map(CompletableFuture::join).collect(Collectors.summingInt((s) -&gt; s));</span>
+    }
+
+<span class="fc" id="L192">    ensureCapacity.ensureExtraCapacity(len);</span>
+<span class="fc bfc" id="L193" title="All 4 branches covered.">    for (i = reuseFirst ? 1 : 0; i &lt;= tempBuildMax; i++) {</span>
+<span class="fc" id="L194">      CharSequence sb = (CharSequence) tempBuilds[i];</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">      if (sb != null) {</span>
+<span class="fc" id="L196">        append.append(sb);</span>
+      }
+    }
+
+<span class="fc" id="L200">    return len;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

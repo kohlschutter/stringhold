@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.kohlschutter.stringhold.liqp","l":"StringHolderRenderTransformer"},{"p":"com.kohlschutter.stringhold.liqp","l":"StringsOnlyRenderTransformer"}];updateSearchResults();

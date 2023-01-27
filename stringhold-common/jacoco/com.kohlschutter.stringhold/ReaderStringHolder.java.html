@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReaderStringHolder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stringhold-common</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold</a> &gt; <span class="el_source">ReaderStringHolder.java</span></div><h1>ReaderStringHolder.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.CharBuffer;
+import java.util.Objects;
+
+import com.kohlschutter.stringhold.IOExceptionHandler.ExceptionResponse;
+
+/**
+ * A {@link StringHolder} that is supplied from {@link Reader} instances of the same source.
+ *
+ * @author Christian Kohlschütter
+ */
+final class ReaderStringHolder extends StringHolder {
+  private static final int BUFFER_SIZE = 8192;
+  private final IOExceptionHandler onError;
+  private final IOSupplier&lt;Reader&gt; readerSupply;
+
+  /**
+   * Constructs a {@link ReaderStringHolder} with the given Reader source.
+   *
+   * @param minLen The minimum length of the content, must not be larger than the actual length.
+   * @param readerSupply The supply of {@link Reader} instances for the content.
+   * @param onError The exception handler.
+   */
+  ReaderStringHolder(int minLen, int expectedLen, IOSupplier&lt;Reader&gt; readerSupply,
+      IOExceptionHandler onError) {
+<span class="fc" id="L49">    super(minLen, expectedLen);</span>
+<span class="fc" id="L50">    this.readerSupply = Objects.requireNonNull(readerSupply);</span>
+<span class="fc" id="L51">    this.onError = Objects.requireNonNull(onError);</span>
+<span class="fc" id="L52">  }</span>
+
+  @Override
+  protected Reader newReader() {
+<span class="fc" id="L56">    return LazyInitReader.withIOSupplier(readerSupply);</span>
+  }
+
+  @Override
+  protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
+<span class="fc" id="L61">    try (Reader reader = newReader()) {</span>
+<span class="fc" id="L62">      int len = 0;</span>
+
+<span class="fc" id="L64">      char[] buf = new char[BUFFER_SIZE];</span>
+<span class="fc" id="L65">      CharBuffer cbuf = CharBuffer.wrap(buf);</span>
+      int count;
+<span class="fc bfc" id="L67" title="All 2 branches covered.">      while ((count = reader.read(buf)) &gt; 0) {</span>
+<span class="fc" id="L68">        out.append(cbuf, 0, count);</span>
+<span class="fc" id="L69">        len += count;</span>
+<span class="fc" id="L70">        cbuf.clear();</span>
+      }
+
+<span class="fc" id="L73">      return len;</span>
+<span class="fc" id="L74">    } catch (IOException e) {</span>
+<span class="fc" id="L75">      handleIOExceptionOnAppendable(out, e);</span>
+<span class="fc" id="L76">      throw e;</span>
+    }
+  }
+
+  /**
+   * Append the contents of this {@link StringHolder} to the given {@link Writer}, and returns the
+   * number of characters appended. This call may or may not turn the contents of this instance into
+   * a String.
+   *
+   * @param out The target.
+   * @return The number of characters appended.
+   * @throws IOException on error.
+   */
+  @Override
+  protected int appendToAndReturnLengthImpl(Writer out) throws IOException {
+<span class="fc" id="L91">    try (Reader reader = newReader()) {</span>
+<span class="fc" id="L92">      int len = 0;</span>
+
+<span class="fc" id="L94">      char[] buf = new char[BUFFER_SIZE];</span>
+      int count;
+<span class="fc bfc" id="L96" title="All 2 branches covered.">      while ((count = reader.read(buf)) &gt; 0) {</span>
+<span class="fc" id="L97">        out.write(buf, 0, count);</span>
+<span class="fc" id="L98">        len += count;</span>
+      }
+<span class="fc" id="L100">      return len;</span>
+<span class="fc" id="L101">    } catch (IOException e) {</span>
+<span class="fc" id="L102">      handleIOExceptionOnAppendable(out, e);</span>
+<span class="fc" id="L103">      throw e;</span>
+    }
+  }
+
+  @Override
+  protected int appendToAndReturnLengthImpl(StringBuilder out) {
+<span class="fc" id="L109">    int len = 0;</span>
+<span class="fc" id="L110">    try (Reader reader = newReader()) {</span>
+<span class="fc" id="L111">      char[] buf = new char[BUFFER_SIZE];</span>
+      int count;
+<span class="fc bfc" id="L113" title="All 2 branches covered.">      while ((count = reader.read(buf)) &gt; 0) {</span>
+<span class="fc" id="L114">        out.append(buf, 0, count);</span>
+<span class="fc" id="L115">        len += count;</span>
+      }
+<span class="fc" id="L117">    } catch (IOException e) {</span>
+<span class="fc" id="L118">      len += handleIOExceptionOnAppendable(out, e);</span>
+<span class="fc" id="L119">    }</span>
+<span class="fc" id="L120">    return len;</span>
+  }
+
+  @Override
+  protected int appendToAndReturnLengthImpl(StringBuffer out) {
+<span class="fc" id="L125">    int len = 0;</span>
+<span class="fc" id="L126">    try (Reader reader = newReader()) {</span>
+
+<span class="fc" id="L128">      char[] buf = new char[BUFFER_SIZE];</span>
+      int count;
+<span class="fc bfc" id="L130" title="All 2 branches covered.">      while ((count = reader.read(buf)) &gt; 0) {</span>
+<span class="fc" id="L131">        out.append(buf, 0, count);</span>
+<span class="fc" id="L132">        len += count;</span>
+      }
+<span class="fc" id="L134">    } catch (IOException e) {</span>
+<span class="fc" id="L135">      len += handleIOExceptionOnAppendable(out, e);</span>
+<span class="fc" id="L136">    }</span>
+
+<span class="fc" id="L138">    return len;</span>
+  }
+
+  private int handleIOExceptionOnAppendable(Appendable out, IOException e) {
+    String s;
+
+<span class="fc" id="L144">    ExceptionResponse resp = onError.onException(e);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">    if (resp == ExceptionResponse.ILLEGAL_STATE) {</span>
+<span class="fc" id="L146">      throw new IllegalStateException(&quot;Unexpected IOException&quot;, e);</span>
+    }
+
+<span class="fc" id="L149">    setError();</span>
+
+<span class="fc bfc" id="L151" title="All 3 branches covered.">    switch (resp) {</span>
+      case EXCEPTION_MESSAGE:
+<span class="fc" id="L153">        s = e.toString();</span>
+        try {
+<span class="fc" id="L155">          out.append(s);</span>
+<span class="fc" id="L156">        } catch (IOException e1) {</span>
+          // ignore
+<span class="fc" id="L158">        }</span>
+<span class="fc" id="L159">        return s.length();</span>
+      case STACKTRACE:
+<span class="fc" id="L161">        StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L162">        e.printStackTrace(new PrintWriter(sw));</span>
+<span class="fc" id="L163">        s = sw.toString();</span>
+        try {
+<span class="fc" id="L165">          out.append(s);</span>
+<span class="fc" id="L166">        } catch (IOException e1) {</span>
+          // ignore
+<span class="fc" id="L168">        }</span>
+<span class="fc" id="L169">        return s.length();</span>
+      default:
+        // nothing
+<span class="fc" id="L172">        return 0;</span>
+    }
+  }
+
+  @Override
+  protected String getString() {
+<span class="fc" id="L178">    StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L179">    try (Reader r = newReader()) {</span>
+<span class="fc" id="L180">      readFully(r, sb);</span>
+<span class="fc" id="L181">    } catch (IOException e) {</span>
+<span class="fc" id="L182">      ExceptionResponse resp = onError.onException(e);</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">      if (resp == ExceptionResponse.ILLEGAL_STATE) {</span>
+<span class="fc" id="L184">        throw new IllegalStateException(&quot;Unexpected IOException&quot;, e);</span>
+      }
+
+<span class="fc" id="L187">      setError();</span>
+<span class="fc bfc" id="L188" title="All 4 branches covered.">      switch (resp) {</span>
+        case FLUSH:
+<span class="fc" id="L190">          break;</span>
+        case EXCEPTION_MESSAGE:
+<span class="fc" id="L192">          return e.toString();</span>
+        case STACKTRACE:
+<span class="fc" id="L194">          StringWriter sw = new StringWriter();</span>
+<span class="fc" id="L195">          e.printStackTrace(new PrintWriter(sw));</span>
+<span class="fc" id="L196">          sb.append(sw.toString());</span>
+<span class="fc" id="L197">          break;</span>
+        default:
+<span class="fc" id="L199">          return &quot;&quot;;</span>
+      }
+<span class="fc" id="L201">    }</span>
+<span class="fc" id="L202">    return sb.toString();</span>
+  }
+
+  private static void readFully(Reader r, StringBuilder sb) throws IOException {
+<span class="fc" id="L206">    char[] buf = new char[BUFFER_SIZE];</span>
+    int count;
+<span class="fc bfc" id="L208" title="All 2 branches covered.">    while ((count = r.read(buf)) &gt; 0) {</span>
+<span class="fc" id="L209">      sb.append(buf, 0, count);</span>
+    }
+<span class="fc" id="L211">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

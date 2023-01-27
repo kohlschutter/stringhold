@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>StringsOnlyRenderTransformer.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">stringhold-codecoverage</a> &gt; <a href="../index.html" class="el_bundle">stringhold-liqp</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold.liqp</a> &gt; <span class="el_source">StringsOnlyRenderTransformer.java</span></div><h1>StringsOnlyRenderTransformer.java</h1><pre class="source lang-java linenums">package com.kohlschutter.stringhold.liqp;
+
+import com.kohlschutter.stringhold.LimitedStringHolderScope;
+import com.kohlschutter.stringhold.StringHolder;
+import com.kohlschutter.stringhold.StringHolderScope;
+import com.kohlschutter.stringhold.StringOnlySequence;
+
+import liqp.RenderTransformer;
+import liqp.RenderTransformer.ObjectAppender.Controller;
+import liqp.TemplateContext;
+
+public final class StringsOnlyRenderTransformer implements RenderTransformer {
+<span class="fc" id="L13">  private static final StringsOnlyRenderTransformer INSTANCE = new StringsOnlyRenderTransformer();</span>
+
+  private StringsOnlyRenderTransformer() {
+  }
+
+  public static StringsOnlyRenderTransformer getInstance() {
+<span class="fc" id="L19">    return INSTANCE;</span>
+  }
+
+  @Override
+  public Controller newObjectAppender(TemplateContext context,
+      int estimatedNumberOfAppends) {
+<span class="fc" id="L25">    return new Controller() {</span>
+<span class="fc" id="L26">      private Object result = &quot;&quot;;</span>
+<span class="fc" id="L27">      private ObjectAppender appender = (o) -&gt; {</span>
+<span class="fc" id="L28">        StringHolder sh = StringHolder.withContent(o);</span>
+<span class="fc" id="L29">        result = sh;</span>
+
+<span class="fc" id="L31">        StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(</span>
+            StringHolderRenderTransformer.SCOPE_KEY, (k) -&gt; {
+<span class="fc" id="L33">              int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">              if (maxLen != Integer.MAX_VALUE) {</span>
+<span class="fc" id="L35">                return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, () -&gt; {</span>
+<span class="fc" id="L36">                  throw new RuntimeException(&quot;rendered string exceeds &quot; + maxLen);</span>
+                });
+              } else {
+<span class="fc" id="L39">                return StringHolderScope.NONE;</span>
+              }
+            });
+
+<span class="fc" id="L43">        sh.updateScope(scope);</span>
+
+<span class="fc" id="L45">        appender = (o2) -&gt; {</span>
+<span class="fc" id="L46">          StringOnlySequence seq = new StringOnlySequence(estimatedNumberOfAppends);</span>
+<span class="fc" id="L47">          seq.updateScope(scope);</span>
+
+          // do not double-count
+<span class="fc" id="L50">          ((StringHolder) result).updateScope(null);</span>
+
+<span class="fc" id="L52">          seq.append(result);</span>
+<span class="fc" id="L53">          result = seq;</span>
+<span class="fc" id="L54">          seq.append(o2);</span>
+<span class="fc" id="L55">          appender = seq::append;</span>
+<span class="fc" id="L56">        };</span>
+<span class="fc" id="L57">      };</span>
+
+      @Override
+      public Object getResult() {
+<span class="fc" id="L61">        return transformObject(context, result);</span>
+      }
+
+      @Override
+      public void append(Object obj) {
+<span class="fc" id="L66">        appender.append(obj);</span>
+<span class="fc" id="L67">      }</span>
+    };
+  }
+
+  @Override
+  public Object transformObject(TemplateContext context, Object obj) {
+<span class="fc" id="L73">    return String.valueOf(obj);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
