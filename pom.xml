@@ -94,5 +94,6 @@
     <modules>
         <module>stringhold-common</module>
         <module>stringhold-liqp</module>
+        <module>stringhold-codecoverage</module>
     </modules>
 </project>

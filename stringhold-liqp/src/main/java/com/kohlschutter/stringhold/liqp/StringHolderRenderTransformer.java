@@ -22,8 +22,7 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
   }
 
   @Override
-  public Controller newObjectAppender(TemplateContext context,
-      int estimatedNumberOfAppends) {
+  public Controller newObjectAppender(TemplateContext context, int estimatedNumberOfAppends) {
     return new Controller() {
       private Object result = "";
       private ObjectAppender appender = (o) -> {

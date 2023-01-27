@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <properties>
-        <kohlschutter.project.base.directory>${project.basedir}/..</kohlschutter.project.base.directory>
+        <kohlschutter.project.base.directory>${project.parent.basedir}</kohlschutter.project.base.directory>
         <kohlschutter.project.notice.file>${kohlschutter.project.base.directory}/NOTICE</kohlschutter.project.notice.file>
         <kohlschutter.multirelease.java8.release>8</kohlschutter.multirelease.java8.release>
         <kohlschutter.multirelease.java.release>15</kohlschutter.multirelease.java.release>

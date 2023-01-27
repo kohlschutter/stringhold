@@ -38,7 +38,7 @@
       <item name="API Javadoc" href="apidocs/index.html" />
       <item name="Source xref" href="xref/index.html" />
       <item name="Test xref" href="xref-test/index.html" />
-      <item name="Code Coverage" href="jacoco/index.html" />
+      <item name="Code Coverage" href="stringhold-codecoverage/jacoco-aggregate/index.html" />
     </menu>
 
     <menu ref="modules" />
