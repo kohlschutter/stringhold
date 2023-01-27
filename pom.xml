@@ -1,24 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.kohlschutter.stringhold</groupId>
     <artifactId>stringhold-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-
     <parent>
         <groupId>com.kohlschutter</groupId>
         <artifactId>kohlschutter-parent-multirelease</artifactId>
         <version>1.5.2-SNAPSHOT</version>
         <relativePath>../kohlschutter-parent/kohlschutter-parent-multirelease/pom.xml</relativePath>
     </parent>
-
     <properties>
         <kohlschutter.project.base.directory>${project.basedir}</kohlschutter.project.base.directory>
         <kohlschutter.project.notice.file>${kohlschutter.project.base.directory}/NOTICE</kohlschutter.project.notice.file>
         <kohlschutter.multirelease.java8.release>8</kohlschutter.multirelease.java8.release>
         <kohlschutter.multirelease.java.release>15</kohlschutter.multirelease.java.release>
-        
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <file.encoding>UTF-8</file.encoding>
@@ -41,7 +37,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -57,7 +52,6 @@
         <connection>scm:git:https://github.com/kohlschutter/stringhold.git</connection>
         <developerConnection>scm:git:https://github.com/kohlschutter/stringhold.git</developerConnection>
     </scm>
-
     <profiles>
         <profile>
             <id>use-snapshots</id>
@@ -90,7 +84,6 @@
             </repositories>
         </profile>
     </profiles>
-
     <modules>
         <module>stringhold-common</module>
         <module>stringhold-liqp</module>
