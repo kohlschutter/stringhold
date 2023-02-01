@@ -681,7 +681,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
     int len;
     if (isString()) {
       len = length();
-      out.append(toString());
+      if (len > 0) {
+        out.append(toString());
+      }
     } else {
       len = appendToAndReturnLengthImpl(out);
       if (minLength < len) {
@@ -765,7 +767,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    */
   protected int appendToAndReturnLengthImpl(StringBuilder out) {
     String s = toString();
-    out.append(s);
+    if (!s.isEmpty()) {
+      out.append(s);
+    }
     return s.length();
   }
 
@@ -779,7 +783,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    */
   protected int appendToAndReturnLengthImpl(StringBuffer out) {
     String s = toString();
-    out.append(s);
+    if (!s.isEmpty()) {
+      out.append(s);
+    }
     return s.length();
   }
 

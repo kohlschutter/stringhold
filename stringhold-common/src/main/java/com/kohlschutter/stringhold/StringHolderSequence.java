@@ -50,17 +50,6 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     sequence = new ArrayList<>(estimatedNumberOfAppends);
   }
 
-  private void addSequence(String o) {
-    int len = o.length();
-    if (len == 0) {
-      return;
-    }
-
-    uncache();
-    sequence.add(o);
-    resizeBy(len, len);
-  }
-
   /**
    * Checks if the to-be-appended {@link StringHolder} should be added as a {@link String} (with
    * conversion via {@link StringHolder#toString()}) instead of adding it directly.
@@ -111,6 +100,17 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     return this;
   }
 
+  private void addSequence(String o) {
+    int len = o.length();
+    if (len == 0) {
+      return;
+    }
+
+    uncache();
+    sequence.add(o);
+    resizeBy(len, len);
+  }
+
   /**
    * Appends the given {@link StringHolder}, unless it is known to be empty.
    *
@@ -139,8 +139,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
    */
   @Override
   public StringHolderSequence append(CharSequence s) {
-    int len = s.length();
-    if (len > 0) {
+    if (!CharSequenceReleaseShim.isEmpty(s)) {
       addSequence(String.valueOf(s));
     }
     return this;
@@ -297,9 +296,9 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     int len = appendToAndReturnLength(sb);
 
     final String s;
+    sequence.clear();
     if (len == 0) {
       s = "";
-      sequence.clear();
     } else {
       s = sb.toString();
       sequence.add(s);
