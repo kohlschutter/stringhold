@@ -357,7 +357,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   /**
    * Constructs a {@link StringHolder} with the given content sequences, as if they had been
    * appended to a {@link StringHolderSequence}. Empty sequences are optimized.
-   * 
+   *
    * @param objects The objects to represent as a sequence; if {@code null}, a StringHolder of the
    *          string {@code "null"} is returned.
    * @return The {@link StringHolder} instance.
@@ -592,7 +592,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * By default, this is only true if {@link #isString()} {@code == true}, but subclasses may
    * override this check. When they do, they must include a check for
    * {@code || super.isLengthKnown()}.
-   * 
+   *
    * Note that once a length is <em>known</em>, it cannot change (i.e., don't override this for
    * mutable objects like {@link StringHolderSequence}).
    *
@@ -640,9 +640,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   /**
    * Checks if this {@link StringHolder} instance is equal to the given String (assume that trivial
    * requirements, such as minimum length, were already checked).
-   * 
+   *
    * Subclasses may override this check for a faster operation.
-   * 
+   *
    * @param s The other string.
    * @return {@code true} if this {@link StringHolder} is equal to the given string.
    */
@@ -653,9 +653,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   /**
    * Checks if this {@link StringHolder} instance is equal to the given {@link StringHolder} (assume
    * that trivial requirements, such as minimum length, were already checked).
-   * 
+   *
    * Subclasses may override this check for a faster operation.
-   * 
+   *
    * @param sh The other {@link StringHolder}.
    * @return {@code true} if this {@link StringHolder} is equal to the given string.
    */
@@ -946,7 +946,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
 
   /**
    * Un-caches the already-determined String. This can be used to implement mutable data structures.
-   * 
+   *
    * Important: Subclasses must carefully check {@link #isEffectivelyImmutable()} status.
    */
   protected void uncache() {
@@ -1386,7 +1386,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
 
   /**
    * Computes a partial hash code, using the given value as the seed.
-   * 
+   *
    * @param h The initial value (seed).
    * @return The updated hash code.
    */
@@ -1405,7 +1405,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
 
   /**
    * Checks if the given {@link StringHolder} is <em>effectively immutable</em>.
-   * 
+   *
    * @return {@code true} if the contents aren't going to change.
    */
   public boolean isEffectivelyImmutable() {

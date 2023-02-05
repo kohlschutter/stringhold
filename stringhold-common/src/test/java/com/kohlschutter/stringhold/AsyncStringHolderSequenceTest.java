@@ -226,7 +226,7 @@ public class AsyncStringHolderSequenceTest {
 
     assertEquals("Hello World", sgs.toString());
   }
-  
+
   @Test
   public void testEstimatedNumberOfAppendsTooLow() {
     AsyncStringHolderSequence sgs = new AsyncStringHolderSequence(0);

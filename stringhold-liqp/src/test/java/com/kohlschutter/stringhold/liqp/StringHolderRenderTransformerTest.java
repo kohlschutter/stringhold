@@ -134,5 +134,22 @@ public class StringHolderRenderTransformerTest {
     assertEquals("Hello ", oac.getResult().toString());
     oac.append(StringHolderSequence.withContent("Wo", "rld"));
     assertEquals("Hello World", oac.getResult().toString());
+
+    assertEquals(tr.transformObject(context, StringHolder.withSupplier(() -> "abc")), "abc");
+  }
+
+  @Test
+  public void testAppendNonSHSequenceUncached() throws Exception {
+    StringHolderRenderTransformer tr = StringHolderRenderTransformer.newUncachedInstance();
+    TemplateContext context = new TemplateContext();
+    ObjectAppender.Controller oac = tr.newObjectAppender(context, 3);
+    oac.append("Hello");
+    assertEquals("Hello", oac.getResult());
+    oac.append(StringHolder.withContent(" "));
+    assertEquals("Hello ", oac.getResult().toString());
+    oac.append(StringHolderSequence.withContent("Wo", "rld"));
+    assertEquals("Hello World", oac.getResult().toString());
+
+    assertEquals(tr.transformObject(context, StringHolder.withSupplier(() -> "abc")), "abc");
   }
 }

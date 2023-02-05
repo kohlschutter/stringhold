@@ -30,7 +30,7 @@ import liqp.TemplateContext;
 
 /**
  * A {@link RenderTransformer} that uses {@link StringHolder} instances for appending.
- * 
+ *
  * @author Christian Kohlschütter
  */
 public final class StringHolderRenderTransformer implements RenderTransformer {
@@ -51,13 +51,13 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
 
   /**
    * Returns the shared {@link StringHolderRenderTransformer} instance.
-   * 
+   *
    * This instance shares a common cache for de-duplicating {@link StringHolderSequence}s, which may
    * help to significantly reduce heap allocation, at the cost of a slightly slower execution.
-   * 
+   *
    * If you're using {@link StringHolderRenderTransformer} in a highly concurrent setting, see
    * {@link #newCachedInstance()} to reduce lock contention.
-   * 
+   *
    * @return The instance.
    */
   public static StringHolderRenderTransformer getSharedCacheInstance() {
@@ -66,10 +66,10 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
 
   /**
    * Creates a new, cached {@link StringHolderRenderTransformer} instance.
-   * 
+   *
    * This instance uses its own cache for de-duplicating {@link StringHolderSequence}s, which may
    * help to significantly reduce heap allocation, at the cost of a slightly slower execution.
-   * 
+   *
    * @return The instance.
    */
   public static StringHolderRenderTransformer newCachedInstance() {
@@ -78,10 +78,10 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
 
   /**
    * Creates a new, uncached {@link StringHolderRenderTransformer} instance.
-   * 
+   *
    * This instance doesn't use a cache for de-duplicating {@link StringHolderSequence}s, resulting
    * in an overall faster execution at the cost of heap allocations.
-   * 
+   *
    * @return The instance.
    */
   public static StringHolderRenderTransformer newUncachedInstance() {
