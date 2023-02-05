@@ -17,16 +17,21 @@
  */
 package com.kohlschutter.stringhold.liqp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import com.kohlschutter.stringhold.StringHolder;
+import com.kohlschutter.stringhold.StringHolderSequence;
 
 import liqp.ProtectionSettings;
 import liqp.RenderSettings;
+import liqp.RenderTransformer;
+import liqp.RenderTransformer.ObjectAppender;
 import liqp.Template;
+import liqp.TemplateContext;
 import liqp.TemplateParser;
 
 public class StringHolderRenderTransformerTest {
@@ -34,7 +39,7 @@ public class StringHolderRenderTransformerTest {
   public void testPrerenderStringHolder() throws Exception {
     TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
         new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .getInstance()).build()).build();
+            .getSharedCacheInstance()).build()).build();
 
     String json = "{\"array\" : [1,2,3] }";
 
@@ -48,7 +53,7 @@ public class StringHolderRenderTransformerTest {
   public void testPrerenderString() throws Exception {
     TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
         new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .getInstance()).build()).build();
+            .getSharedCacheInstance()).build()).build();
 
     Template template = parser.parse("Hello World");
 
@@ -60,8 +65,8 @@ public class StringHolderRenderTransformerTest {
   public void testPrerenderLengthExceeded() throws Exception {
     TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
         new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .getInstance()).build()).withProtectionSettings(new ProtectionSettings.Builder()
-                .withMaxSizeRenderedString(2).build()).build();
+            .getSharedCacheInstance()).build()).withProtectionSettings(
+                new ProtectionSettings.Builder().withMaxSizeRenderedString(2).build()).build();
 
     String json = "{\"array\" : [1,2,3] }";
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
@@ -70,4 +75,64 @@ public class StringHolderRenderTransformerTest {
         "Exception should be thrown because string exceeds limit");
   }
 
+  @Test
+  public void testComplexForLoop() throws Exception {
+    Object shrt = prerenderComplexForLoop(StringHolderRenderTransformer.getSharedCacheInstance());
+    Object deft = prerenderComplexForLoop(null);
+    assertEquals(shrt, deft.toString());
+    assertEquals(deft.toString(), shrt.toString());
+  }
+
+  private Object prerenderComplexForLoop(RenderTransformer transformer) {
+    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
+        new RenderSettings.Builder().withRenderTransformer(//
+            transformer).build()).withProtectionSettings(new ProtectionSettings.Builder().build())
+        .build();
+
+    Template template = parser.parse(
+        "{%for l in (1..100)%}{% for k in (1..100) %}{% for i in (1..10) %}Hello! {{ i }} :-)\n{% endfor %}{% endfor %}{% endfor %}");
+
+    return template.prerender();
+  }
+
+  @Test
+  public void testNewCachedInstance() throws Exception {
+    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
+        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
+            .newCachedInstance()).build()).build();
+
+    String json = "{\"array\" : [1,1,1] }";
+
+    Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
+
+    assertTrue(template.prerender(json) instanceof StringHolder,
+        "Prerendered result of a for-loop should be a StringHolder");
+  }
+
+  @Test
+  public void testNewUncachedInstance() throws Exception {
+    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
+        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
+            .newUncachedInstance()).build()).build();
+
+    String json = "{\"array\" : [1,1,1] }";
+
+    Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
+
+    assertTrue(template.prerender(json) instanceof StringHolder,
+        "Prerendered result of a for-loop should be a StringHolder");
+  }
+
+  @Test
+  public void testAppendNonSHSequence() throws Exception {
+    StringHolderRenderTransformer tr = StringHolderRenderTransformer.newCachedInstance();
+    TemplateContext context = new TemplateContext();
+    ObjectAppender.Controller oac = tr.newObjectAppender(context, 3);
+    oac.append("Hello");
+    assertEquals("Hello", oac.getResult());
+    oac.append(StringHolder.withContent(" "));
+    assertEquals("Hello ", oac.getResult().toString());
+    oac.append(StringHolderSequence.withContent("Wo", "rld"));
+    assertEquals("Hello World", oac.getResult().toString());
+  }
 }
