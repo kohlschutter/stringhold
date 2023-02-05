@@ -42,7 +42,8 @@ public class StringHolderTest {
   public void testString() throws Exception {
     assertTrue(StringHolder.withContent("Some string").isString());
     assertTrue(StringHolder.withContent("").isString());
-    assertTrue(StringHolder.withContent(null).isString());
+    assertTrue(StringHolder.withContent((Object) null).isString());
+    assertTrue(StringHolder.withContent((Object[]) null).isString());
     assertTrue(StringHolder.withContent(new StringBuilder("foo")).isString());
 
     // StringSequences are not supplied as String immediately
@@ -77,7 +78,8 @@ public class StringHolderTest {
     assertEquals(StringHolder.withContent(""), StringHolder.withContent(""));
 
     assertNotEquals(StringHolder.withContent(""), null);
-    assertNotEquals(StringHolder.withContent(null), null);
+    assertNotEquals(StringHolder.withContent((Object) null), null);
+    assertNotEquals(StringHolder.withContent((Object[]) null), null);
 
     assertNotEquals(StringHolder.withContent(""), new StringBuilder());
     assertEquals(StringHolder.withContent(""), new StringBuilder().toString());
@@ -151,7 +153,10 @@ public class StringHolderTest {
   @Test
   public void testIdentity() throws Exception {
     assertSame(StringHolder.withContent(""), StringHolder.withContent(""));
-    assertSame(StringHolder.withContent(null), StringHolder.withContent(null));
+    assertSame(StringHolder.withContent((Object) null), StringHolder.withContent((Object) null));
+    assertSame(StringHolder.withContent((Object[]) null), StringHolder.withContent(
+        (Object[]) null));
+    assertSame(StringHolder.withContent((Object) null), StringHolder.withContent((Object[]) null));
 
     StringHolder x = StringHolder.withContent("X");
     assertSame(StringHolder.withContent(x), x);
@@ -169,7 +174,8 @@ public class StringHolderTest {
   @Test
   public void testCachedCommonResults() throws Exception {
     // cached common result
-    assertSame(StringHolder.withContent(null), StringHolder.withContent("null"));
+    assertSame(StringHolder.withContent((Object) null), StringHolder.withContent("null"));
+    assertSame(StringHolder.withContent((Object[]) null), StringHolder.withContent("null"));
     assertSame(StringHolder.withContent('\n'), StringHolder.withContent("\n"));
     assertSame(StringHolder.withContent(1), StringHolder.withContent("1"));
     assertSame(StringHolder.withContent(true), StringHolder.withContent("true"));
@@ -194,7 +200,8 @@ public class StringHolderTest {
 
   @Test
   public void testNull() throws Exception {
-    assertEquals("null", StringHolder.withContent(null).toString());
+    assertEquals("null", StringHolder.withContent((Object) null).toString());
+    assertEquals("null", StringHolder.withContent((Object[]) null).toString());
   }
 
   @Test
@@ -223,6 +230,141 @@ public class StringHolderTest {
 
     abc.appendTo(out);
     assertEquals("" + abc + defg + abc, out.toString());
+  }
+
+  @Test
+  public void testEmptyAppendToAndReturnLength() throws Exception {
+    Appendable app = new Appendable() {
+
+      @Override
+      public Appendable append(CharSequence csq, int start, int end) throws IOException {
+        fail();
+        return this;
+      }
+
+      @Override
+      public Appendable append(char c) throws IOException {
+        fail();
+        return this;
+      }
+
+      @Override
+      public Appendable append(CharSequence csq) throws IOException {
+        fail();
+        return this;
+      }
+    };
+    assertEquals(0, StringHolder.withSupplier(() -> "").appendToAndReturnLength(app));
+
+    StringBuilder sb = new StringBuilder();
+    assertEquals(0, StringHolder.withSupplier(() -> "").appendToAndReturnLength(sb));
+    assertTrue(sb.isEmpty());
+
+    StringBuffer sbuf = new StringBuffer();
+    assertEquals(0, StringHolder.withSupplier(() -> "").appendToAndReturnLength(sbuf));
+    assertTrue(sbuf.isEmpty());
+
+    StringWriter sw = new StringWriter();
+    assertEquals(0, StringHolder.withSupplier(() -> "").appendToAndReturnLength(sw));
+    assertTrue(sw.toString().isEmpty());
+  }
+
+  @Test
+  public void testEmptySequenceAppendToAndReturnLength() throws Exception {
+    Appendable app = new Appendable() {
+
+      @Override
+      public Appendable append(CharSequence csq, int start, int end) throws IOException {
+        fail();
+        return this;
+      }
+
+      @Override
+      public Appendable append(char c) throws IOException {
+        fail();
+        return this;
+      }
+
+      @Override
+      public Appendable append(CharSequence csq) throws IOException {
+        fail();
+        return this;
+      }
+    };
+    assertEquals(0, new StringHolderSequence().appendToAndReturnLength(app));
+
+    StringBuilder sb = new StringBuilder();
+    assertEquals(0, new StringHolderSequence().appendToAndReturnLength(sb));
+    assertTrue(sb.isEmpty());
+
+    StringBuffer sbuf = new StringBuffer();
+    assertEquals(0, new StringHolderSequence().appendToAndReturnLength(sbuf));
+    assertTrue(sbuf.isEmpty());
+
+    StringWriter sw = new StringWriter();
+    assertEquals(0, new StringHolderSequence().appendToAndReturnLength(sw));
+    assertTrue(sw.toString().isEmpty());
+  }
+
+  @Test
+  public void testCustomEmptyAppendToAndReturnLength() throws Exception {
+    Appendable app = new Appendable() {
+
+      @Override
+      public Appendable append(CharSequence csq, int start, int end) throws IOException {
+        fail();
+        return this;
+      }
+
+      @Override
+      public Appendable append(char c) throws IOException {
+        fail();
+        return this;
+      }
+
+      @Override
+      public Appendable append(CharSequence csq) throws IOException {
+        fail();
+        return this;
+      }
+    };
+    assertEquals(0, new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    }.appendToAndReturnLength(app));
+
+    StringBuilder sb = new StringBuilder();
+    assertEquals(0, new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    }.appendToAndReturnLength(sb));
+    assertTrue(sb.isEmpty());
+
+    StringBuffer sbuf = new StringBuffer();
+    assertEquals(0, new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    }.appendToAndReturnLength(sbuf));
+    assertTrue(sbuf.isEmpty());
+
+    StringWriter sw = new StringWriter();
+    assertEquals(0, new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    }.appendToAndReturnLength(sw));
+    assertTrue(sw.toString().isEmpty());
   }
 
   @Test
@@ -1005,5 +1147,127 @@ public class StringHolderTest {
     assertFalse(sh.isString());
     assertEquals(4, sh.length());
     assertTrue(sh.isString());
+  }
+
+  @Test
+  public void testWithContent() throws Exception {
+    assertEquals(StringHolder.withContent("Hello", ' ', "World"), "Hello World");
+    assertEquals(StringHolder.withContent("Hello", StringHolder.withContent(" "), "World"),
+        "Hello World");
+    assertEquals(StringHolder.withContent("Hello", StringHolder.withSupplier(() -> " "), "World"),
+        "Hello World");
+    assertEquals(StringHolder.withContent("Hello", StringHolder.withSupplierFixedLength(1,
+        () -> " "), "World"), "Hello World");
+    assertEquals(StringHolder.withContent("Hello", StringHolder.withSupplierFixedLength(1,
+        () -> " "), new StringHolderSequence(), "World"), "Hello World");
+    assertEquals(StringHolder.withContent("Hello", StringHolder.withSupplierFixedLength(1,
+        () -> " "), new StringHolderSequence().append(new StringHolder() {
+
+          @Override
+          protected String getString() {
+            return "";
+          }
+        }), "World"), "Hello World");
+  }
+
+  @Test
+  public void testWithContentArrayEmpty() throws Exception {
+    assertSame(StringHolder.withContent(""), StringHolder.withContent());
+    assertSame(StringHolder.withContent(""), StringHolder.withContent(new Object[] {}));
+    assertSame(StringHolder.withContent(""), StringHolder.withContent(new Object[] {""}));
+    assertSame(StringHolder.withContent(""), StringHolder.withContent("", ""));
+    assertSame(StringHolder.withContent(""), StringHolder.withContent("", StringHolder.withContent(
+        ""), ""));
+  }
+
+  @Test
+  public void testWithContentArray() throws Exception {
+    assertEquals(StringHolder.withContent("Hello", ' ', new StringBuilder("World")), "Hello World");
+  }
+
+  @Test
+  public void testEqualsStringUnknownLength() throws Exception {
+    assertEquals(StringHolder.withSupplier(() -> "abc"), "abc");
+    assertNotEquals(StringHolder.withSupplier(() -> "abcd"), "abc");
+    assertNotEquals(StringHolder.withSupplier(() -> "abc"), "abcd");
+
+    assertNotEquals(StringHolder.withContent("abc"), StringHolder.withSupplierMinimumLength(4,
+        () -> "abcd"));
+    assertEquals(StringHolder.withContent("abc"), StringHolder.withSupplierMinimumLength(2,
+        () -> "abc"));
+  }
+
+  @Test
+  public void testEqualsStringKnownLength() throws Exception {
+    assertEquals(StringHolder.withSupplierFixedLength(3, () -> "abc"), "abc");
+    assertNotEquals(StringHolder.withSupplierFixedLength(4, () -> "abcd"), "abc");
+    assertNotEquals(StringHolder.withSupplierFixedLength(3, () -> "abc"), "abcd");
+
+    assertNotEquals(StringHolder.withSupplierFixedLength(3, () -> "abc"), StringHolder
+        .withSupplierFixedLength(4, () -> "abcd"));
+    assertNotEquals(StringHolder.withSupplierFixedLength(3, () -> "abc"), StringHolder.withContent(
+        "abcd"));
+    assertNotEquals(StringHolder.withContent("abc"), StringHolder.withSupplierMinimumLength(4,
+        () -> "abcd"));
+    assertNotEquals(StringHolder.withSupplierFixedLength(3, () -> "abc"), StringHolder
+        .withSupplierMinimumLength(4, () -> "abcd"));
+  }
+
+  private static StringHolder troubleHolder(int minLen) {
+    StringHolder sh = StringHolder.withSupplierMinimumLength(minLen, () -> "");
+    assertThrows(IllegalStateException.class, sh::toString);
+    assertTrue(sh.checkError());
+    assertTrue(sh.isString());
+    return sh;
+  }
+
+  @Test
+  public void testEqualsStringCheckError() throws Exception {
+    StringHolder sh = troubleHolder(1);
+    assertEquals(sh, StringHolder.withSupplier(() -> ""));
+    assertNotEquals(sh, StringHolder.withSupplier(() -> "abc"));
+    assertNotEquals(sh, StringHolder.withSupplierMinimumLength(3, () -> "abc"));
+    assertNotEquals(StringHolder.withContent("abc"), sh);
+    assertNotEquals(StringHolder.withSupplierMinimumLength(3, () -> "abc"), sh);
+    assertNotEquals(StringHolder.withSupplier(() -> "abc"), sh);
+    assertEquals(sh, troubleHolder(1));
+    assertEquals(sh, troubleHolder(2));
+  }
+
+  @Test
+  public void testUpdateHashCode() throws Exception {
+    assertEquals("Hello World".hashCode(), new StringHolder(0) {
+
+      @Override
+      protected String getString() {
+        return " World";
+      }
+
+    }.updateHashCode("Hello".hashCode()));
+
+    assertEquals("Hello World".hashCode(), new StringHolder(0) {
+
+      @Override
+      protected String getString() {
+        return "Hello World";
+      }
+    }.updateHashCode(0));
+
+    assertEquals("Hello World".hashCode(), StringHolder.withSupplierFixedLength("Hello World"
+        .length(), () -> "Hello World").updateHashCode(0));
+  }
+
+  @Test
+  public void testMarkImmutable() throws Exception {
+    StringHolder sh = new StringHolder() {
+
+      @Override
+      protected String getString() {
+        return "Hello World";
+      }
+    };
+    assertFalse(sh.isEffectivelyImmutable());
+    sh.markEffectivelyImmutable();
+    assertTrue(sh.isEffectivelyImmutable());
   }
 }

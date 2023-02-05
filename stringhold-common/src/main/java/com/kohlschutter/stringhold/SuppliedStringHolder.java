@@ -147,8 +147,12 @@ class SuppliedStringHolder extends StringHolder {
       return sh.appendToAndReturnLengthDefaultImpl(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
-      out.append(cs);
-      return cs.length();
+      if (CharSequenceReleaseShim.isEmpty(cs)) {
+        return 0;
+      } else {
+        out.append(cs);
+        return cs.length();
+      }
     } else {
       return super.appendToAndReturnLengthDefaultImpl(out);
     }
@@ -162,8 +166,12 @@ class SuppliedStringHolder extends StringHolder {
       return sh.appendToAndReturnLengthImpl(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
-      out.append(cs);
-      return cs.length();
+      if (CharSequenceReleaseShim.isEmpty(cs)) {
+        return 0;
+      } else {
+        out.append(cs);
+        return cs.length();
+      }
     } else {
       return super.appendToAndReturnLengthImpl(out);
     }
@@ -177,8 +185,12 @@ class SuppliedStringHolder extends StringHolder {
       return sh.appendToAndReturnLengthImpl(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
-      out.append(cs);
-      return cs.length();
+      if (CharSequenceReleaseShim.isEmpty(cs)) {
+        return 0;
+      } else {
+        out.append(cs);
+        return cs.length();
+      }
     } else {
       return super.appendToAndReturnLengthImpl(out);
     }
@@ -192,8 +204,12 @@ class SuppliedStringHolder extends StringHolder {
       return sh.appendToAndReturnLengthImpl(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
-      out.append(cs);
-      return cs.length();
+      if (CharSequenceReleaseShim.isEmpty(cs)) {
+        return 0;
+      } else {
+        out.append(cs);
+        return cs.length();
+      }
     } else {
       return super.appendToAndReturnLengthImpl(out);
     }

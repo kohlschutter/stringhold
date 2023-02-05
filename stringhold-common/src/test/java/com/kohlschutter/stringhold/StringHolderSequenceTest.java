@@ -513,4 +513,13 @@ public class StringHolderSequenceTest {
     assertFalse(seq.isString()); // still three separate strings
   }
 
+  @Test
+  public void testLength() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    seq.append("Hello");
+    seq.append(' ');
+    seq.append(StringHolder.withContent("World"));
+    assertEquals("Hello World".length(), seq.length());
+    assertFalse(seq.isString());
+  }
 }

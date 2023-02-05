@@ -31,7 +31,12 @@ import java.util.Objects;
  * @author Christian Kohlschütter
  */
 public class StringHolderSequence extends StringHolder implements Appendable {
-  final List<Object> sequence;
+  final List<CharSequence> sequence;
+
+  private boolean immutable = false;
+  private boolean cannotUseCache = false;
+  private Integer cachedHashCode = null;
+  private Integer cachedLength = null;
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
@@ -65,6 +70,13 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     return false;
   }
 
+  private void checkMutable() {
+    if (immutable) {
+      throw new IllegalStateException(
+          "Cannot append -- instance is marked as effectively-immutable");
+    }
+  }
+
   @Override
   public StringHolderSequence append(CharSequence csq, int start, int end) {
     if (end == start) {
@@ -96,18 +108,22 @@ public class StringHolderSequence extends StringHolder implements Appendable {
    * @return This instance.
    */
   public StringHolderSequence append(String s) {
-    addSequence(s);
+    if (!s.isEmpty()) {
+      addSequence(CommonStrings.lookupIfPossible(s));
+    }
     return this;
   }
 
-  private void addSequence(String o) {
-    int len = o.length();
+  private void addSequence(String s) {
+    int len = s.length();
     if (len == 0) {
       return;
     }
 
+    checkMutable();
+
     uncache();
-    sequence.add(o);
+    sequence.add(s);
     resizeBy(len, len);
   }
 
@@ -121,8 +137,13 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     if (s.isKnownEmpty()) {
       return this;
     } else if (s.isString() || needsStringConversion(s)) {
+      checkMutable();
       addSequence(s.toString());
       return this;
+    }
+
+    if (!s.isEffectivelyImmutable()) {
+      cannotUseCache = true;
     }
 
     uncache();
@@ -140,7 +161,7 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   @Override
   public StringHolderSequence append(CharSequence s) {
     if (!CharSequenceReleaseShim.isEmpty(s)) {
-      addSequence(String.valueOf(s));
+      addSequence(CommonStrings.lookupIfPossible(String.valueOf(s)));
     }
     return this;
   }
@@ -294,6 +315,8 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   protected String getString() {
     StringBuilder sb = new StringBuilder(Math.max(16, getExpectedLength()));
     int len = appendToAndReturnLength(sb);
+
+    uncache();
 
     final String s;
     sequence.clear();
@@ -473,5 +496,98 @@ public class StringHolderSequence extends StringHolder implements Appendable {
     }
 
     throw new IndexOutOfBoundsException();
+  }
+
+  @Override
+  public int hashCode() { // NOPMD.OverrideBothEqualsAndHashcode
+    if (cachedHashCode == null || cannotUseCache) {
+      cachedHashCode = updateHashCode(0);
+    }
+    return cachedHashCode;
+  }
+
+  @Override
+  protected int updateHashCode(int h) {
+    if (isString()) {
+      return super.updateHashCode(h);
+    }
+
+    for (CharSequence obj : sequence) {
+      h = updateHashCode(obj, h);
+    }
+
+    return h;
+  }
+
+  private static int updateHashCode(Object obj, int h) {
+    if (obj instanceof StringHolder) {
+      StringHolder sh = (StringHolder) obj;
+      if (!sh.isKnownEmpty()) {
+        h = sh.updateHashCode(h);
+      }
+    } else {
+      CharSequence s = (CharSequence) obj;
+      if (h == 0) {
+        return s.hashCode();
+      }
+      int len = s.length();
+      for (int i = 0; i < len; i++) {
+        h = 31 * h + s.charAt(i);
+      }
+    }
+
+    return h;
+  }
+
+  @Override
+  protected boolean checkEquals(StringHolder sh) {
+    if (sh instanceof StringHolderSequence) {
+      StringHolderSequence shs = (StringHolderSequence) sh;
+      if (sequence.equals(shs.sequence)) {
+        return true;
+      }
+    }
+
+    return super.checkEquals(sh);
+  }
+
+  @Override
+  protected void uncache() {
+    super.uncache();
+    cachedHashCode = null;
+    cachedLength = null;
+  }
+
+  @Override
+  protected int computeLength() {
+    Integer length = cachedLength;
+    if (length == null || cannotUseCache) {
+      int len = 0;
+      for (CharSequence obj : sequence) {
+        len += obj.length();
+      }
+      cachedLength = length = len;
+    }
+    return length;
+  }
+
+  @Override
+  public boolean isEffectivelyImmutable() {
+    return immutable;
+  }
+
+  @Override
+  public void markEffectivelyImmutable() {
+    if (immutable) {
+      return;
+    }
+    for (Object seq : sequence) {
+      if (!(seq instanceof StringHolder)) {
+        continue;
+      }
+      StringHolder sh = (StringHolder) seq;
+      sh.markEffectivelyImmutable();
+    }
+    immutable = true;
   }
 }

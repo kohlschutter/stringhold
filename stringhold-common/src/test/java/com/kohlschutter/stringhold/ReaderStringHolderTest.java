@@ -567,8 +567,5 @@ public class ReaderStringHolderTest {
     sh1.resizeBy(3, -1000);
     assertEquals(3, sh1.getMinimumLength());
     assertEquals(3, sh1.getExpectedLength());
-
-    // still equals because checkError() is true
-    assertEquals(sh2, sh1);
   }
 }

@@ -45,10 +45,10 @@ import com.kohlschutter.util.ComparisonUtil;
  *
  * @author Christian Kohlschütter
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ExcessiveClassLength"})
+@SuppressWarnings({
+    "PMD.CyclomaticComplexity", "PMD.ExcessiveClassLength", "PMD.ExcessivePublicCount"})
 public abstract class StringHolder extends CharSequenceReleaseShim implements CharSequence,
     HasLength, Comparable<Object> {
-
   String theString;
 
   private int minLength;
@@ -229,7 +229,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    */
   public static StringHolder withSupplierFixedLength(int fixedLength, Supplier<?> supplier) {
     if (fixedLength == 0) {
-      return SimpleStringHolder.EMPTY_STRING;
+      return CommonStrings.EMPTY_STRINGHOLDER;
     }
     return new FixedLengthSuppliedStringHolder(fixedLength, supplier);
   }
@@ -250,7 +250,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   public static StringHolder withSupplierFixedLength(int fixedLength, IOSupplier<?> supplier,
       IOExceptionHandler onError) {
     if (fixedLength == 0) {
-      return SimpleStringHolder.EMPTY_STRING;
+      return CommonStrings.EMPTY_STRINGHOLDER;
     }
     return new FixedLengthSuppliedStringHolder(fixedLength, supplier, onError);
   }
@@ -324,11 +324,10 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   @SuppressWarnings("PMD.CognitiveComplexity")
   public static StringHolder withContent(Object obj) {
     if (obj == null) {
-      return SimpleStringHolder.NULL_STRING;
-    }
-    if (obj instanceof String) {
+      return CommonStrings.NULL_STRINGHOLDER;
+    } else if (obj instanceof String) {
       String s = (String) obj;
-      StringHolder sh = SimpleStringHolder.COMMON_STRINGS.get(s);
+      StringHolder sh = CommonStrings.lookup(s);
       if (sh != null) {
         return sh;
       }
@@ -338,20 +337,59 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
     } else {
       if (obj instanceof CharSequence) {
         if (CharSequenceReleaseShim.isEmpty((CharSequence) obj)) {
-          return SimpleStringHolder.EMPTY_STRING;
+          return CommonStrings.EMPTY_STRINGHOLDER;
         }
       } else {
-        StringHolder sh = SimpleStringHolder.COMMON_STRINGS.get(obj);
+        StringHolder sh = CommonStrings.lookup(obj);
         if (sh != null) {
           return sh;
         }
       }
       String s = String.valueOf(obj);
-      StringHolder sh = SimpleStringHolder.COMMON_STRINGS.get(s);
+      StringHolder sh = CommonStrings.lookup(s);
       if (sh != null) {
         return sh;
       }
       return new SimpleStringHolder(s);
+    }
+  }
+
+  /**
+   * Constructs a {@link StringHolder} with the given content sequences, as if they had been
+   * appended to a {@link StringHolderSequence}. Empty sequences are optimized.
+   * 
+   * @param objects The objects to represent as a sequence; if {@code null}, a StringHolder of the
+   *          string {@code "null"} is returned.
+   * @return The {@link StringHolder} instance.
+   * @see #withContent(Object)
+   */
+  public static StringHolder withContent(Object... objects) {
+    if (objects == null) {
+      return CommonStrings.NULL_STRINGHOLDER;
+    }
+    switch (objects.length) {
+      case 0:
+        return CommonStrings.EMPTY_STRINGHOLDER;
+      case 1:
+        return withContent(objects[0]);
+      default:
+        // see below
+    }
+    StringHolderSequence seq = new StringHolderSequence(objects.length);
+    for (Object obj : objects) {
+      if (obj instanceof StringHolder //
+          && ((StringHolder) obj).isKnownEmpty()) {
+        continue;
+      } else if (obj instanceof CharSequence && CharSequenceReleaseShim.isEmpty(
+          (CharSequence) obj)) {
+        continue;
+      }
+      seq.append(obj);
+    }
+    if (seq.numberOfAppends() == 0) {
+      return CommonStrings.EMPTY_STRINGHOLDER;
+    } else {
+      return seq;
     }
   }
 
@@ -552,8 +590,11 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * {@link #getExpectedLength()} {@code == } {@link #length()}.
    *
    * By default, this is only true if {@link #isString()} {@code == true}, but subclasses may
-   * override this check. When they do, they must include a check for {@code ||}
-   * {@link #isString()}.
+   * override this check. When they do, they must include a check for
+   * {@code || super.isLengthKnown()}.
+   * 
+   * Note that once a length is <em>known</em>, it cannot change (i.e., don't override this for
+   * mutable objects like {@link StringHolderSequence}).
    *
    * @return {@code true} if the length in this holder is known.
    * @see #isKnownEmpty()
@@ -564,7 +605,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return toString().hashCode();
   }
 
@@ -587,15 +628,54 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
   private boolean equalsString(String s) {
     if (!checkError() && s.length() < getMinimumLength()) {
       return false;
-    } else {
+    } else if (isString()) {
       return toString().equals(s);
+    } else if (isLengthKnown() && length() != s.length()) {
+      return false;
+    } else {
+      return checkEquals(s);
     }
   }
 
+  /**
+   * Checks if this {@link StringHolder} instance is equal to the given String (assume that trivial
+   * requirements, such as minimum length, were already checked).
+   * 
+   * Subclasses may override this check for a faster operation.
+   * 
+   * @param s The other string.
+   * @return {@code true} if this {@link StringHolder} is equal to the given string.
+   */
+  protected boolean checkEquals(String s) {
+    return toString().equals(s);
+  }
+
+  /**
+   * Checks if this {@link StringHolder} instance is equal to the given {@link StringHolder} (assume
+   * that trivial requirements, such as minimum length, were already checked).
+   * 
+   * Subclasses may override this check for a faster operation.
+   * 
+   * @param sh The other {@link StringHolder}.
+   * @return {@code true} if this {@link StringHolder} is equal to the given string.
+   */
+  protected boolean checkEquals(StringHolder sh) {
+    return toString().equals(sh.toString());
+  }
+
   private boolean equalsStringHolder(StringHolder obj) {
+    if (isLengthKnown() && obj.isLengthKnown() && length() != obj.length()) {
+      return false;
+    }
+
     if (isString()) {
       if (!obj.checkError() && length() < obj.getMinimumLength()) {
         return false;
+      }
+      if (obj.isString()) {
+        return toString().equals(obj.toString());
+      } else {
+        return obj.equalsString(toString());
       }
     } else if (obj.isString()) {
       if (!checkError() && obj.length() < getMinimumLength()) {
@@ -603,7 +683,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
       }
     }
 
-    return obj.equalsString(toString());
+    return checkEquals(obj);
   }
 
   /**
@@ -753,7 +833,9 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    */
   protected int appendToAndReturnLengthDefaultImpl(Appendable out) throws IOException {
     String s = toString();
-    out.append(s);
+    if (!s.isEmpty()) {
+      out.append(s);
+    }
     return s.length();
   }
 
@@ -828,7 +910,7 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
         if (isKnownEmpty()) {
           theString = s = "";
         } else {
-          theString = s = Objects.requireNonNull(getString());
+          theString = s = CommonStrings.lookupIfPossible(Objects.requireNonNull(getString()));
         }
         resizeTo(s.length(), 0, true);
       } catch (RuntimeException e) {
@@ -847,7 +929,8 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
 
   /**
    * Called from within {@link #toString()} after updating/assigning the cached string but before
-   * returning it. This may be a good opportunity to see if we got what we wanted, setError, etc.
+   * returning it. This may be a good opportunity to see if we got what we wanted, call setError,
+   * etc.
    *
    * @param s The string.
    */
@@ -863,6 +946,8 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
 
   /**
    * Un-caches the already-determined String. This can be used to implement mutable data structures.
+   * 
+   * Important: Subclasses must carefully check {@link #isEffectivelyImmutable()} status.
    */
   protected void uncache() {
     theString = null;
@@ -951,10 +1036,14 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
    * @return The old scope, or {@code null} if none was set before.
    */
   public final StringHolderScope updateScope(StringHolderScope newScope) {
-    if (newScope == StringHolderScope.NONE) { // NOPMD
+    if (newScope == StringHolderScope.NONE) { // NOPMD.CompareObjectsWithEquals
       newScope = null;
     }
     StringHolderScope oldScope = this.scope;
+    if (oldScope == newScope) { // NOPMD.CompareObjectsWithEquals
+      return oldScope;
+    }
+
     if (oldScope != null) {
       try {
         oldScope.remove(this);
@@ -1292,6 +1381,43 @@ public abstract class StringHolder extends CharSequenceReleaseShim implements Ch
       if (c1 != c2) {
         return c1 - c2;
       }
+    }
+  }
+
+  /**
+   * Computes a partial hash code, using the given value as the seed.
+   * 
+   * @param h The initial value (seed).
+   * @return The updated hash code.
+   */
+  protected int updateHashCode(int h) {
+    int length = length();
+
+    if (h == 0 && isString()) {
+      return toString().hashCode();
+    }
+
+    for (int i = 0; i < length; i++) {
+      h = 31 * h + charAt(i);
+    }
+    return h;
+  }
+
+  /**
+   * Checks if the given {@link StringHolder} is <em>effectively immutable</em>.
+   * 
+   * @return {@code true} if the contents aren't going to change.
+   */
+  public boolean isEffectivelyImmutable() {
+    return isString();
+  }
+
+  /**
+   * Marks this instance as <em>effectively immutable</em>.
+   */
+  public void markEffectivelyImmutable() {
+    if (!isEffectivelyImmutable()) {
+      toString();
     }
   }
 }
