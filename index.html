@@ -86,7 +86,7 @@
 <p>Concatenating large Strings in Java, potentially with deep hierarchies, with inputs from different sources (local or network), etc., can be unnecessarily complex:</p>
 <ul>
 
-<li>Even with StringBuilders, text gets copied multiple times around</li>
+<li>Even with StringBuilders, text gets copied around multiple times</li>
 <li>Character buffers get reallocated over and over</li>
 <li>A missing input fragment blocks the assembly of the full output</li>
 <li>The output is written to a stream, so why did we assemble it to String in the first place?</li>
@@ -113,7 +113,7 @@
 <p>You can use a <code>Reader</code> source as a supplying source through the <code>ReaderStringHolder</code> subclass.</p>
 <p>You can also build your own StringHolder subclass, if you want to.</p></section><section>
 <h2>The Twist</h2>
-<p>All the operation listed above may in fact never create a String or concatenate them. If all that you need is to copy data from a Reader to a Writer, there is no need to construct a single String from it!</p>
+<p>All the operations listed above may in fact never create a String or concatenate them. If all that you need is to copy data from a Reader to a Writer, there is no need to construct a single String from it!</p>
 <p><strong>stringhold</strong> takes great care of delaying the materialization of String instances from input data as much as possible.</p></section><section>
 <h2>Relaxing assumptions</h2>
 <p>Often, a criterion such as &#x201c;too long&#x201d; doesn't require to know the exact length of something. It's enough that we know we've hit a certain minimum length.</p>
@@ -134,7 +134,7 @@
 <h2>Modern Java</h2>
 <p><strong>stringhold</strong> is fully compatible with Java 8 and above. Thanks to a Multirelease jar structure, it can optimize the use of Java methods introduced in newer Java releases whenever possible, such as <code>CharSequence#isEmpty()</code> &#x2014; without complicating its own public API.</p></section><section>
 <h2>Code Quality</h2>
-<p>This project currently maintains a <a href="https://kohlschutter.github.io/stringhold/jacoco/index.html" class="externalLink">100% code coverage</a> policy.</p>
+<p>This project currently maintains a <a href="https://kohlschutter.github.io/stringhold/stringhold-codecoverage/jacoco-aggregate/index.html" class="externalLink">100% code coverage</a> policy.</p>
 <p>This is one of the projects where this makes actual sense.</p>
 <p>The <strong>stringhold</strong> API is expected to not have breaking changes across minor and patch releases. Changes in behavior are possible but should be clearly marked in the changelog.</p></section></section><section>
 <h1>Usage Examples</h1><section>
