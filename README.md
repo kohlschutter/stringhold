@@ -4,7 +4,7 @@
 
 Concatenating large Strings in Java, potentially with deep hierarchies, with inputs from different sources (local or network), etc., can be unnecessarily complex:
 
-- Even with StringBuilders, text gets copied multiple times around
+- Even with StringBuilders, text gets copied around multiple times
 - Character buffers get reallocated over and over
 - A missing input fragment blocks the assembly of the full output
 - The output is written to a stream, so why did we assemble it to String in the first place?
@@ -38,7 +38,7 @@ You can also build your own StringHolder subclass, if you want to.
 
 ## The Twist
 
-All the operation listed above may in fact never create a String or concatenate them. If all that you need is to copy data from a Reader to a Writer, there is no need to construct a single String from it!
+All the operations listed above may in fact never create a String or concatenate them. If all that you need is to copy data from a Reader to a Writer, there is no need to construct a single String from it!
 
 **stringhold** takes great care of delaying the materialization of String instances from input data as much as possible.
 
@@ -73,7 +73,7 @@ A set of StringHolders can be associated with a `StringHolderScope`, which recei
 
 ## Code Quality
 
-This project currently maintains a [100% code coverage](https://kohlschutter.github.io/stringhold/jacoco/index.html) policy.
+This project currently maintains a [100% code coverage](https://kohlschutter.github.io/stringhold/stringhold-codecoverage/jacoco-aggregate/index.html) policy.
 
 This is one of the projects where this makes actual sense.
 
