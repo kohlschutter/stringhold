@@ -17,6 +17,8 @@
  */
 package com.kohlschutter.stringhold.liqp;
 
+import java.util.WeakHashMap;
+
 import com.kohlschutter.stringhold.LimitedStringHolderScope;
 import com.kohlschutter.stringhold.StringHolder;
 import com.kohlschutter.stringhold.StringHolderScope;
@@ -28,83 +30,141 @@ import liqp.TemplateContext;
 
 /**
  * A {@link RenderTransformer} that uses {@link StringHolder} instances for appending.
- * 
+ *
  * @author Christian Kohlschütter
  */
 public final class StringHolderRenderTransformer implements RenderTransformer {
-<span class="fc" id="L35">  static final String SCOPE_KEY = StringHolderScope.class.getName();</span>
+<span class="fc" id="L37">  static final String SCOPE_KEY = StringHolderScope.class.getName();</span>
 
-<span class="fc" id="L37">  private static final StringHolderRenderTransformer INSTANCE = new StringHolderRenderTransformer();</span>
+<span class="fc" id="L39">  private static final WeakHashMap&lt;StringHolderSequence, StringHolderSequence&gt; HOLDER_CACHE =</span>
+      new WeakHashMap&lt;&gt;();
 
-  private StringHolderRenderTransformer() {
+<span class="fc" id="L42">  private static final StringHolderRenderTransformer INSTANCE = new StringHolderRenderTransformer(</span>
+      HOLDER_CACHE);
+
+  private final WeakHashMap&lt;StringHolderSequence, StringHolderSequence&gt; holderCache;
+
+  private StringHolderRenderTransformer(
+<span class="fc" id="L48">      WeakHashMap&lt;StringHolderSequence, StringHolderSequence&gt; holderCache) {</span>
+<span class="fc" id="L49">    this.holderCache = holderCache;</span>
+<span class="fc" id="L50">  }</span>
+
+  /**
+   * Returns the shared {@link StringHolderRenderTransformer} instance.
+   *
+   * This instance shares a common cache for de-duplicating {@link StringHolderSequence}s, which may
+   * help to significantly reduce heap allocation, at the cost of a slightly slower execution.
+   *
+   * If you're using {@link StringHolderRenderTransformer} in a highly concurrent setting, see
+   * {@link #newCachedInstance()} to reduce lock contention.
+   *
+   * @return The instance.
+   */
+  public static StringHolderRenderTransformer getSharedCacheInstance() {
+<span class="fc" id="L64">    return INSTANCE;</span>
   }
 
   /**
-   * Returns the {@link StringHolderRenderTransformer} singleton instance.
-   * 
+   * Creates a new, cached {@link StringHolderRenderTransformer} instance.
+   *
+   * This instance uses its own cache for de-duplicating {@link StringHolderSequence}s, which may
+   * help to significantly reduce heap allocation, at the cost of a slightly slower execution.
+   *
    * @return The instance.
    */
-  public static StringHolderRenderTransformer getInstance() {
-<span class="fc" id="L48">    return INSTANCE;</span>
+  public static StringHolderRenderTransformer newCachedInstance() {
+<span class="fc" id="L76">    return new StringHolderRenderTransformer(new WeakHashMap&lt;&gt;());</span>
+  }
+
+  /**
+   * Creates a new, uncached {@link StringHolderRenderTransformer} instance.
+   *
+   * This instance doesn't use a cache for de-duplicating {@link StringHolderSequence}s, resulting
+   * in an overall faster execution at the cost of heap allocations.
+   *
+   * @return The instance.
+   */
+  public static StringHolderRenderTransformer newUncachedInstance() {
+<span class="fc" id="L88">    return new StringHolderRenderTransformer(null);</span>
   }
 
   @Override
   public Controller newObjectAppender(TemplateContext context, int estimatedNumberOfAppends) {
-<span class="fc" id="L53">    return new Controller() {</span>
-<span class="fc" id="L54">      private Object result = &quot;&quot;;</span>
-<span class="fc" id="L55">      private ObjectAppender appender = (o) -&gt; {</span>
-<span class="fc" id="L56">        StringHolder sh = StringHolder.withContent(o);</span>
-<span class="fc" id="L57">        result = sh;</span>
-
-        @SuppressWarnings(&quot;PMD.AvoidThrowingRawExceptionTypes&quot;)
-<span class="fc" id="L60">        StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(</span>
-            SCOPE_KEY, (k) -&gt; {
-<span class="fc" id="L62">              int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">              if (maxLen != Integer.MAX_VALUE) {</span>
-<span class="fc" id="L64">                return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, () -&gt; {</span>
-<span class="fc" id="L65">                  throw new RuntimeException(&quot;rendered string exceeds &quot; + maxLen);</span>
-                });
-              } else {
-<span class="fc" id="L68">                return StringHolderScope.NONE;</span>
-              }
+    @SuppressWarnings(&quot;PMD.AvoidThrowingRawExceptionTypes&quot;)
+<span class="fc" id="L94">    StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(</span>
+        SCOPE_KEY, (k) -&gt; {
+<span class="fc" id="L96">          int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">          if (maxLen != Integer.MAX_VALUE) {</span>
+<span class="fc" id="L98">            return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, () -&gt; {</span>
+<span class="fc" id="L99">              throw new RuntimeException(&quot;rendered string exceeds &quot; + maxLen);</span>
             });
+          } else {
+<span class="fc" id="L102">            return StringHolderScope.NONE;</span>
+          }
+        });
 
-<span class="fc" id="L72">        sh.updateScope(scope);</span>
+<span class="fc" id="L106">    return new Controller() {</span>
+<span class="fc" id="L107">      private Object result = &quot;&quot;;</span>
+<span class="fc" id="L108">      private ObjectAppender appender = (o) -&gt; {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (o instanceof StringHolder) {</span>
+<span class="fc" id="L110">          ((StringHolder) o).updateScope(scope);</span>
+        }
+<span class="fc" id="L112">        result = o;</span>
 
-<span class="fc" id="L74">        appender = (o2) -&gt; {</span>
-<span class="fc" id="L75">          StringHolderSequence seq = new StringHolderSequence(Math.max(3,</span>
+<span class="fc" id="L114">        appender = (o2) -&gt; {</span>
+<span class="fc" id="L115">          StringHolderSequence seq = new StringHolderSequence(Math.max(3,</span>
               estimatedNumberOfAppends));
-<span class="fc" id="L77">          seq.updateScope(scope);</span>
 
-          // do not double-count
-<span class="fc" id="L80">          ((StringHolder) result).updateScope(null);</span>
-<span class="fc" id="L81">          seq.append(result);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">          if (result instanceof StringHolder) {</span>
+<span class="fc" id="L119">            ((StringHolder) result).updateScope(StringHolderScope.NONE);</span>
+          }
+<span class="fc" id="L121">          seq.updateScope(scope);</span>
+<span class="fc" id="L122">          seq.append(result);</span>
 
-<span class="fc" id="L83">          result = seq;</span>
+<span class="fc" id="L124">          result = seq;</span>
 
-<span class="fc" id="L85">          seq.append(o2);</span>
-<span class="fc" id="L86">          appender = seq::append;</span>
-<span class="fc" id="L87">        };</span>
-<span class="fc" id="L88">      };</span>
+<span class="fc" id="L126">          seq.append(o2);</span>
+<span class="fc" id="L127">          appender = seq::append;</span>
+<span class="fc" id="L128">        };</span>
+<span class="fc" id="L129">      };</span>
 
       @Override
       public Object getResult() {
-<span class="fc" id="L92">        return transformObject(context, result);</span>
+<span class="fc" id="L133">        return transformObject(context, result);</span>
       }
 
       @Override
       public void append(Object obj) {
-<span class="fc" id="L97">        appender.append(obj);</span>
-<span class="fc" id="L98">      }</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L139">          ((StringHolder) obj).updateScope(StringHolderScope.NONE);</span>
+        }
+<span class="fc" id="L141">        appender.append(obj);</span>
+<span class="fc" id="L142">      }</span>
     };
   }
 
   @Override
   public Object transformObject(TemplateContext context, Object obj) {
-<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L105">      return ((StringHolder) obj).asContent();</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L149">      StringHolder sh = (StringHolder) obj;</span>
+
+      StringHolder o;
+<span class="fc bfc" id="L152" title="All 4 branches covered.">      if (sh instanceof StringHolderSequence &amp;&amp; holderCache != null) {</span>
+<span class="fc" id="L153">        StringHolderSequence shs = (StringHolderSequence) sh;</span>
+<span class="fc" id="L154">        shs.markEffectivelyImmutable();</span>
+<span class="fc" id="L155">        shs.hashCode(); // pre-compute hashcode to reduce time under lock</span>
+
+        // de-duplicate identical StringHolderSequences
+<span class="fc" id="L158">        synchronized (holderCache) {</span>
+<span class="fc" id="L159">          o = holderCache.computeIfAbsent(shs, (k) -&gt; shs);</span>
+<span class="fc" id="L160">        }</span>
+<span class="fc" id="L161">      } else {</span>
+<span class="fc" id="L162">        o = sh;</span>
+      }
+
+<span class="fc" id="L165">      return o.asContent();</span>
     } else {
-<span class="fc" id="L107">      return obj;</span>
+<span class="fc" id="L167">      return obj;</span>
     }
   }
 }

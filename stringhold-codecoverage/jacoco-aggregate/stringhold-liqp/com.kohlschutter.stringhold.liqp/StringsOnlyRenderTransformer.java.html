@@ -28,7 +28,7 @@ import liqp.TemplateContext;
 
 /**
  * A {@link RenderTransformer} that uses {@link StringOnlySequence} instances for appending.
- * 
+ *
  * @author Christian Kohlschütter
  */
 public final class StringsOnlyRenderTransformer implements RenderTransformer {
@@ -39,7 +39,7 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
 
   /**
    * Returns the {@link StringsOnlyRenderTransformer} singleton instance.
-   * 
+   *
    * @return The instance.
    */
   public static StringsOnlyRenderTransformer getInstance() {

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1674839887651">
+<licensePluginReport goal="CHECK" timestamp="1675635789174">
     <module artifactId="stringhold-common" groupId="com.kohlschutter.stringhold" version="1.0.0-SNAPSHOT"/>
     <files>
         <file path="src/main/java/com/kohlschutter/stringhold/AsyncStringHolderSequence.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CachedIOSupplier.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/CommonStrings.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/FixedLengthSuppliedStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/HasExpectedLength.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/HasKnownLength.java" result="PRESENT"/>
@@ -31,9 +32,11 @@
         <file path="src/test/java/com/kohlschutter/stringhold/LazyInitReaderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/LimitedStringHolderScopeTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/ReaderStringHolderTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/SimpleStringHolderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/StringHolderScopeTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/StringHolderSequenceTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/StringHolderTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/StringOnlySequenceTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/StringSequenceTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/SuppliedStringHolderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/WrappedAppendable.java" result="PRESENT"/>

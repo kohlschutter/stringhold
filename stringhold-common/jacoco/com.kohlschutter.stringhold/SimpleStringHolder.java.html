@@ -17,10 +17,6 @@
  */
 package com.kohlschutter.stringhold;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 
 /**
@@ -29,48 +25,10 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
  * @author Christian Kohlschütter
  */
 final class SimpleStringHolder extends StringHolder implements HasKnownLength {
-  static final Map&lt;Object, StringHolder&gt; COMMON_STRINGS;
-
-  static {
-<span class="fc" id="L35">    Object[] items = {</span>
-        &quot;&quot;, &quot; &quot;, &quot;null&quot;, //
-        &quot;,&quot;, &quot;.&quot;, //
-        &quot;\n&quot;, &quot;\n &quot;, &quot;\n  &quot;, &quot;\n   &quot;, &quot;\n    &quot;, &quot;\n     &quot;, &quot;\n      &quot;, &quot;\n       &quot;, &quot;\n        &quot;,
-        &quot;\n         &quot;, &quot;\n          &quot;, &quot;\n           &quot;, &quot;\n            &quot;, //
-        &quot;\n\n&quot;, &quot;\n\n  &quot;, //
-<span class="fc" id="L41">        true, false, //</span>
-<span class="fc" id="L42">        -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, //</span>
-        &quot;src&quot;, &quot;alt&quot;, &quot;read&quot;, &quot;width&quot;, &quot;height&quot;, &quot;style&quot;, &quot;small&quot;, //
-        &quot;1600&quot;, &quot;800&quot;, &quot;480&quot;, //
-        &quot;&lt;h&quot;, &quot;&lt;/h&quot; //
-    };
-
-<span class="fc" id="L48">    COMMON_STRINGS = new HashMap&lt;&gt;(items.length + 16);</span>
-    boolean putObj;
-<span class="fc bfc" id="L50" title="All 2 branches covered.">    for (Object obj : items) {</span>
-      String s;
-<span class="fc bfc" id="L52" title="All 2 branches covered.">      if (obj instanceof String) {</span>
-<span class="fc" id="L53">        s = (String) obj;</span>
-<span class="fc" id="L54">        putObj = false;</span>
-      } else {
-<span class="fc" id="L56">        s = String.valueOf(obj);</span>
-<span class="fc" id="L57">        putObj = true;</span>
-      }
-<span class="fc" id="L59">      StringHolder sh = new SimpleStringHolder(s);</span>
-<span class="fc" id="L60">      COMMON_STRINGS.put(s, sh);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">      if (putObj) {</span>
-<span class="fc" id="L62">        COMMON_STRINGS.put(obj, sh);</span>
-      }
-    }
-  }
-
-<span class="fc" id="L67">  static final StringHolder EMPTY_STRING = Objects.requireNonNull(COMMON_STRINGS.get(&quot;&quot;));</span>
-<span class="fc" id="L68">  static final StringHolder NULL_STRING = Objects.requireNonNull(COMMON_STRINGS.get(&quot;null&quot;));</span>
-
   SimpleStringHolder(String s) {
-<span class="fc" id="L71">    super(s.length());</span>
-<span class="fc" id="L72">    this.theString = s;</span>
-<span class="fc" id="L73">  }</span>
+<span class="fc" id="L29">    super(s.length());</span>
+<span class="fc" id="L30">    this.theString = s;</span>
+<span class="fc" id="L31">  }</span>
 
   @Override
   @ExcludeFromCodeCoverageGeneratedReport
@@ -83,6 +41,11 @@ final class SimpleStringHolder extends StringHolder implements HasKnownLength {
   @ExcludeFromCodeCoverageGeneratedReport
   protected void uncache() {
     // should not be reachable; just defensive a measure
+  }
+
+  @Override
+  public boolean isEffectivelyImmutable() {
+<span class="fc" id="L48">    return true;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

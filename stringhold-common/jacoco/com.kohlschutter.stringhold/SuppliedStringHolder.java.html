@@ -147,87 +147,103 @@ class SuppliedStringHolder extends StringHolder {
 <span class="fc" id="L147">      return sh.appendToAndReturnLengthDefaultImpl(out);</span>
 <span class="fc bfc" id="L148" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
 <span class="fc" id="L149">      CharSequence cs = (CharSequence) obj;</span>
-<span class="fc" id="L150">      out.append(cs);</span>
-<span class="fc" id="L151">      return cs.length();</span>
+<span class="fc bfc" id="L150" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(cs)) {</span>
+<span class="fc" id="L151">        return 0;</span>
+      } else {
+<span class="fc" id="L153">        out.append(cs);</span>
+<span class="fc" id="L154">        return cs.length();</span>
+      }
     } else {
-<span class="fc" id="L153">      return super.appendToAndReturnLengthDefaultImpl(out);</span>
+<span class="fc" id="L157">      return super.appendToAndReturnLengthDefaultImpl(out);</span>
     }
   }
 
   @Override
   protected int appendToAndReturnLengthImpl(StringBuilder out) {
-<span class="fc" id="L159">    Object obj = getSuppliedObject();</span>
-<span class="fc bfc" id="L160" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L161">      StringHolder sh = (StringHolder) obj;</span>
-<span class="fc" id="L162">      return sh.appendToAndReturnLengthImpl(out);</span>
-<span class="fc bfc" id="L163" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
-<span class="fc" id="L164">      CharSequence cs = (CharSequence) obj;</span>
-<span class="fc" id="L165">      out.append(cs);</span>
-<span class="fc" id="L166">      return cs.length();</span>
+<span class="fc" id="L163">    Object obj = getSuppliedObject();</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L165">      StringHolder sh = (StringHolder) obj;</span>
+<span class="fc" id="L166">      return sh.appendToAndReturnLengthImpl(out);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
+<span class="fc" id="L168">      CharSequence cs = (CharSequence) obj;</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(cs)) {</span>
+<span class="fc" id="L170">        return 0;</span>
+      } else {
+<span class="fc" id="L172">        out.append(cs);</span>
+<span class="fc" id="L173">        return cs.length();</span>
+      }
     } else {
-<span class="fc" id="L168">      return super.appendToAndReturnLengthImpl(out);</span>
+<span class="fc" id="L176">      return super.appendToAndReturnLengthImpl(out);</span>
     }
   }
 
   @Override
   protected int appendToAndReturnLengthImpl(StringBuffer out) {
-<span class="fc" id="L174">    Object obj = getSuppliedObject();</span>
-<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L176">      StringHolder sh = (StringHolder) obj;</span>
-<span class="fc" id="L177">      return sh.appendToAndReturnLengthImpl(out);</span>
-<span class="fc bfc" id="L178" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
-<span class="fc" id="L179">      CharSequence cs = (CharSequence) obj;</span>
-<span class="fc" id="L180">      out.append(cs);</span>
-<span class="fc" id="L181">      return cs.length();</span>
+<span class="fc" id="L182">    Object obj = getSuppliedObject();</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L184">      StringHolder sh = (StringHolder) obj;</span>
+<span class="fc" id="L185">      return sh.appendToAndReturnLengthImpl(out);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
+<span class="fc" id="L187">      CharSequence cs = (CharSequence) obj;</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(cs)) {</span>
+<span class="fc" id="L189">        return 0;</span>
+      } else {
+<span class="fc" id="L191">        out.append(cs);</span>
+<span class="fc" id="L192">        return cs.length();</span>
+      }
     } else {
-<span class="fc" id="L183">      return super.appendToAndReturnLengthImpl(out);</span>
+<span class="fc" id="L195">      return super.appendToAndReturnLengthImpl(out);</span>
     }
   }
 
   @Override
   protected int appendToAndReturnLengthImpl(Writer out) throws IOException {
-<span class="fc" id="L189">    Object obj = getSuppliedObject();</span>
-<span class="fc bfc" id="L190" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L191">      StringHolder sh = (StringHolder) obj;</span>
-<span class="fc" id="L192">      return sh.appendToAndReturnLengthImpl(out);</span>
-<span class="fc bfc" id="L193" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
-<span class="fc" id="L194">      CharSequence cs = (CharSequence) obj;</span>
-<span class="fc" id="L195">      out.append(cs);</span>
-<span class="fc" id="L196">      return cs.length();</span>
+<span class="fc" id="L201">    Object obj = getSuppliedObject();</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L203">      StringHolder sh = (StringHolder) obj;</span>
+<span class="fc" id="L204">      return sh.appendToAndReturnLengthImpl(out);</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">    } else if (obj instanceof CharSequence) {</span>
+<span class="fc" id="L206">      CharSequence cs = (CharSequence) obj;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(cs)) {</span>
+<span class="fc" id="L208">        return 0;</span>
+      } else {
+<span class="fc" id="L210">        out.append(cs);</span>
+<span class="fc" id="L211">        return cs.length();</span>
+      }
     } else {
-<span class="fc" id="L198">      return super.appendToAndReturnLengthImpl(out);</span>
+<span class="fc" id="L214">      return super.appendToAndReturnLengthImpl(out);</span>
     }
   }
 
   @Override
   protected int computeLength() {
-<span class="fc" id="L204">    Object obj = getSuppliedObject();</span>
-<span class="fc bfc" id="L205" title="All 2 branches covered.">    if (obj instanceof CharSequence) {</span>
-<span class="fc" id="L206">      return ((CharSequence) obj).length();</span>
+<span class="fc" id="L220">    Object obj = getSuppliedObject();</span>
+<span class="fc bfc" id="L221" title="All 2 branches covered.">    if (obj instanceof CharSequence) {</span>
+<span class="fc" id="L222">      return ((CharSequence) obj).length();</span>
     }
-<span class="fc" id="L208">    return super.computeLength();</span>
+<span class="fc" id="L224">    return super.computeLength();</span>
   }
 
   @Override
   public boolean isLengthKnown() {
-<span class="fc bfc" id="L213" title="All 2 branches covered.">    if (super.isLengthKnown()) {</span>
-<span class="fc" id="L214">      return true;</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">    if (super.isLengthKnown()) {</span>
+<span class="fc" id="L230">      return true;</span>
     }
-<span class="fc" id="L216">    Object obj = object;</span>
-<span class="fc bfc" id="L217" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
-<span class="fc" id="L218">      return ((StringHolder) obj).isLengthKnown();</span>
+<span class="fc" id="L232">    Object obj = object;</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">    if (obj instanceof StringHolder) {</span>
+<span class="fc" id="L234">      return ((StringHolder) obj).isLengthKnown();</span>
     } else {
-<span class="fc" id="L220">      return (obj instanceof CharSequence);</span>
+<span class="fc" id="L236">      return (obj instanceof CharSequence);</span>
     }
   }
 
   @Override
   protected String getString() {
-<span class="fc bfc" id="L226" title="All 2 branches covered.">    Object obj = object == null ? getSuppliedObject() : object;</span>
-<span class="fc bfc" id="L227" title="All 2 branches covered.">    if (obj instanceof CharSequence) {</span>
-<span class="fc" id="L228">      return ((CharSequence) obj).toString();</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">    Object obj = object == null ? getSuppliedObject() : object;</span>
+<span class="fc bfc" id="L243" title="All 2 branches covered.">    if (obj instanceof CharSequence) {</span>
+<span class="fc" id="L244">      return ((CharSequence) obj).toString();</span>
     } else {
-<span class="fc" id="L230">      return String.valueOf(obj);</span>
+<span class="fc" id="L246">      return String.valueOf(obj);</span>
     }
   }
 }

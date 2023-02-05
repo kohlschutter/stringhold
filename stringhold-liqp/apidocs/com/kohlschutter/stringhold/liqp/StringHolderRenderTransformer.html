@@ -126,14 +126,24 @@ implements liqp.RenderTransformer</span></div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSharedCacheInstance()" class="member-name-link">getSharedCacheInstance</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> singleton instance.</div>
+<div class="block">Returns the shared <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> instance.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>liqp.RenderTransformer.ObjectAppender.Controller</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newObjectAppender(liqp.TemplateContext,int)" class="member-name-link">newObjectAppender</a><wbr>(liqp.TemplateContext&nbsp;context,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newCachedInstance()" class="member-name-link">newCachedInstance</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a new, cached <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> instance.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>liqp.RenderTransformer.ObjectAppender.Controller</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newObjectAppender(liqp.TemplateContext,int)" class="member-name-link">newObjectAppender</a><wbr>(liqp.TemplateContext&nbsp;context,
  int&nbsp;estimatedNumberOfAppends)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newUncachedInstance()" class="member-name-link">newUncachedInstance</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a new, uncached <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> instance.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#transformObject(liqp.TemplateContext,java.lang.Object)" class="member-name-link">transformObject</a><wbr>(liqp.TemplateContext&nbsp;context,
  <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></div>
@@ -156,10 +166,44 @@ implements liqp.RenderTransformer</span></div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getInstance()">
-<h3>getInstance</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
-<div class="block">Returns the <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> singleton instance.</div>
+<section class="detail" id="getSharedCacheInstance()">
+<h3>getSharedCacheInstance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></span>&nbsp;<span class="element-name">getSharedCacheInstance</span>()</div>
+<div class="block">Returns the shared <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> instance.
+
+ This instance shares a common cache for de-duplicating <code>StringHolderSequence</code>s, which may
+ help to significantly reduce heap allocation, at the cost of a slightly slower execution.
+
+ If you're using <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> in a highly concurrent setting, see
+ <a href="#newCachedInstance()"><code>newCachedInstance()</code></a> to reduce lock contention.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The instance.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newCachedInstance()">
+<h3>newCachedInstance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></span>&nbsp;<span class="element-name">newCachedInstance</span>()</div>
+<div class="block">Creates a new, cached <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> instance.
+
+ This instance uses its own cache for de-duplicating <code>StringHolderSequence</code>s, which may
+ help to significantly reduce heap allocation, at the cost of a slightly slower execution.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The instance.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="newUncachedInstance()">
+<h3>newUncachedInstance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp">StringHolderRenderTransformer</a></span>&nbsp;<span class="element-name">newUncachedInstance</span>()</div>
+<div class="block">Creates a new, uncached <a href="StringHolderRenderTransformer.html" title="class in com.kohlschutter.stringhold.liqp"><code>StringHolderRenderTransformer</code></a> instance.
+
+ This instance doesn't use a cache for de-duplicating <code>StringHolderSequence</code>s, resulting
+ in an overall faster execution at the cost of heap allocations.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>The instance.</dd>
