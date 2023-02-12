@@ -168,7 +168,7 @@ public class LimitedStringHolderScopeTest {
     assertTrue(exceeded.get());
   }
 
-  private static class CustomResizeStringHolder extends StringHolder {
+  private static class CustomResizeStringHolder extends AbstractStringHolder {
 
     CustomResizeStringHolder() {
       super(0);

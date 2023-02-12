@@ -207,7 +207,7 @@ public class CompareTest {
     assertEquals(0, new CustomEmptyStringHolder().compareTo(new CustomEmptyStringHolder()));
   }
 
-  private static final class CustomEmptyStringHolder extends StringHolder {
+  private static final class CustomEmptyStringHolder extends AbstractStringHolder {
     @Override
     protected String getString() {
       return "";
@@ -469,7 +469,7 @@ public class CompareTest {
         new CustomCharAtStringHolder(4, "aaaa")));
   }
 
-  private static class CustomCharAtStringHolder extends StringHolder {
+  private static class CustomCharAtStringHolder extends AbstractStringHolder {
     protected final String str;
 
     CustomCharAtStringHolder(String s) {

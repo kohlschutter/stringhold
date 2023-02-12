@@ -30,7 +30,7 @@ import java.util.Objects;
  *
  * @author Christian Kohlschütter
  */
-public class StringHolderSequence extends StringHolder implements Appendable {
+public class StringHolderSequence extends AbstractStringHolder implements Appendable {
   final List<CharSequence> sequence;
 
   private boolean immutable = false;
@@ -520,8 +520,8 @@ public class StringHolderSequence extends StringHolder implements Appendable {
   }
 
   private static int updateHashCode(Object obj, int h) {
-    if (obj instanceof StringHolder) {
-      StringHolder sh = (StringHolder) obj;
+    if (obj instanceof AbstractStringHolder) {
+      AbstractStringHolder sh = (AbstractStringHolder) obj;
       if (!sh.isKnownEmpty()) {
         h = sh.updateHashCode(h);
       }

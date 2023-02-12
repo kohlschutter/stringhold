@@ -20,11 +20,11 @@ package com.kohlschutter.stringhold;
 import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 
 /**
- * A StringHolder that holds a String, plain and simple.
+ * A {@link StringHolder} that holds a String, plain and simple.
  *
  * @author Christian Kohlschütter
  */
-final class SimpleStringHolder extends StringHolder implements HasKnownLength {
+final class SimpleStringHolder extends AbstractStringHolder implements HasKnownLength {
   SimpleStringHolder(String s) {
     super(s.length());
     this.theString = s;

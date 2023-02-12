@@ -285,7 +285,7 @@ public class SuppliedStringHolderTest {
     assertInstanceOf(CustomAppendStringHolder.class, content);
   }
 
-  private static final class CustomAppendStringHolder extends StringHolder {
+  private static final class CustomAppendStringHolder extends AbstractStringHolder {
 
     public CustomAppendStringHolder() {
       super();
@@ -352,7 +352,7 @@ public class SuppliedStringHolderTest {
     assertEquals("Hello", sw.toString());
 
     sw = new StringWriter();
-    sh.newReader().transferTo(sw);
+    sh.toReader().transferTo(sw);
     assertEquals("Hello", sw.toString());
   }
 
@@ -375,7 +375,7 @@ public class SuppliedStringHolderTest {
     assertEquals("123", sw.toString());
 
     sw = new StringWriter();
-    StringHolder.withSupplier(() -> 123).newReader().transferTo(sw);
+    StringHolder.withSupplier(() -> 123).toReader().transferTo(sw);
     assertEquals("123", sw.toString());
   }
 
@@ -398,13 +398,13 @@ public class SuppliedStringHolderTest {
     assertEquals("null", sw.toString());
 
     sw = new StringWriter();
-    StringHolder.withSupplier(() -> null).newReader().transferTo(sw);
+    StringHolder.withSupplier(() -> null).toReader().transferTo(sw);
     assertEquals("null", sw.toString());
   }
 
   @Test
   public void testAppendCustom() throws Exception {
-    StringHolder sh = StringHolder.withSupplier(() -> new StringHolder(0) {
+    StringHolder sh = StringHolder.withSupplier(() -> new AbstractStringHolder(0) {
 
       @Override
       protected String getString() {
@@ -459,7 +459,7 @@ public class SuppliedStringHolderTest {
     assertEquals("Hello", sw.toString());
 
     sw = new StringWriter();
-    sh.newReader().transferTo(sw);
+    sh.toReader().transferTo(sw);
     assertEquals("Hello", sw.toString());
   }
 

@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.kohlschutter.stringhold.StringHolder;
-import com.kohlschutter.stringhold.StringHolderSequence;
 
 import liqp.ProtectionSettings;
 import liqp.RenderSettings;
@@ -132,7 +131,7 @@ public class StringHolderRenderTransformerTest {
     assertEquals("Hello", oac.getResult());
     oac.append(StringHolder.withContent(" "));
     assertEquals("Hello ", oac.getResult().toString());
-    oac.append(StringHolderSequence.withContent("Wo", "rld"));
+    oac.append(StringHolder.withContent("Wo", "rld"));
     assertEquals("Hello World", oac.getResult().toString());
 
     assertEquals(tr.transformObject(context, StringHolder.withSupplier(() -> "abc")), "abc");
@@ -147,7 +146,7 @@ public class StringHolderRenderTransformerTest {
     assertEquals("Hello", oac.getResult());
     oac.append(StringHolder.withContent(" "));
     assertEquals("Hello ", oac.getResult().toString());
-    oac.append(StringHolderSequence.withContent("Wo", "rld"));
+    oac.append(StringHolder.withContent("Wo", "rld"));
     assertEquals("Hello World", oac.getResult().toString());
 
     assertEquals(tr.transformObject(context, StringHolder.withSupplier(() -> "abc")), "abc");

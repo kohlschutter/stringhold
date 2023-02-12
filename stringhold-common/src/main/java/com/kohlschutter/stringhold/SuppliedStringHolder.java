@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 import com.kohlschutter.stringhold.IOExceptionHandler.ExceptionResponse;
 
-class SuppliedStringHolder extends StringHolder {
+class SuppliedStringHolder extends AbstractStringHolder {
 
   private static final IOExceptionHandler UNREACHABLE_EXCEPTION_HANDLER = new IOExceptionHandler() {
 
@@ -133,7 +133,7 @@ class SuppliedStringHolder extends StringHolder {
     Object obj = getSuppliedObject();
     if (obj instanceof StringHolder) {
       StringHolder sh = (StringHolder) obj;
-      return sh.newReader();
+      return sh.toReader();
     } else {
       return super.newReader();
     }
@@ -144,7 +144,7 @@ class SuppliedStringHolder extends StringHolder {
     Object obj = getSuppliedObject();
     if (obj instanceof StringHolder) {
       StringHolder sh = (StringHolder) obj;
-      return sh.appendToAndReturnLengthDefaultImpl(out);
+      return sh.appendToAndReturnLength(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
       if (CharSequenceReleaseShim.isEmpty(cs)) {
@@ -163,7 +163,7 @@ class SuppliedStringHolder extends StringHolder {
     Object obj = getSuppliedObject();
     if (obj instanceof StringHolder) {
       StringHolder sh = (StringHolder) obj;
-      return sh.appendToAndReturnLengthImpl(out);
+      return sh.appendToAndReturnLength(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
       if (CharSequenceReleaseShim.isEmpty(cs)) {
@@ -182,7 +182,7 @@ class SuppliedStringHolder extends StringHolder {
     Object obj = getSuppliedObject();
     if (obj instanceof StringHolder) {
       StringHolder sh = (StringHolder) obj;
-      return sh.appendToAndReturnLengthImpl(out);
+      return sh.appendToAndReturnLength(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
       if (CharSequenceReleaseShim.isEmpty(cs)) {
@@ -201,7 +201,7 @@ class SuppliedStringHolder extends StringHolder {
     Object obj = getSuppliedObject();
     if (obj instanceof StringHolder) {
       StringHolder sh = (StringHolder) obj;
-      return sh.appendToAndReturnLengthImpl(out);
+      return sh.appendToAndReturnLength(out);
     } else if (obj instanceof CharSequence) {
       CharSequence cs = (CharSequence) obj;
       if (CharSequenceReleaseShim.isEmpty(cs)) {

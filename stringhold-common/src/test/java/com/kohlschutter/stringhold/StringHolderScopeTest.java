@@ -124,7 +124,7 @@ public class StringHolderScopeTest {
     StringHolder sh = StringHolder.withContent("test");
     sh.updateScope(sc);
 
-    StringHolder shLengthNotKnown = new StringHolder() {
+    StringHolder shLengthNotKnown = new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -185,7 +185,7 @@ public class StringHolderScopeTest {
     assertThrows(UnsupportedOperationException.class, () -> sh.toString());
   }
 
-  private static final class ResizingStringHolder extends StringHolder {
+  private static final class ResizingStringHolder extends AbstractStringHolder {
 
     protected ResizingStringHolder() {
       super(10);
@@ -275,7 +275,7 @@ public class StringHolderScopeTest {
 
     StringWriter sw = new StringWriter();
 
-    StringHolder sh = ReaderStringHolder.withReaderSupplier(() -> new StringReader(
+    StringHolder sh = StringHolder.withReaderSupplier(() -> new StringReader(
         "One, Two, Mississippi"), (e) -> ExceptionResponse.EMPTY);
     sh.updateScope(sc);
 
@@ -285,7 +285,7 @@ public class StringHolderScopeTest {
     assertEquals("One, Two, Mississippi", sw.toString());
   }
 
-  private static final class BrokenStringHolder extends StringHolder {
+  private static final class BrokenStringHolder extends AbstractStringHolder {
     @Override
     protected String getString() {
       // TODO Auto-generated method stub

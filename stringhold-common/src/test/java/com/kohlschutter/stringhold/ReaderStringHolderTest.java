@@ -37,7 +37,7 @@ import com.kohlschutter.stringhold.IOExceptionHandler.ExceptionResponse;
 public class ReaderStringHolderTest {
   @Test
   public void testReaderToString() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplier(() -> new StringReader("hello"), (
+    StringHolder rsh = StringHolder.withReaderSupplier(() -> new StringReader("hello"), (
         e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 
     assertFalse(rsh.isString());
@@ -47,7 +47,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testMinimumLength() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(1, () -> new StringReader(
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(1, () -> new StringReader(
         "hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     assertEquals(1, rsh.getExpectedLength());
     assertEquals("hello", rsh.toString());
@@ -56,8 +56,8 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testExpectedLength() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierExpectedLength(555,
-        () -> new StringReader("hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+    StringHolder rsh = StringHolder.withReaderSupplierExpectedLength(555, () -> new StringReader(
+        "hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     assertEquals(555, rsh.getExpectedLength());
     assertEquals("hello", rsh.toString());
     assertEquals(5, rsh.getExpectedLength());
@@ -65,7 +65,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testMinimumAndExpectedLength() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumAndExpectedLength(3, 555,
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumAndExpectedLength(3, 555,
         () -> new StringReader("hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     assertEquals(3, rsh.getMinimumLength());
     assertEquals(555, rsh.getExpectedLength());
@@ -79,7 +79,7 @@ public class ReaderStringHolderTest {
     StringWriter out = new StringWriter();
 
     AtomicInteger supplies = new AtomicInteger(0);
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(0, () -> {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(0, () -> {
       supplies.incrementAndGet();
       return new StringReader("hello");
     }, (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
@@ -130,13 +130,13 @@ public class ReaderStringHolderTest {
       }
     };
 
-    assertThrows(IOException.class, () -> ReaderStringHolder.withReaderSupplierMinimumLength(5,
+    assertThrows(IOException.class, () -> StringHolder.withReaderSupplierMinimumLength(5,
         () -> new StringReader("hello"), (e) -> IOExceptionHandler.ExceptionResponse.FLUSH)
         .appendTo(cantAppendable));
 
-    assertThrows(IllegalStateException.class, () -> ReaderStringHolder
-        .withReaderSupplierMinimumLength(5, () -> new StringReader("hello"), (
-            e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE).appendTo(cantAppendable));
+    assertThrows(IllegalStateException.class, () -> StringHolder.withReaderSupplierMinimumLength(5,
+        () -> new StringReader("hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE)
+        .appendTo(cantAppendable));
   }
 
   @Test
@@ -170,11 +170,11 @@ public class ReaderStringHolderTest {
       }
     };
 
-    assertThrows(IOException.class, () -> ReaderStringHolder.withReaderSupplierMinimumLength(5,
+    assertThrows(IOException.class, () -> StringHolder.withReaderSupplierMinimumLength(5,
         () -> new StringReader("hello"), (
             e) -> IOExceptionHandler.ExceptionResponse.EXCEPTION_MESSAGE).appendTo(cantAppendable));
 
-    assertThrows(IOException.class, () -> ReaderStringHolder.withReaderSupplierMinimumLength(5,
+    assertThrows(IOException.class, () -> StringHolder.withReaderSupplierMinimumLength(5,
         () -> new StringReader("hello"), (e) -> IOExceptionHandler.ExceptionResponse.STACKTRACE)
         .appendTo(cantAppendable));
   }
@@ -182,7 +182,7 @@ public class ReaderStringHolderTest {
   @Test
   public void testReaderToStringBuilder() throws Exception {
     StringBuilder sb = new StringBuilder();
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> new StringReader(
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -> new StringReader(
         "hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     rsh.appendTo(sb);
     assertEquals("hello", sb.toString());
@@ -191,7 +191,7 @@ public class ReaderStringHolderTest {
   @Test
   public void testReaderToStringBuffer() throws Exception {
     StringBuffer sb = new StringBuffer();
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> new StringReader(
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -> new StringReader(
         "hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     rsh.appendTo(sb);
     assertEquals("hello", sb.toString());
@@ -220,7 +220,7 @@ public class ReaderStringHolderTest {
         return this;
       }
     };
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> new StringReader(
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -> new StringReader(
         "hello"), (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     rsh.appendTo(app);
     assertEquals("hello", sb.toString());
@@ -230,7 +230,7 @@ public class ReaderStringHolderTest {
   public void testExceptionOnSupply_empty() throws Exception {
     // Note that we claim a minimum length of 123
 
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> {
       throw new MyIOException("No reader");
     }, (e) -> IOExceptionHandler.ExceptionResponse.EMPTY);
 
@@ -247,7 +247,7 @@ public class ReaderStringHolderTest {
     // Note that we claim a minimum length of 123
 
     IOException exc = new MyIOException("No reader");
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> {
       throw exc;
     }, (e) -> IOExceptionHandler.ExceptionResponse.EXCEPTION_MESSAGE);
     assertEquals(exc.toString(), rsh.toString());
@@ -261,7 +261,7 @@ public class ReaderStringHolderTest {
   public void testExceptionOnSupply_flush() throws Exception {
     // Note that we claim a minimum length of 123
 
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> {
       throw new MyIOException("No reader");
     }, (e) -> IOExceptionHandler.ExceptionResponse.FLUSH);
     assertEquals("", rsh.toString());
@@ -275,7 +275,7 @@ public class ReaderStringHolderTest {
   public void testExceptionOnSupply_stacktrace() throws Exception {
     // Note that we claim a minimum length of 123
 
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> {
       throw new MyIOException("No reader");
     }, (e) -> IOExceptionHandler.ExceptionResponse.STACKTRACE);
     assertNotEquals("", rsh.toString());
@@ -289,7 +289,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testExceptionOnSupply_illegalState() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> {
       throw new MyIOException("No reader");
     }, (e) -> IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
     try (Reader r = rsh.toReader()) {
@@ -320,7 +320,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testExceptionOnAppend_flush() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> new Reader() {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> new Reader() {
 
       @Override
       public int read(char[] cbuf, int off, int len) throws IOException {
@@ -376,7 +376,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testExceptionOnAppend_empty() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -> new Reader() {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -> new Reader() {
 
       @Override
       public int read(char[] cbuf, int off, int len) throws IOException {
@@ -432,7 +432,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testExceptionOnAppend_exceptionMessage() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> new Reader() {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -> new Reader() {
 
       @Override
       public int read(char[] cbuf, int off, int len) throws IOException {
@@ -491,7 +491,7 @@ public class ReaderStringHolderTest {
 
   @Test
   public void testExceptionOnAppend_stacktrace() throws Exception {
-    StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> new Reader() {
+    StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -> new Reader() {
 
       @Override
       public int read(char[] cbuf, int off, int len) throws IOException {
@@ -550,7 +550,7 @@ public class ReaderStringHolderTest {
   @Test
   public void testEqualsWithTrouble() throws Exception {
     // holder initially claims a minimum length of 5
-    StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> {
+    StringHolder sh1 = StringHolder.withReaderSupplierMinimumLength(5, () -> {
       throw new IOException();
     }, (e) -> ExceptionResponse.EMPTY);
 
@@ -564,7 +564,7 @@ public class ReaderStringHolderTest {
     StringHolder sh2 = StringHolder.withSupplierMinimumLength(0, () -> "");
     assertEquals(sh2, sh1);
 
-    sh1.resizeBy(3, -1000);
+    ((AbstractStringHolder) sh1).resizeBy(3, -1000);
     assertEquals(3, sh1.getMinimumLength());
     assertEquals(3, sh1.getExpectedLength());
   }

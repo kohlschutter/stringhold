@@ -32,7 +32,7 @@ import com.kohlschutter.stringhold.IOExceptionHandler.ExceptionResponse;
  *
  * @author Christian Kohlschütter
  */
-final class ReaderStringHolder extends StringHolder {
+final class ReaderStringHolder extends AbstractStringHolder {
   private static final int BUFFER_SIZE = 8192;
   private final IOExceptionHandler onError;
   private final IOSupplier<Reader> readerSupply;

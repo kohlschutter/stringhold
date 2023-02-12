@@ -103,7 +103,7 @@ public class StringHolderTest {
     // holder 1 claims minimum length of 5, but has checkError() == true
     // holder 2 claims minimum length of 5
     {
-      StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> {
+      StringHolder sh1 = StringHolder.withReaderSupplierMinimumLength(5, () -> {
         throw new IOException();
       }, (e) -> ExceptionResponse.EMPTY);
       StringHolder sh2 = StringHolder.withSupplierMinimumLength(5, () -> "12345");
@@ -114,7 +114,7 @@ public class StringHolderTest {
 
     // holder 1 claims minimum length of 5, but has checkError() == true
     {
-      StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -> {
+      StringHolder sh1 = StringHolder.withReaderSupplierMinimumLength(5, () -> {
         throw new IOException();
       }, (e) -> ExceptionResponse.ILLEGAL_STATE);
 
@@ -128,7 +128,7 @@ public class StringHolderTest {
 
     {
       // holder 1 is in unclear error state, but not String yet, claiming a minimum length of 10
-      StringHolder brokenSh = new StringHolder(10) {
+      StringHolder brokenSh = new AbstractStringHolder(10) {
         {
           setError();
         }
@@ -328,7 +328,7 @@ public class StringHolderTest {
         return this;
       }
     };
-    assertEquals(0, new StringHolder() {
+    assertEquals(0, new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -337,7 +337,7 @@ public class StringHolderTest {
     }.appendToAndReturnLength(app));
 
     StringBuilder sb = new StringBuilder();
-    assertEquals(0, new StringHolder() {
+    assertEquals(0, new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -347,7 +347,7 @@ public class StringHolderTest {
     assertTrue(sb.isEmpty());
 
     StringBuffer sbuf = new StringBuffer();
-    assertEquals(0, new StringHolder() {
+    assertEquals(0, new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -357,7 +357,7 @@ public class StringHolderTest {
     assertTrue(sbuf.isEmpty());
 
     StringWriter sw = new StringWriter();
-    assertEquals(0, new StringHolder() {
+    assertEquals(0, new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -614,7 +614,7 @@ public class StringHolderTest {
 
   @Test
   public void testIncreaseLength() throws Exception {
-    StringHolder customHolder = new StringHolder(0, 8) {
+    StringHolder customHolder = new AbstractStringHolder(0, 8) {
       {
         resizeBy(1, -1);
       }
@@ -635,7 +635,7 @@ public class StringHolderTest {
 
   @Test
   public void testIncreaseLengthNegativeValue() throws Exception {
-    assertThrows(IllegalArgumentException.class, () -> new StringHolder(6, 0) {
+    assertThrows(IllegalArgumentException.class, () -> new AbstractStringHolder(6, 0) {
       {
         // using a negative increment for the minimum length is not allowed, unless checkError() is
         // true.
@@ -651,7 +651,7 @@ public class StringHolderTest {
 
   @Test
   public void testIncreaseLengthNegativeValueTrouble() throws Exception {
-    new StringHolder(6, 0) {
+    new AbstractStringHolder(6, 0) {
       {
         // using a negative increment for the minimum length is not allowed
         // unless checkError() is true.
@@ -671,7 +671,7 @@ public class StringHolderTest {
 
   @Test
   public void testUpdateLengthLesserValue() throws Exception {
-    assertThrows(IllegalStateException.class, () -> new StringHolder(6, 0) {
+    assertThrows(IllegalStateException.class, () -> new AbstractStringHolder(6, 0) {
       {
         // using a value smaller than the current minimum is not allowed, unless checkError() is
         // true
@@ -687,7 +687,7 @@ public class StringHolderTest {
 
   @Test
   public void testUpdateLengthLesserValueTrouble() throws Exception {
-    new StringHolder(6, 0) {
+    new AbstractStringHolder(6, 0) {
       {
         //
         assertEquals(6, getMinimumLength());
@@ -710,7 +710,7 @@ public class StringHolderTest {
 
   @Test
   public void testUpdateLengthLesserValueTroubleCleared() throws Exception {
-    assertThrows(IllegalStateException.class, () -> new StringHolder(6, 0) {
+    assertThrows(IllegalStateException.class, () -> new AbstractStringHolder(6, 0) {
       {
         // using a value smaller than the current minimum is not allowed
         // unless checkError() is true
@@ -734,15 +734,15 @@ public class StringHolderTest {
     StringHolder sh = StringHolder.withSupplierMinimumLength(Integer.MAX_VALUE - 1, () -> "");
     assertEquals(Integer.MAX_VALUE - 1, sh.getMinimumLength());
 
-    sh.resizeBy(1, 0);
+    ((AbstractStringHolder) sh).resizeBy(1, 0);
     assertEquals(Integer.MAX_VALUE, sh.getMinimumLength());
 
     // we increase beyond Integer.MAX_VALUE, and don't overflow
-    sh.resizeBy(1, 0);
+    ((AbstractStringHolder) sh).resizeBy(1, 0);
     assertEquals(Integer.MAX_VALUE, sh.getMinimumLength());
   }
 
-  private static final class BrokenStringHolder extends StringHolder {
+  private static final class BrokenStringHolder extends AbstractStringHolder {
     protected BrokenStringHolder() {
       super(0);
     }
@@ -809,7 +809,7 @@ public class StringHolderTest {
 
   @Test
   public void testIsEmptyWhenKnownEmpty() throws Exception {
-    StringHolder sh = new StringHolder(0) {
+    StringHolder sh = new AbstractStringHolder(0) {
 
       @Override
       protected int computeLength() {
@@ -835,7 +835,7 @@ public class StringHolderTest {
 
   @Test
   public void testKnownEmpty_customZero() throws Exception {
-    assertFalse(new StringHolder(0) {
+    assertFalse(new AbstractStringHolder(0) {
 
       @Override
       protected String getString() {
@@ -847,7 +847,7 @@ public class StringHolderTest {
 
   @Test
   public void testKnownEmpty_customNonZero() throws Exception {
-    StringHolder sh = new StringHolder(0) {
+    StringHolder sh = new AbstractStringHolder(0) {
 
       @Override
       protected String getString() {
@@ -861,7 +861,7 @@ public class StringHolderTest {
 
   @Test
   public void testKnownEmpty_custom_broken() throws Exception {
-    StringHolder sh = new StringHolder(0) {
+    StringHolder sh = new AbstractStringHolder(0) {
 
       @Override
       protected int computeLength() {
@@ -883,7 +883,7 @@ public class StringHolderTest {
 
   @Test
   public void testKnownEmpty_custom_broken_computeLength() throws Exception {
-    StringHolder sh = new StringHolder(0, 5) {
+    StringHolder sh = new AbstractStringHolder(0, 5) {
 
       @Override
       protected int computeLength() {
@@ -911,7 +911,7 @@ public class StringHolderTest {
 
   @Test
   public void testKnownEmpty_custom_setTheStringDirectly() throws Exception {
-    StringHolder customSh = new StringHolder(0) {
+    StringHolder customSh = new AbstractStringHolder(0) {
       {
         theString = "foo";
       }
@@ -934,7 +934,7 @@ public class StringHolderTest {
 
   @Test
   public void testKnownEmpty_customEmpty_setTheStringDirectly() throws Exception {
-    StringHolder customSh = new StringHolder(0) {
+    StringHolder customSh = new AbstractStringHolder(0) {
       {
         theString = "";
       }
@@ -968,7 +968,7 @@ public class StringHolderTest {
     }
 
     {
-      StringHolder sh = new StringHolder(4) {
+      StringHolder sh = new AbstractStringHolder(4) {
         @Override
         protected int computeLength() {
           return 4;
@@ -996,7 +996,7 @@ public class StringHolderTest {
 
   @Test
   public void testLengthKnown_customZero() throws Exception {
-    StringHolder customSh = new StringHolder(0) {
+    StringHolder customSh = new AbstractStringHolder(0) {
       @Override
       protected int computeLength() {
         return 0;
@@ -1019,7 +1019,7 @@ public class StringHolderTest {
 
   @Test
   public void testLengthKnown_custom_broken() throws Exception {
-    StringHolder customSh = new StringHolder(0) {
+    StringHolder customSh = new AbstractStringHolder(0) {
       @Override
       protected int computeLength() {
         return 5;
@@ -1123,7 +1123,7 @@ public class StringHolderTest {
     assertInstanceOf(String.class, content);
     assertEquals("test", content);
 
-    sh = new StringHolder() {
+    sh = new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -1137,7 +1137,7 @@ public class StringHolderTest {
 
   @Test
   public void testComputeLength() throws Exception {
-    StringHolder sh = new StringHolder() {
+    StringHolder sh = new AbstractStringHolder() {
 
       @Override
       protected String getString() {
@@ -1161,7 +1161,7 @@ public class StringHolderTest {
     assertEquals(StringHolder.withContent("Hello", StringHolder.withSupplierFixedLength(1,
         () -> " "), new StringHolderSequence(), "World"), "Hello World");
     assertEquals(StringHolder.withContent("Hello", StringHolder.withSupplierFixedLength(1,
-        () -> " "), new StringHolderSequence().append(new StringHolder() {
+        () -> " "), new StringHolderSequence().append(new AbstractStringHolder() {
 
           @Override
           protected String getString() {
@@ -1236,7 +1236,7 @@ public class StringHolderTest {
 
   @Test
   public void testUpdateHashCode() throws Exception {
-    assertEquals("Hello World".hashCode(), new StringHolder(0) {
+    assertEquals("Hello World".hashCode(), new AbstractStringHolder(0) {
 
       @Override
       protected String getString() {
@@ -1245,7 +1245,7 @@ public class StringHolderTest {
 
     }.updateHashCode("Hello".hashCode()));
 
-    assertEquals("Hello World".hashCode(), new StringHolder(0) {
+    assertEquals("Hello World".hashCode(), new AbstractStringHolder(0) {
 
       @Override
       protected String getString() {
@@ -1253,13 +1253,13 @@ public class StringHolderTest {
       }
     }.updateHashCode(0));
 
-    assertEquals("Hello World".hashCode(), StringHolder.withSupplierFixedLength("Hello World"
-        .length(), () -> "Hello World").updateHashCode(0));
+    assertEquals("Hello World".hashCode(), ((AbstractStringHolder) StringHolder
+        .withSupplierFixedLength("Hello World".length(), () -> "Hello World")).updateHashCode(0));
   }
 
   @Test
   public void testMarkImmutable() throws Exception {
-    StringHolder sh = new StringHolder() {
+    StringHolder sh = new AbstractStringHolder() {
 
       @Override
       protected String getString() {
