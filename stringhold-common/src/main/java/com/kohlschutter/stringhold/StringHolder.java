@@ -3,7 +3,7 @@ package com.kohlschutter.stringhold;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -334,13 +334,13 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
    * The conditional supplier is called at most once; the check is delayed as much as possible.
    * 
    * @param wrapped The wrapped {@link StringHolder}.
-   * @param includeCondition Controls the inclusion of that {@link StringHolder}; {@code false}
+   * @param includePredicate Controls the inclusion of that {@link StringHolder}; {@code false}
    *          means "excluded".
    * @return the conditional {@link StringHolder}.
    */
   static StringHolder withConditionalStringHolder(StringHolder wrapped,
-      BooleanSupplier includeCondition) {
-    return new ConditionalStringHolder(wrapped, includeCondition);
+      Predicate<StringHolder> includePredicate) {
+    return new ConditionalStringHolder(wrapped, includePredicate);
   }
 
   @Override

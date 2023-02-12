@@ -20,7 +20,7 @@ public class ConditionalStringHolderTest {
 
     StringHolder csh;
     StringHolder seq = StringHolder.withContent("Hello", (csh = StringHolder
-        .withConditionalStringHolder(StringHolder.withContent(" World"), () -> {
+        .withConditionalStringHolder(StringHolder.withContent(" World"), (o) -> {
           conditionChecked.incrementAndGet();
           return false;
         })));
@@ -66,7 +66,7 @@ public class ConditionalStringHolderTest {
 
     StringHolder csh;
     StringHolder seq = StringHolder.withContent("Hello", (csh = StringHolder
-        .withConditionalStringHolder(StringHolder.withContent(" World"), () -> {
+        .withConditionalStringHolder(StringHolder.withContent(" World"), (o) -> {
           conditionChecked.incrementAndGet();
           return true;
         })));
@@ -113,7 +113,7 @@ public class ConditionalStringHolderTest {
 
     StringHolder seq = StringHolder.withContent(StringHolder.withSupplier(() -> "Hello "),
         StringHolder.withSupplier(() -> "World"));
-    StringHolder csh = StringHolder.withConditionalStringHolder(seq, () -> {
+    StringHolder csh = StringHolder.withConditionalStringHolder(seq, (o) -> {
       conditionChecked.incrementAndGet();
       return false;
     });
@@ -127,9 +127,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testCharSequence() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> false);
+        (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> true);
+        (o) -> true);
     assertFalse(excl.isString());
     assertFalse(incl.isString());
 
@@ -149,9 +149,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testExpectedLength() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder
-        .withSupplierExpectedLength(5, () -> "Hello"), () -> false);
+        .withSupplierExpectedLength(5, () -> "Hello"), (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder
-        .withSupplierExpectedLength(5, () -> "Hello"), () -> true);
+        .withSupplierExpectedLength(5, () -> "Hello"), (o) -> true);
 
     assertEquals(5, excl.getExpectedLength());
     assertEquals(5, incl.getExpectedLength());
@@ -182,9 +182,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testLength() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder
-        .withSupplierExpectedLength(5, () -> "Hello"), () -> false);
+        .withSupplierExpectedLength(5, () -> "Hello"), (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder
-        .withSupplierExpectedLength(5, () -> "Hello"), () -> true);
+        .withSupplierExpectedLength(5, () -> "Hello"), (o) -> true);
 
     assertFalse(excl.isLengthKnown());
     assertFalse(incl.isLengthKnown());
@@ -204,9 +204,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testReader() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> false);
+        (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> true);
+        (o) -> true);
 
     try (BufferedReader br = new BufferedReader(excl.toReader())) {
       assertEquals(null, br.readLine());
@@ -220,7 +220,7 @@ public class ConditionalStringHolderTest {
   public void testScope() throws Exception {
     StringHolder sc;
     StringHolder excl = StringHolder.withConditionalStringHolder((sc = StringHolder.withContent(
-        "Hello")), () -> false);
+        "Hello")), (o) -> false);
 
     LimitedStringHolderScope scope = LimitedStringHolderScope.withNoLimits();
     assertNull(excl.getScope());
@@ -233,9 +233,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testToString() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> false);
+        (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> true);
+        (o) -> true);
 
     assertEquals("", excl.toString());
     assertEquals("Hello", incl.toString());
@@ -244,9 +244,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testCompareToCharSequence() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> false);
+        (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> true);
+        (o) -> true);
 
     assertEquals(0, excl.compareTo(""));
     assertEquals(-1, excl.compareTo("Hello"));
@@ -257,9 +257,9 @@ public class ConditionalStringHolderTest {
   @Test
   public void testCompareToStringHolder() throws Exception {
     StringHolder excl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> false);
+        (o) -> false);
     StringHolder incl = StringHolder.withConditionalStringHolder(StringHolder.withContent("Hello"),
-        () -> true);
+        (o) -> true);
 
     assertEquals(0, excl.compareTo(StringHolder.withContent("")));
     assertEquals(-1, excl.compareTo(StringHolder.withContent("Hello")));

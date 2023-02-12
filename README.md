@@ -135,6 +135,15 @@ A sequence of String(Holder)s that can be assembled/appended out of order via sc
 	// The final order is still guaranteed to be correct.
 	// This may save time at the cost of constructing temporary StringBuilders.
 
+You can also define a conditional StringHolder, which may be defined but later excluded if a condition is not met:
+
+    StringHolder seq = StringHolder.withContent("Hello", //
+	   StringHolder.withConditionalStringHolder(StringHolder.withContent(" World"), (o) -> {
+ 	     return checkIfIncluded(o); // false: exclude; true: include
+	   }));
+	seq.toString() // returns "Hello" or "Hello World", depending on checkIfIncluded
+
+
 ## The full API
 
 * [API JavaDoc](https://kohlschutter.github.io/stringhold/stringhold-common/apidocs/index.html)

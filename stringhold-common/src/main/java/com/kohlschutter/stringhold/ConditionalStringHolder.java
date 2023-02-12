@@ -3,7 +3,7 @@ package com.kohlschutter.stringhold;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
 
 /**
  * A {@link StringHolder} that may conditionally be included/excluded.
@@ -12,7 +12,7 @@ import java.util.function.BooleanSupplier;
  */
 final class ConditionalStringHolder implements StringHolder {
   private final StringHolder wrapped;
-  private final BooleanSupplier include;
+  private final Predicate<StringHolder> include;
   private Boolean excluded;
 
   /**
@@ -24,7 +24,7 @@ final class ConditionalStringHolder implements StringHolder {
    * @param include Controls the inclusion of that {@link StringHolder}; {@code false} means
    *          "excluded".
    */
-  ConditionalStringHolder(StringHolder wrapped, BooleanSupplier include) {
+  ConditionalStringHolder(StringHolder wrapped, Predicate<StringHolder> include) {
     this.wrapped = wrapped;
     this.include = include;
   }
@@ -35,7 +35,7 @@ final class ConditionalStringHolder implements StringHolder {
 
   private synchronized boolean isExcluded() {
     if (excluded == null) {
-      excluded = !include.getAsBoolean();
+      excluded = !include.test(this);
     }
     return excluded;
   }
