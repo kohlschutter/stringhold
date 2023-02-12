@@ -51,7 +51,7 @@ final class ConditionalStringHolder implements StringHolder {
   }
 
   private boolean isKnownExcluded() {
-    return excluded != null && isExcluded();
+    return excluded != null && excluded;
   }
 
   private synchronized boolean isExcluded() {
