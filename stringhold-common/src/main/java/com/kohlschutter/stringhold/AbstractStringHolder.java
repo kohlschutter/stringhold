@@ -29,7 +29,7 @@ import com.kohlschutter.util.ComparisonUtil;
 
 /**
  * Base implementation of a {@link StringHolder}.
- * 
+ *
  * @author Christian Kohlschütter
  */
 @SuppressWarnings({

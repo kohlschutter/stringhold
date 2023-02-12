@@ -1,3 +1,20 @@
+/*
+ * stringhold
+ *
+ * Copyright 2022 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.kohlschutter.stringhold;
 
 import java.io.IOException;
@@ -7,7 +24,7 @@ import java.util.function.Predicate;
 
 /**
  * A {@link StringHolder} that may conditionally be included/excluded.
- * 
+ *
  * @author Christian Kohlschütter
  */
 final class ConditionalStringHolder implements StringHolder {
@@ -19,7 +36,7 @@ final class ConditionalStringHolder implements StringHolder {
    * Constructs a conditional wrapper around the given {@link StringHolder}; the given
    * {@code include} supplier controls whether the {@link StringHolder} is included, or effectively
    * empty.
-   * 
+   *
    * @param wrapped The wrapped {@link StringHolder}.
    * @param include Controls the inclusion of that {@link StringHolder}; {@code false} means
    *          "excluded".
