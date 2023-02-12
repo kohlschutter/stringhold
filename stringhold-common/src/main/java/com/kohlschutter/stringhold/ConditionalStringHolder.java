@@ -22,6 +22,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Predicate;
 
+import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
+
 /**
  * A {@link StringHolder} that may conditionally be included/excluded.
  *
@@ -30,6 +32,8 @@ import java.util.function.Predicate;
 final class ConditionalStringHolder implements StringHolder {
   private final StringHolder wrapped;
   private final Predicate<StringHolder> include;
+
+  @SuppressFBWarnings("IS2_INCONSISTENT_SYNC")
   private Boolean excluded;
 
   /**
