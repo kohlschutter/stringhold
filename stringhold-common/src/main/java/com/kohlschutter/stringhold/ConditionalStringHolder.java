@@ -282,4 +282,9 @@ final class ConditionalStringHolder implements StringHolder {
     }
     return wrapped.toString();
   }
+
+  @Override
+  public boolean isCacheable() {
+    return isString();
+  }
 }

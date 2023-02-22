@@ -360,6 +360,17 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
     return new ConditionalStringHolder(wrapped, includePredicate);
   }
 
+  /**
+   * Constructs a wrapper around the given {@link StringHolder}, marking it as "uncacheable" (i.e.,
+   * {@link #isCacheable()} returning {@code false}, unless {@link #isString()} is {@code true}).
+   *
+   * @param wrapped The wrapped {@link StringHolder}.
+   * @return the uncacheable {@link StringHolder}.
+   */
+  static StringHolder withUncacheableStringHolder(StringHolder wrapped) {
+    return withConditionalStringHolder(wrapped, (k) -> true);
+  }
+
   @Override
   default boolean isEmpty() {
     return length() == 0;
@@ -592,7 +603,7 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
   int compareTo(StringHolder o);
 
   /**
-   * Checks if the given {@link StringHolder} is <em>effectively immutable</em>.
+   * Checks if this {@link StringHolder} is <em>effectively immutable</em>.
    *
    * @return {@code true} if the contents aren't going to change.
    */
@@ -602,4 +613,18 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
    * Marks this instance as <em>effectively immutable</em>.
    */
   void markEffectivelyImmutable();
+
+  /**
+   * Checks if this {@link StringHolder} is cacheable. A cacheable {@link StringHolder} may be
+   * probed early for its contents (length, hashCode, etc.). This is usually the case, except when a
+   * {@link StringHolder} is involved that was supplied via
+   * {@link StringHolder#withConditionalStringHolder(StringHolder, Predicate)} or via
+   * {@link #withUncacheableStringHolder(StringHolder)}, and that StringHolder is not already a
+   * string or otherwise supplied, for example.
+   *
+   * @return {@code true} if cacheable.
+   */
+  default boolean isCacheable() {
+    return true;
+  }
 }

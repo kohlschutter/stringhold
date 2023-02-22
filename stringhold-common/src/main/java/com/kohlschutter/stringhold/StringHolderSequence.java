@@ -590,4 +590,18 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
     }
     immutable = true;
   }
+
+  @Override
+  public boolean isCacheable() {
+    for (Object seq : sequence) {
+      if (!(seq instanceof StringHolder)) {
+        continue;
+      }
+      StringHolder sh = (StringHolder) seq;
+      if (!sh.isCacheable()) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
