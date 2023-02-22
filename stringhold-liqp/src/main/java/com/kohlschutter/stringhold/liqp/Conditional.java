@@ -26,14 +26,16 @@ import liqp.tags.Tag;
 /**
  * Sets/gets the conditional state for a certain conditional-key.
  * <p>
- * Examples: <pre><tt>
+ * Examples: <pre><code>
  * {% conditional get: someState %} // false
  * {% conditional set: someState %} // no output
  * {% conditional get: someState %} // true
  * {% conditional clear: someState %} // no output
  * {% conditional get: someState %} // false
- * </pre></tt>
- * </p>
+ * </code></pre>
+ *
+ * <b>NOTE:</b> The behavior of declaring a conditional tag within a conditionally block is
+ * currently undefined.
  *
  * @author Christian Kohlschütter
  * @see Conditionally
@@ -74,14 +76,13 @@ public final class Conditional extends Tag {
         throw new IllegalArgumentException("Illegal conditional command: " + command);
     }
 
-    if (!key.isBlank()) {
-      Map<String, Object> map = context.getEnvironmentMap();
-      if (!b && map.containsKey(Conditionally.ENVMAP_SUPPLIED_PREFIX + key)) {
-        throw new IllegalStateException("Conditional already supplied: " + key);
-      }
-
-      map.put(Conditionally.ENVMAP_CONDITIONAL_PREFIX + key, b);
+    Map<String, Object> map = context.getEnvironmentMap();
+    Object existingValue = map.get(Conditionally.ENVMAP_SUPPLIED_PREFIX + key);
+    if (existingValue != null && Boolean.valueOf(String.valueOf(existingValue)) != b) {
+      throw new IllegalStateException("Conditional already accessed: " + key);
     }
+
+    map.put(Conditionally.ENVMAP_CONDITIONAL_PREFIX + key, b);
 
     return null;
   }

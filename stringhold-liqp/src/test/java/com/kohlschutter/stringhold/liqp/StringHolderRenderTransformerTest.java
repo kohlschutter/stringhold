@@ -44,7 +44,7 @@ public class StringHolderRenderTransformerTest {
 
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
 
-    assertTrue(template.prerender(json) instanceof StringHolder,
+    assertTrue(template.renderToObject(json) instanceof StringHolder,
         "Prerendered result of a for-loop should be a StringHolder");
   }
 
@@ -56,7 +56,7 @@ public class StringHolderRenderTransformerTest {
 
     Template template = parser.parse("Hello World");
 
-    assertTrue(template.prerender() instanceof String,
+    assertTrue(template.renderToObject() instanceof String,
         "Prerendered result of a simple string should be a String");
   }
 
@@ -70,7 +70,7 @@ public class StringHolderRenderTransformerTest {
     String json = "{\"array\" : [1,2,3] }";
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
 
-    assertThrows(Exception.class, () -> template.prerender(json),
+    assertThrows(Exception.class, () -> template.renderToObject(json),
         "Exception should be thrown because string exceeds limit");
   }
 
@@ -91,7 +91,7 @@ public class StringHolderRenderTransformerTest {
     Template template = parser.parse(
         "{%for l in (1..100)%}{% for k in (1..100) %}{% for i in (1..10) %}Hello! {{ i }} :-)\n{% endfor %}{% endfor %}{% endfor %}");
 
-    return template.prerender();
+    return template.renderToObject();
   }
 
   @Test
@@ -104,7 +104,7 @@ public class StringHolderRenderTransformerTest {
 
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
 
-    assertTrue(template.prerender(json) instanceof StringHolder,
+    assertTrue(template.renderToObject(json) instanceof StringHolder,
         "Prerendered result of a for-loop should be a StringHolder");
   }
 
@@ -118,7 +118,7 @@ public class StringHolderRenderTransformerTest {
 
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
 
-    assertTrue(template.prerender(json) instanceof StringHolder,
+    assertTrue(template.renderToObject(json) instanceof StringHolder,
         "Prerendered result of a for-loop should be a StringHolder");
   }
 

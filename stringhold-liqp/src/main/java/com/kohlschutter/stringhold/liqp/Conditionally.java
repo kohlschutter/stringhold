@@ -26,15 +26,14 @@ import liqp.nodes.LNode;
 /**
  * Defines a conditional section, which may be excluded from the final output.
  * <p>
- * Example: <pre><tt>
+ * Example: <pre><code>
  * {% conditional set: someState %}
  * {% conditionally someState %}
  * Hello World
  * {% endconditionally %}
  * {% conditional clear: someState %} // remove line to include content from the above section
- * </pre></tt>
- * </p>
- * 
+ * </code></pre>
+ *
  * <b>IMPORTANT:</b> This requires the use of {@link StringHolderRenderTransformer}.
  *
  * @author Christian Kohlschütter
@@ -45,7 +44,7 @@ public final class Conditionally extends Block {
   static final String ENVMAP_SUPPLIED_PREFIX = " stringhold.conditional-supplied.";
 
   /**
-   * Constructs a new "condtionally" {@link Block}.
+   * Constructs a new "conditionally" {@link Block}.
    */
   public Conditionally() {
     super("conditionally");
@@ -57,19 +56,18 @@ public final class Conditionally extends Block {
     Object blockNode = nodes[1].render(context);
 
     String key = String.valueOf(conditional);
-    if (key.isBlank()) {
-      return null;
-    }
 
     StringHolder sh = StringHolder.withSupplier(() -> {
-      context.getEnvironmentMap().put(ENVMAP_SUPPLIED_PREFIX + key, true);
       return blockNode;
     });
 
     return StringHolder.withConditionalStringHolder(sh, (o) -> {
       Object val = context.getEnvironmentMap().get(ENVMAP_CONDITIONAL_PREFIX + key);
 
-      return Boolean.valueOf(String.valueOf(val));
+      boolean supply = Boolean.valueOf(String.valueOf(val));
+      context.getEnvironmentMap().put(ENVMAP_SUPPLIED_PREFIX + key, supply);
+
+      return supply;
     });
   }
 }

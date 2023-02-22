@@ -38,7 +38,7 @@ public class StringsOnlyRenderTransformerTest {
 
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
 
-    assertTrue(template.prerender(json) instanceof String,
+    assertTrue(template.renderToObject(json) instanceof String,
         "Prerendered result of a for-loop should be a String");
   }
 
@@ -50,7 +50,7 @@ public class StringsOnlyRenderTransformerTest {
 
     Template template = parser.parse("Hello World");
 
-    assertTrue(template.prerender() instanceof String,
+    assertTrue(template.renderToObject() instanceof String,
         "Prerendered result of a simple string should be a String");
   }
 
@@ -64,7 +64,7 @@ public class StringsOnlyRenderTransformerTest {
     String json = "{\"array\" : [1,2,3] }";
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
 
-    assertThrows(Exception.class, () -> template.prerender(json),
+    assertThrows(Exception.class, () -> template.renderToObject(json),
         "Exception should be thrown because string exceeds limit");
   }
 }
