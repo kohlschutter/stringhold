@@ -620,7 +620,8 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
    * {@link StringHolder} is involved that was supplied via
    * {@link StringHolder#withConditionalStringHolder(StringHolder, Predicate)} or via
    * {@link #withUncacheableStringHolder(StringHolder)}, and that StringHolder is not already a
-   * string or otherwise supplied, for example.
+   * string or otherwise supplied, for example. By convention, it should be cacheable whenever
+   * {@link #isString()} is {@code true}.
    *
    * @return {@code true} if cacheable.
    */

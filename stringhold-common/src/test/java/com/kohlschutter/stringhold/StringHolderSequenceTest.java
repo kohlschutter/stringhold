@@ -522,4 +522,19 @@ public class StringHolderSequenceTest {
     assertEquals("Hello World".length(), seq.length());
     assertFalse(seq.isString());
   }
+
+  @Test
+  public void testCacheable() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    seq.append("Hello");
+    seq.append(' ');
+    seq.append(StringHolder.withContent("World"));
+    assertTrue(seq.isCacheable());
+
+    StringHolder sh = StringHolder.withUncacheableStringHolder(StringHolder.withContent("!!!"));
+    seq.append(sh);
+    assertFalse(seq.isCacheable());
+    sh.toString();
+    assertTrue(seq.isCacheable());
+  }
 }

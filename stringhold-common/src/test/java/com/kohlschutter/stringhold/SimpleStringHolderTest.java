@@ -30,4 +30,10 @@ public class SimpleStringHolderTest {
     sh.markEffectivelyImmutable();
     assertTrue(sh.isEffectivelyImmutable());
   }
+
+  @Test
+  public void testCacheable() throws Exception {
+    StringHolder sh = StringHolder.withContent("test");
+    assertTrue(sh.isCacheable());
+  }
 }

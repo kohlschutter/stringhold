@@ -283,4 +283,19 @@ public class ConditionalStringHolderTest {
     assertEquals(1, Math.min(1, incl.compareTo(StringHolder.withContent(""))));
     assertEquals(0, incl.compareTo(StringHolder.withContent("Hello")));
   }
+
+  @Test
+  public void testUncacheableStringHolder() throws Exception {
+    StringHolder sh;
+
+    sh = StringHolder.withUncacheableStringHolder(StringHolder.withSupplier(() -> ""));
+    assertFalse(sh.isCacheable());
+    sh.toString();
+    assertTrue(sh.isCacheable());
+
+    sh = StringHolder.withUncacheableStringHolder(StringHolder.withContent(""));
+    assertFalse(sh.isCacheable());
+    sh.toString();
+    assertTrue(sh.isCacheable());
+  }
 }
