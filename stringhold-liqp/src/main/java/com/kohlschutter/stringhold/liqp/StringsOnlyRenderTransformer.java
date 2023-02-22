@@ -59,7 +59,8 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
             StringHolderRenderTransformer.SCOPE_KEY, (k) -> {
               int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;
               if (maxLen != Integer.MAX_VALUE) {
-                return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, () -> {
+                return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, (
+                    stringholder) -> {
                   throw new RuntimeException("rendered string exceeds " + maxLen);
                 });
               } else {
@@ -72,9 +73,6 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
         appender = (o2) -> {
           StringOnlySequence seq = new StringOnlySequence(estimatedNumberOfAppends);
           seq.updateScope(scope);
-
-          // do not double-count
-          ((StringHolder) result).updateScope(null);
 
           seq.append(result);
           result = seq;

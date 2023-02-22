@@ -17,6 +17,8 @@
  */
 package com.kohlschutter.stringhold.liqp;
 
+import java.util.Map;
+
 import com.kohlschutter.stringhold.StringHolder;
 
 import liqp.TemplateContext;
@@ -61,11 +63,12 @@ public final class Conditionally extends Block {
       return blockNode;
     });
 
+    Map<String, Object> envMap = context.getEnvironmentMap();
     return StringHolder.withConditionalStringHolder(sh, (o) -> {
-      Object val = context.getEnvironmentMap().get(ENVMAP_CONDITIONAL_PREFIX + key);
+      Object val = envMap.get(ENVMAP_CONDITIONAL_PREFIX + key);
 
       boolean supply = Boolean.valueOf(String.valueOf(val));
-      context.getEnvironmentMap().put(ENVMAP_SUPPLIED_PREFIX + key, supply);
+      envMap.put(ENVMAP_SUPPLIED_PREFIX + key, supply);
 
       return supply;
     });

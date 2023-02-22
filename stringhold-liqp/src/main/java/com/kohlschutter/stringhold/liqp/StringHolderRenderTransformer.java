@@ -39,13 +39,18 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
   private static final WeakHashMap<StringHolderSequence, StringHolderSequence> HOLDER_CACHE =
       new WeakHashMap<>();
 
+  private static final int DEFAULT_MAX_LENGTH = 64 * 1024;
+
   private static final StringHolderRenderTransformer INSTANCE = new StringHolderRenderTransformer(
-      HOLDER_CACHE);
+      DEFAULT_MAX_LENGTH, HOLDER_CACHE);
 
   private final WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache;
 
-  private StringHolderRenderTransformer(
+  private int maximumLength;
+
+  private StringHolderRenderTransformer(int maximumLength,
       WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache) {
+    this.maximumLength = maximumLength;
     this.holderCache = holderCache;
   }
 
@@ -65,7 +70,8 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
   }
 
   /**
-   * Creates a new, cached {@link StringHolderRenderTransformer} instance.
+   * Creates a new, cached {@link StringHolderRenderTransformer} instance, using a default maximum
+   * length of 64k characters.
    *
    * This instance uses its own cache for de-duplicating {@link StringHolderSequence}s, which may
    * help to significantly reduce heap allocation, at the cost of a slightly slower execution.
@@ -73,7 +79,20 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
    * @return The instance.
    */
   public static StringHolderRenderTransformer newCachedInstance() {
-    return new StringHolderRenderTransformer(new WeakHashMap<>());
+    return newCachedInstance(DEFAULT_MAX_LENGTH);
+  }
+
+  /**
+   * Creates a new, cached {@link StringHolderRenderTransformer} instance.
+   *
+   * This instance uses its own cache for de-duplicating {@link StringHolderSequence}s, which may
+   * help to significantly reduce heap allocation, at the cost of a slightly slower execution.
+   *
+   * @param maximumLength The maximum string length to cache.
+   * @return The instance.
+   */
+  public static StringHolderRenderTransformer newCachedInstance(int maximumLength) {
+    return new StringHolderRenderTransformer(maximumLength, new WeakHashMap<>());
   }
 
   /**
@@ -85,18 +104,19 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
    * @return The instance.
    */
   public static StringHolderRenderTransformer newUncachedInstance() {
-    return new StringHolderRenderTransformer(null);
+    return new StringHolderRenderTransformer(0, null);
   }
 
   @Override
   public Controller newObjectAppender(TemplateContext context, int estimatedNumberOfAppends) {
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
-    StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(
+    final StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(
         SCOPE_KEY, (k) -> {
           int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;
           if (maxLen != Integer.MAX_VALUE) {
-            return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, () -> {
-              throw new RuntimeException("rendered string exceeds " + maxLen);
+            return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, (
+                stringholder) -> {
+              throw new RuntimeException("rendered string exceeds " + maxLen + ": " + stringholder);
             });
           } else {
             return StringHolderScope.NONE;
@@ -115,9 +135,6 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
           StringHolderSequence seq = new StringHolderSequence(Math.max(3,
               estimatedNumberOfAppends));
 
-          if (result instanceof StringHolder) {
-            ((StringHolder) result).updateScope(StringHolderScope.NONE);
-          }
           seq.updateScope(scope);
           seq.append(result);
 
@@ -135,9 +152,6 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
 
       @Override
       public void append(Object obj) {
-        if (obj instanceof StringHolder) {
-          ((StringHolder) obj).updateScope(StringHolderScope.NONE);
-        }
         appender.append(obj);
       }
     };
@@ -154,6 +168,10 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
         shs.markEffectivelyImmutable();
         shs.hashCode(); // pre-compute hashcode to reduce time under lock
 
+        if (shs.getMinimumLength() > maximumLength) {
+          // don't cache
+          return shs.asContent();
+        }
         // de-duplicate identical StringHolderSequences
         synchronized (holderCache) {
           o = holderCache.computeIfAbsent(shs, (k) -> shs);

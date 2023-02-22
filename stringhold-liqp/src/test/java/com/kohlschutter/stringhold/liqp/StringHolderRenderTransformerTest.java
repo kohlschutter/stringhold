@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.StringWriter;
+
 import org.junit.jupiter.api.Test;
 
 import com.kohlschutter.stringhold.StringHolder;
@@ -69,9 +71,29 @@ public class StringHolderRenderTransformerTest {
 
     String json = "{\"array\" : [1,2,3] }";
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
-
     assertThrows(Exception.class, () -> template.renderToObject(json),
         "Exception should be thrown because string exceeds limit");
+  }
+
+  @Test
+  public void testPrerenderLengthExceededVariable() throws Exception {
+    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
+        new RenderSettings.Builder() //
+            .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance()) //
+            .build()) //
+        .withProtectionSettings(new ProtectionSettings.Builder() //
+            .withMaxSizeRenderedString(2) //
+            .build()) //
+        .build();
+
+    String json = "{\"array\" : [1,2,3], \"var\" : \"X\" }";
+    Template template = parser.parse("{% for item in array %}{{ var }}{% endfor %}");
+
+    assertThrows(Exception.class, () -> template.renderToObject(json));
+
+    StringWriter out = new StringWriter();
+    assertThrows(Exception.class, () -> ((StringHolder) template.renderToObject(json)).appendTo(
+        out), "Exception should be thrown because string exceeds limit");
   }
 
   @Test
