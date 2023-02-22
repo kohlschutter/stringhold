@@ -18,6 +18,7 @@
 package com.kohlschutter.stringhold;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -166,7 +167,7 @@ public class StringHolderScopeTest {
       }
 
       @Override
-      public void resizeBy(StringHolder sh, int minLengthBy, int expectedLengthBy) {
+      public void resizeBy(int minLengthBy, int expectedLengthBy) {
         if (expectedLengthBy > 10) {
           throw new UnsupportedOperationException("I don't like large resizes");
         }
@@ -219,7 +220,7 @@ public class StringHolderScopeTest {
       }
 
       @Override
-      public void resizeBy(StringHolder sh, int minLengthBy, int expectedLengthBy) {
+      public void resizeBy(int minLengthBy, int expectedLengthBy) {
         triggered.set(true);
       }
     };
@@ -244,7 +245,7 @@ public class StringHolderScopeTest {
       }
 
       @Override
-      public void resizeBy(StringHolder sh, int minLengthBy, int expectedLengthBy) {
+      public void resizeBy(int minLengthBy, int expectedLengthBy) {
         throw new UnsupportedOperationException("I don't like resizes");
       }
     };
@@ -266,7 +267,7 @@ public class StringHolderScopeTest {
       }
 
       @Override
-      public void resizeBy(StringHolder sh, int minLengthBy, int expectedLengthBy) {
+      public void resizeBy(int minLengthBy, int expectedLengthBy) {
         if (expectedLengthBy > 10) {
           throw new UnsupportedOperationException("I don't like large resizes");
         }
@@ -333,5 +334,97 @@ public class StringHolderScopeTest {
 
     bsh.setErrorState(true);
     bsh.setErrorState(false);
+  }
+
+  @Test
+  public void testAppendTwiceSameScopeAsSequence() throws Exception {
+    AtomicBoolean exceeded = new AtomicBoolean(false);
+    LimitedStringHolderScope scope = LimitedStringHolderScope.withUpperLimitForMinimumLength(2, (
+        sh) -> {
+      exceeded.set(true);
+    });
+    StringHolder a = StringHolder.withContent("A");
+    assertEquals(null, a.updateScope(scope));
+    StringHolder b = StringHolder.withContent("B");
+    assertEquals(null, b.updateScope(scope));
+
+    StringHolderSequence seq = new StringHolderSequence();
+    assertEquals(null, seq.updateScope(scope));
+    seq.append(a);
+    seq.append(b);
+    assertFalse(exceeded.get());
+    seq.append(a);
+    assertTrue(exceeded.get());
+  }
+
+  @Test
+  public void testAppendTwiceSameScopeSequenceDifferentScope() throws Exception {
+    AtomicBoolean exceeded = new AtomicBoolean(false);
+    LimitedStringHolderScope scope = LimitedStringHolderScope.withUpperLimitForMinimumLength(2, (
+        sh) -> {
+      exceeded.set(true);
+    });
+
+    CountingScope countingScope = new CountingScope();
+
+    StringHolder a = StringHolder.withContent("A");
+    assertEquals(null, a.updateScope(countingScope));
+    StringHolder b = StringHolder.withContent("B");
+    assertEquals(null, b.updateScope(countingScope));
+
+    StringHolderSequence seq = new StringHolderSequence();
+    assertEquals(null, seq.updateScope(scope));
+    seq.append(a);
+    seq.append(b);
+    assertFalse(exceeded.get());
+    seq.append(a);
+    assertTrue(exceeded.get());
+  }
+
+  @Test
+  public void testAppendTwiceNoScopeSequenceDifferentScope() throws Exception {
+    AtomicBoolean exceeded = new AtomicBoolean(false);
+    LimitedStringHolderScope scope = LimitedStringHolderScope.withUpperLimitForMinimumLength(2, (
+        sh) -> {
+      exceeded.set(true);
+    });
+
+    StringHolder a = StringHolder.withContent("A");
+    StringHolder b = StringHolder.withContent("B");
+
+    StringHolderSequence seq = new StringHolderSequence();
+    assertEquals(null, seq.updateScope(scope));
+    seq.append(a);
+    seq.append(b);
+    assertFalse(exceeded.get());
+    seq.append(a);
+    assertTrue(exceeded.get());
+  }
+
+  @Test
+  public void testAppendTwiceNoScopeSequenceNoScope() throws Exception {
+    StringHolder a = StringHolder.withContent("A");
+    StringHolder b = StringHolder.withContent("B");
+
+    StringHolderSequence seq = new StringHolderSequence();
+    seq.append(a);
+    seq.append(b);
+    seq.append(a);
+    assertEquals("ABA", seq.toString());
+  }
+
+  @Test
+  public void testAppendTwiceNoScopeSequenceNoScope1() throws Exception {
+    CountingScope countingScope = new CountingScope();
+
+    StringHolder a = StringHolder.withContent("A");
+    a.updateScope(countingScope);
+    StringHolder b = StringHolder.withContent("B");
+
+    StringHolderSequence seq = new StringHolderSequence();
+    seq.append(a);
+    seq.append(b);
+    seq.append(a);
+    assertEquals("ABA", seq.toString());
   }
 }

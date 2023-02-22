@@ -60,11 +60,10 @@ public interface StringHolderScope {
   /**
    * Called upon a size change regarding the given {@link StringHolder}.
    *
-   * @param sh The {@link StringHolder}.
    * @param minLengthBy The relative size change for the minimum length, can also be negative.
    * @param expectedLengthBy The relative size change for the expected length, can also be negative.
    */
-  default void resizeBy(StringHolder sh, int minLengthBy, int expectedLengthBy) {
+  default void resizeBy(int minLengthBy, int expectedLengthBy) {
   }
 
   /**

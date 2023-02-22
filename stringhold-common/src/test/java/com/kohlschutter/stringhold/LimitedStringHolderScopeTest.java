@@ -84,7 +84,7 @@ public class LimitedStringHolderScopeTest {
 
   @Test
   public void testLimit_minLength() {
-    LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForMinimumLength(3, () -> {
+    LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForMinimumLength(3, (sh) -> {
       throw new QuotaExceededException("Limit exceeded");
     });
 
@@ -116,7 +116,7 @@ public class LimitedStringHolderScopeTest {
   @Test
   public void testLimit_minExpectedLength() {
     LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForExpectedLength(3,
-        () -> {
+        (sh) -> {
           throw new QuotaExceededException("Limit exceeded");
         });
 
@@ -132,7 +132,7 @@ public class LimitedStringHolderScopeTest {
   @Test
   public void testLimit_minAndExpectedLength() {
     LimitedStringHolderScope ls = LimitedStringHolderScope
-        .withUpperLimitForMinimumAndExpectedLength(3, 30, () -> {
+        .withUpperLimitForMinimumAndExpectedLength(3, 30, (sh) -> {
           throw new QuotaExceededException("Limit exceeded");
         });
 
@@ -149,7 +149,7 @@ public class LimitedStringHolderScopeTest {
   public void testLimit_badExpectedLengthAdd() {
     AtomicBoolean exceeded = new AtomicBoolean(false);
     LimitedStringHolderScope ls = LimitedStringHolderScope
-        .withUpperLimitForMinimumAndExpectedLength(0, 10, () -> exceeded.set(true));
+        .withUpperLimitForMinimumAndExpectedLength(0, 10, (sh) -> exceeded.set(true));
     assertFalse(exceeded.get());
     StringHolder.withContent("One Mississippi, two Mississippi").updateScope(ls);
     assertTrue(exceeded.get());
@@ -160,7 +160,7 @@ public class LimitedStringHolderScopeTest {
     AtomicBoolean exceeded = new AtomicBoolean(false);
 
     LimitedStringHolderScope ls = LimitedStringHolderScope
-        .withUpperLimitForMinimumAndExpectedLength(0, 10, () -> exceeded.set(true));
+        .withUpperLimitForMinimumAndExpectedLength(0, 10, (sh) -> exceeded.set(true));
     StringHolder sh = StringHolder.withSupplier(() -> "One Mississippi, two Mississippi");
     sh.updateScope(ls);
     assertFalse(exceeded.get());
@@ -190,7 +190,7 @@ public class LimitedStringHolderScopeTest {
     AtomicBoolean exceeded = new AtomicBoolean(false);
 
     LimitedStringHolderScope ls = LimitedStringHolderScope
-        .withUpperLimitForMinimumAndExpectedLength(10, 20, () -> exceeded.set(true));
+        .withUpperLimitForMinimumAndExpectedLength(10, 20, (sh) -> exceeded.set(true));
     CustomResizeStringHolder sh = new CustomResizeStringHolder();
     sh.updateScope(ls);
     assertFalse(exceeded.get());
@@ -203,7 +203,7 @@ public class LimitedStringHolderScopeTest {
     AtomicBoolean exceeded = new AtomicBoolean(false);
 
     LimitedStringHolderScope ls = LimitedStringHolderScope
-        .withUpperLimitForMinimumAndExpectedLength(0, 10, () -> exceeded.set(true));
+        .withUpperLimitForMinimumAndExpectedLength(0, 10, (sh) -> exceeded.set(true));
     CustomResizeStringHolder sh = new CustomResizeStringHolder();
     sh.updateScope(ls);
     assertFalse(exceeded.get());

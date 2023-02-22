@@ -129,6 +129,9 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
 
   /**
    * Appends the given {@link StringHolder}, unless it is known to be empty.
+   * 
+   * As a side-effect, the scope of the given {@link StringHolder} is updated with the scope of this
+   * instance.
    *
    * @param s The string.
    * @return This instance.
@@ -138,7 +141,13 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
       return this;
     } else if (s.isString() || needsStringConversion(s)) {
       checkMutable();
+
+      if (s.getScope() == getScope()) {
+        // don't double count
+        s.updateScope(StringHolderScope.NONE);
+      }
       addSequence(s.toString());
+
       return this;
     }
 
@@ -146,9 +155,10 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
       cannotUseCache = true;
     }
 
+    resizeBy(s.getMinimumLength(), s.getExpectedLength());
+
     uncache();
     sequence.add(s);
-    resizeBy(s.getMinimumLength(), s.getExpectedLength());
 
     return this;
   }

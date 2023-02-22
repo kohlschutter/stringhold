@@ -368,7 +368,7 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
    * @return the uncacheable {@link StringHolder}.
    */
   static StringHolder withUncacheableStringHolder(StringHolder wrapped) {
-    return withConditionalStringHolder(wrapped, (k) -> true);
+    return wrapped.isCacheable() ? withConditionalStringHolder(wrapped, (k) -> true) : wrapped;
   }
 
   @Override

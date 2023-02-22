@@ -19,7 +19,9 @@ package com.kohlschutter.stringhold;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -294,8 +296,10 @@ public class ConditionalStringHolderTest {
     assertTrue(sh.isCacheable());
 
     sh = StringHolder.withUncacheableStringHolder(StringHolder.withContent(""));
+    assertSame(sh, StringHolder.withUncacheableStringHolder(sh));
     assertFalse(sh.isCacheable());
     sh.toString();
     assertTrue(sh.isCacheable());
+    assertNotSame(sh, StringHolder.withUncacheableStringHolder(sh));
   }
 }

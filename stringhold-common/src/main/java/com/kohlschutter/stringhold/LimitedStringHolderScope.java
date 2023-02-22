@@ -20,6 +20,7 @@ package com.kohlschutter.stringhold;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * A {@link StringHolderScope} that keeps track of the aggregate minimum length of all associated
@@ -36,14 +37,14 @@ public final class LimitedStringHolderScope implements StringHolderScope {
   private final AtomicInteger expectedLength = new AtomicInteger();
   private final int minLengthLimit;
   private final int expectedLengthLimit;
-  private final Runnable onLimitExceeded;
+  private final Consumer<StringHolder> onLimitExceeded;
 
   private LimitedStringHolderScope() {
     this(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
   }
 
   private LimitedStringHolderScope(int minLengthLimit, int expectedLengthLimit,
-      Runnable onLimitExceeded) {
+      Consumer<StringHolder> onLimitExceeded) {
     this.minLengthLimit = minLengthLimit;
     this.expectedLengthLimit = expectedLengthLimit;
     this.onLimitExceeded = onLimitExceeded;
@@ -72,7 +73,7 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withUpperLimitForMinimumLength(int minLengthLimit,
-      Runnable onLimitExceeded) {
+      Consumer<StringHolder> onLimitExceeded) {
     return new LimitedStringHolderScope(minLengthLimit, Integer.MAX_VALUE, Objects.requireNonNull(
         onLimitExceeded));
   }
@@ -88,7 +89,7 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withUpperLimitForExpectedLength(int expectedLengthLimit,
-      Runnable onLimitExceeded) {
+      Consumer<StringHolder> onLimitExceeded) {
     return new LimitedStringHolderScope(expectedLengthLimit, expectedLengthLimit, Objects
         .requireNonNull(onLimitExceeded));
   }
@@ -106,7 +107,7 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withUpperLimitForMinimumAndExpectedLength(
-      int minLengthLimit, int expectedLengthLimit, Runnable onLimitExceeded) {
+      int minLengthLimit, int expectedLengthLimit, Consumer<StringHolder> onLimitExceeded) {
     return new LimitedStringHolderScope(minLengthLimit, expectedLengthLimit, Objects.requireNonNull(
         onLimitExceeded));
   }
@@ -137,7 +138,7 @@ public final class LimitedStringHolderScope implements StringHolderScope {
     int el = expectedLength.addAndGet(sh.getExpectedLength());
 
     if (ml > minLengthLimit || el > expectedLengthLimit) {
-      onLimitExceeded.run();
+      onLimitExceeded.accept(sh);
     }
   }
 
@@ -148,12 +149,12 @@ public final class LimitedStringHolderScope implements StringHolderScope {
   }
 
   @Override
-  public void resizeBy(StringHolder sh, int minBy, int expBy) {
+  public void resizeBy(int minBy, int expBy) {
     int ml = minimumLength.addAndGet(minBy);
     int el = expectedLength.addAndGet(expBy);
 
     if (ml > minLengthLimit || el > expectedLengthLimit) {
-      onLimitExceeded.run();
+      onLimitExceeded.accept(null);
     }
   }
 }

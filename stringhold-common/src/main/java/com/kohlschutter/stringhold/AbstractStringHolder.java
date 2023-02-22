@@ -136,7 +136,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
     StringHolderScope sc = this.scope;
     if (sc != null) {
       try {
-        sc.resizeBy(this, this.minLength - oldMin, this.expectedLength - oldExpected);
+        sc.resizeBy(this.minLength - oldMin, this.expectedLength - oldExpected);
       } catch (RuntimeException | Error e) {
         setError();
         throw e;
@@ -177,7 +177,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
     StringHolderScope sc = this.scope;
     if (sc != null) {
       try {
-        sc.resizeBy(this, this.minLength - oldMin, this.expectedLength - oldExpected);
+        sc.resizeBy(this.minLength - oldMin, this.expectedLength - oldExpected);
       } catch (RuntimeException | Error e) {
         setError();
         throw e;
