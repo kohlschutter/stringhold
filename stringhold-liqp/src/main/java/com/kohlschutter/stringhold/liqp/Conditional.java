@@ -34,13 +34,15 @@ import liqp.tags.Tag;
  * {% conditional get: someState %} // false
  * </code></pre>
  *
- * <b>NOTE:</b> The behavior of declaring a conditional tag within a conditionally block is
- * currently undefined.
+ * <b>NOTE:</b> By default, conditionals are {@code true}. The behavior of declaring a conditional
+ * tag within a conditionally block is currently undefined.
  *
  * @author Christian Kohlschütter
  * @see Conditionally
  */
 public final class Conditional extends Tag {
+  static final String ENVMAP_CONDITIONAL_PREFIX = " stringhold.conditional.";
+  static final String ENVMAP_SUPPLIED_PREFIX = " stringhold.conditional-supplied.";
 
   /**
    * Constructs a new "conditional" {@link Tag}.
@@ -70,20 +72,58 @@ public final class Conditional extends Tag {
         b = false;
         break;
       case "get":
-        return Boolean.valueOf(String.valueOf(context.getEnvironmentMap().get(
-            Conditionally.ENVMAP_CONDITIONAL_PREFIX + key)));
+        return isConditionalSet(context.getEnvironmentMap(), key);
       default:
         throw new IllegalArgumentException("Illegal conditional command: " + command);
     }
 
     Map<String, Object> map = context.getEnvironmentMap();
-    Object existingValue = map.get(Conditionally.ENVMAP_SUPPLIED_PREFIX + key);
-    if (existingValue != null && Boolean.valueOf(String.valueOf(existingValue)) != b) {
+    Boolean supplied = getConditionalSuppliedState(map, key);
+    if (supplied != null && supplied.booleanValue() != b) {
       throw new IllegalStateException("Conditional already accessed: " + key);
     }
 
-    map.put(Conditionally.ENVMAP_CONDITIONAL_PREFIX + key, b);
+    setConditional(map, key, b);
 
     return null;
+  }
+
+  /**
+   * Checks if the conditional identified by the given key is set.
+   * 
+   * @param envMap The environment map.
+   * @param key The key, without its internal prefix.
+   * @return {@code true} if set.
+   */
+  public static boolean isConditionalSet(Map<String, Object> envMap, String key) {
+    Object val = envMap.get(Conditional.ENVMAP_CONDITIONAL_PREFIX + key);
+    return Boolean.valueOf(String.valueOf(val));
+  }
+
+  /**
+   * Checks if the conditional identified by the given key is set.
+   * 
+   * @param envMap The environment map.
+   * @param key The key, without its internal prefix.
+   * @param on {@code true} if set, {@code false} if clear.
+   */
+  public static void setConditional(Map<String, Object> envMap, String key, boolean on) {
+    envMap.put(Conditional.ENVMAP_CONDITIONAL_PREFIX + key, on);
+  }
+
+  /**
+   * Checks the "supplied" state of the conditional identified by the given key.
+   * 
+   * @param envMap The environment map.
+   * @param key The key, without its internal prefix.
+   * @return {@code false}/{@code true} for the "supply" condition once determined, or {@code null}
+   *         if not determined yet.
+   */
+  public static Boolean getConditionalSuppliedState(Map<String, Object> envMap, String key) {
+    Object val = envMap.get(Conditional.ENVMAP_SUPPLIED_PREFIX + key);
+    if (val == null) {
+      return null;
+    }
+    return Boolean.valueOf(String.valueOf(val));
   }
 }

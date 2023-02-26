@@ -18,7 +18,12 @@
 package com.kohlschutter.stringhold.liqp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.Test;
 
@@ -123,5 +128,44 @@ public class ConditionalTest {
     assertThrows(IllegalStateException.class, () -> parser.parse(
         "{% capture test %}{% conditionally yo %}true{% endconditionally %}{% endcapture %}{{ test }}{% conditional set: yo %}")
         .render());
+  }
+
+  @Test
+  public void testSetConditional() throws Exception {
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderSettings(new RenderSettings.Builder() //
+            .withRenderTransformer(StringholdLiqpSettings.RENDER_SETTINGS.getRenderTransformer())
+            .withEnvironmentMapConfigurator((envMap) -> {
+              Conditional.setConditional(envMap, "test", true);
+            }) //
+            .build()) //
+        .withParseSettings(new ParseSettings.Builder() //
+            .with(StringholdLiqpSettings.PARSE_SETTINGS) //
+            .build()) //
+        .build();
+
+    Template template = parser.parse("Hello{% conditionally test %} World{% endconditionally %}");
+    assertEquals("Hello World", template.render());
+  }
+
+  @Test
+  public void testGetConditional() throws Exception {
+    CompletableFuture<Map<String, Object>> envMapFuture = new CompletableFuture<>();
+
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderSettings(new RenderSettings.Builder() //
+            .withRenderTransformer(StringholdLiqpSettings.RENDER_SETTINGS.getRenderTransformer())
+            .withEnvironmentMapConfigurator(envMapFuture::complete) //
+            .build()) //
+        .withParseSettings(new ParseSettings.Builder() //
+            .with(StringholdLiqpSettings.PARSE_SETTINGS) //
+            .build()) //
+        .build();
+
+    Template template = parser.parse("{% conditional set: test %}");
+    assertEquals("", template.renderToObject());
+    Map<String, Object> envMap = envMapFuture.get(); // NOTE: only accessible upon renderToObject
+    assertTrue(Conditional.isConditionalSet(envMap, "test"));
+    assertFalse(Conditional.isConditionalSet(envMap, "somethingelse"));
   }
 }

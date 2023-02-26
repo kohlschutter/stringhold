@@ -42,9 +42,6 @@ import liqp.nodes.LNode;
  * @see Conditional
  */
 public final class Conditionally extends Block {
-  static final String ENVMAP_CONDITIONAL_PREFIX = " stringhold.conditional.";
-  static final String ENVMAP_SUPPLIED_PREFIX = " stringhold.conditional-supplied.";
-
   /**
    * Constructs a new "conditionally" {@link Block}.
    */
@@ -65,10 +62,8 @@ public final class Conditionally extends Block {
 
     Map<String, Object> envMap = context.getEnvironmentMap();
     return StringHolder.withConditionalStringHolder(sh, (o) -> {
-      Object val = envMap.get(ENVMAP_CONDITIONAL_PREFIX + key);
-
-      boolean supply = Boolean.valueOf(String.valueOf(val));
-      envMap.put(ENVMAP_SUPPLIED_PREFIX + key, supply);
+      boolean supply = Conditional.isConditionalSet(envMap, key);
+      envMap.put(Conditional.ENVMAP_SUPPLIED_PREFIX + key, supply);
 
       return supply;
     });
