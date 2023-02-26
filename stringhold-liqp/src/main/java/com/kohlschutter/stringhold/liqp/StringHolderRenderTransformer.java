@@ -165,13 +165,13 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
       StringHolder o;
       if (holderCache != null && (sh instanceof StringHolderSequence) && sh.isCacheable()) {
         StringHolderSequence shs = (StringHolderSequence) sh;
-        shs.markEffectivelyImmutable();
 
         if (shs.getMinimumLength() > maximumLength) {
           // don't cache
           return shs.asContent();
         }
 
+        shs.markEffectivelyImmutable();
         shs.hashCode(); // pre-compute hashcode to reduce time under lock
 
         // de-duplicate identical StringHolderSequences
