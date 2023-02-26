@@ -1,7 +1,7 @@
 /*
  * stringhold
  *
- * Copyright 2022 Christian Kohlschütter
+ * Copyright 2022, 2023 Christian Kohlschütter
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,8 @@ public class LimitedStringHolderScopeTest {
 
   @Test
   public void testLimit_minLength() {
-    LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForMinimumLength(3, (sh) -> {
+    LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForMinimumLength(3, (
+        sh) -> {
       throw new QuotaExceededException("Limit exceeded");
     });
 
@@ -115,10 +116,10 @@ public class LimitedStringHolderScopeTest {
 
   @Test
   public void testLimit_minExpectedLength() {
-    LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForExpectedLength(3,
-        (sh) -> {
-          throw new QuotaExceededException("Limit exceeded");
-        });
+    LimitedStringHolderScope ls = LimitedStringHolderScope.withUpperLimitForExpectedLength(3, (
+        sh) -> {
+      throw new QuotaExceededException("Limit exceeded");
+    });
 
     StringHolder.withContent("ab").updateScope(ls);
 

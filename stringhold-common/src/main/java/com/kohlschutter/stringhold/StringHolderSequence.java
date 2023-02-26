@@ -1,7 +1,7 @@
 /*
  * stringhold
  *
- * Copyright 2022 Christian Kohlschütter
+ * Copyright 2022, 2023 Christian Kohlschütter
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
 
   /**
    * Appends the given {@link StringHolder}, unless it is known to be empty.
-   * 
+   *
    * As a side-effect, the scope of the given {@link StringHolder} is updated with the scope of this
    * instance.
    *

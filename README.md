@@ -202,7 +202,7 @@ To reformat code, which simplifies pull requests and restores general sanity, us
 
 # Legal Notices
 
-Copyright 2022 Christian Kohlschuetter <christian@kohlschutter.com>
+Copyright 2022, 2023 Christian Kohlschuetter <christian@kohlschutter.com>
 
 SPDX-License-Identifier: Apache-2.0
 See NOTICE and LICENSE for license details.
