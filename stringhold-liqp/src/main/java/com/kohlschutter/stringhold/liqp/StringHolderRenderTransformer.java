@@ -46,11 +46,11 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
 
   private final WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache;
 
-  private int maximumLength;
+  private int maximumCacheableLength;
 
   private StringHolderRenderTransformer(int maximumLength,
       WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache) {
-    this.maximumLength = maximumLength;
+    this.maximumCacheableLength = maximumLength;
     this.holderCache = holderCache;
   }
 
@@ -166,7 +166,7 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
       if (holderCache != null && (sh instanceof StringHolderSequence) && sh.isCacheable()) {
         StringHolderSequence shs = (StringHolderSequence) sh;
 
-        if (shs.getMinimumLength() > maximumLength) {
+        if (shs.getMinimumLength() > maximumCacheableLength) {
           // don't cache
           return shs.asContent();
         }
