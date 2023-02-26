@@ -19,6 +19,8 @@ package com.kohlschutter.stringhold;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.jupiter.api.Test;
 
 public class StringOnlySequenceTest {
@@ -34,5 +36,21 @@ public class StringOnlySequenceTest {
     sos.append(StringHolder.withSupplier(() -> "ld"));
 
     assertEquals(sos, "Hello World");
+  }
+
+  @Test
+  public void testClone() throws Exception {
+    AtomicInteger supplies = new AtomicInteger(0);
+    StringOnlySequence sos = new StringOnlySequence();
+    sos.append(StringHolder.withSupplier(() -> {
+      supplies.incrementAndGet();
+      return "Hello";
+    }));
+
+    assertEquals("Hello", sos.clone().toString());
+    assertEquals("Hello", sos.toString());
+
+    // StringHolders are converted to string upon append to StringOnlySequence
+    assertEquals(1, supplies.get());
   }
 }

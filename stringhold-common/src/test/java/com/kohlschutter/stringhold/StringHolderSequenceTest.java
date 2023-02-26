@@ -28,6 +28,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 
@@ -536,5 +537,32 @@ public class StringHolderSequenceTest {
     assertFalse(seq.isCacheable());
     sh.toString();
     assertTrue(seq.isCacheable());
+  }
+
+  @Test
+  public void testAppendCharSequenceHolder() throws Exception {
+    StringHolderSequence seq = new StringHolderSequence();
+    CharSequence cs = StringHolder.withSupplier(() -> "hello");
+    seq.append(cs);
+    assertEquals("hello", seq.toString());
+  }
+
+  @Test
+  public void testClone() throws Exception {
+    AtomicInteger helloSupplies = new AtomicInteger();
+
+    StringHolderSequence seq1 = new StringHolderSequence();
+    seq1.append(StringHolder.withSupplier(() -> {
+      helloSupplies.incrementAndGet();
+      return "hello";
+    }));
+
+    StringHolderSequence seq2 = seq1.clone();
+    seq1.append(" there");
+    seq2.append(" world");
+    assertEquals("hello world", seq2.toString());
+    assertEquals("hello there", seq1.toString());
+
+    assertEquals(2, helloSupplies.get());
   }
 }

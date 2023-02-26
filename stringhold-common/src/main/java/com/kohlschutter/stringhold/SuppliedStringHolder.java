@@ -43,7 +43,7 @@ class SuppliedStringHolder extends AbstractStringHolder {
 
   private final IOSupplier<?> supplier;
   private final IOExceptionHandler onError;
-  private final AtomicBoolean supplied = new AtomicBoolean(false);
+  private AtomicBoolean supplied = new AtomicBoolean(false);
   private Object object = null;
 
   SuppliedStringHolder(int minLen, int expLen, Supplier<?> supplier) {
@@ -245,5 +245,12 @@ class SuppliedStringHolder extends AbstractStringHolder {
     } else {
       return String.valueOf(obj);
     }
+  }
+
+  @Override
+  public SuppliedStringHolder clone() {
+    SuppliedStringHolder clone = (SuppliedStringHolder) super.clone();
+    clone.supplied = new AtomicBoolean(supplied.get());
+    return clone;
   }
 }

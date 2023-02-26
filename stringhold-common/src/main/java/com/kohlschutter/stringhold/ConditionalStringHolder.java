@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Predicate;
 
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
 
 /**
@@ -30,7 +31,7 @@ import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
  * @author Christian Kohlschütter
  */
 final class ConditionalStringHolder implements StringHolder {
-  private final StringHolder wrapped;
+  private StringHolder wrapped;
   private final Predicate<StringHolder> include;
 
   @SuppressFBWarnings("IS2_INCONSISTENT_SYNC")
@@ -286,5 +287,21 @@ final class ConditionalStringHolder implements StringHolder {
   @Override
   public boolean isCacheable() {
     return isString();
+  }
+
+  @ExcludeFromCodeCoverageGeneratedReport // ignore CloneNotSupportedException handling code
+  private ConditionalStringHolder cloneSuper() {
+    try {
+      return (ConditionalStringHolder) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  @Override
+  public StringHolder clone() {
+    ConditionalStringHolder clone = cloneSuper();
+    clone.wrapped = clone.wrapped.clone();
+    return clone;
   }
 }

@@ -27,6 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
@@ -301,5 +304,28 @@ public class ConditionalStringHolderTest {
     sh.toString();
     assertTrue(sh.isCacheable());
     assertNotSame(sh, StringHolder.withUncacheableStringHolder(sh));
+  }
+
+  @Test
+  public void testClone() throws Exception {
+    StringHolder w1 = StringHolder.withSupplier(() -> "hello");
+    List<StringHolder> checks = new ArrayList<>();
+
+    StringHolder cs1 = StringHolder.withConditionalStringHolder(w1, (sh) -> {
+      checks.add(sh);
+      return true;
+    });
+
+    StringHolder cs2 = cs1.clone();
+
+    assertEquals("hello", cs2.toString());
+    assertTrue(cs2.isString());
+    assertFalse(cs1.isString()); // not affected
+
+    assertEquals(Arrays.asList(cs2), checks);
+
+    checks.clear();
+    assertEquals("hello", cs1.toString());
+    assertEquals(Arrays.asList(cs1), checks);
   }
 }

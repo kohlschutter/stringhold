@@ -17,6 +17,7 @@
  */
 package com.kohlschutter.stringhold;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -35,5 +36,10 @@ public class SimpleStringHolderTest {
   public void testCacheable() throws Exception {
     StringHolder sh = StringHolder.withContent("test");
     assertTrue(sh.isCacheable());
+  }
+
+  @Test
+  public void testClone() throws Exception {
+    assertEquals("test", StringHolder.withContent("test").clone().toString());
   }
 }

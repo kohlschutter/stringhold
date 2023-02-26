@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Christian Kohlschütter
  */
 public class StringHolderSequence extends AbstractStringHolder implements Appendable {
-  final List<CharSequence> sequence;
+  protected List<CharSequence> sequence;
 
   private boolean immutable = false;
   private boolean cannotUseCache = false;
@@ -170,6 +170,9 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
    */
   @Override
   public StringHolderSequence append(CharSequence s) {
+    if (s instanceof StringHolder) {
+      return append((StringHolder) s);
+    }
     if (!CharSequenceReleaseShim.isEmpty(s)) {
       addSequence(CommonStrings.lookupIfPossible(String.valueOf(s)));
     }
@@ -613,5 +616,22 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
       }
     }
     return true;
+  }
+
+  @Override
+  public StringHolderSequence clone() {
+    StringHolderSequence clone = (StringHolderSequence) super.clone();
+
+    List<CharSequence> seq = new ArrayList<>();
+    for (int i = 0, n = sequence.size(); i < n; i++) {
+      CharSequence cs = sequence.get(i);
+      if (cs instanceof StringHolder) {
+        cs = ((StringHolder) cs).clone();
+      }
+      seq.add(cs);
+    }
+    clone.sequence = seq;
+
+    return clone;
   }
 }

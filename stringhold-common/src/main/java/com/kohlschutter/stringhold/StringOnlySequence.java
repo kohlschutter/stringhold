@@ -44,4 +44,9 @@ public class StringOnlySequence extends StringHolderSequence {
   protected boolean needsStringConversion(StringHolder sh) {
     return true;
   }
+
+  @Override
+  public StringOnlySequence clone() {
+    return (StringOnlySequence) super.clone();
+  }
 }

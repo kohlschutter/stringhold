@@ -40,7 +40,7 @@ import java.util.function.Supplier;
  *
  * @author Christian Kohlschütter
  */
-public interface StringHolder extends CharSequence, HasLength, Comparable<Object> {
+public interface StringHolder extends CharSequence, HasLength, Comparable<Object>, Cloneable {
   /**
    * Constructs a new {@link StringHolder} with content from the given supplier, assuming a minimum
    * length of 0.
@@ -628,4 +628,6 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
   default boolean isCacheable() {
     return true;
   }
+
+  StringHolder clone();
 }

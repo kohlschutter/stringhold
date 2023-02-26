@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Objects;
 
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
 import com.kohlschutter.util.ComparisonUtil;
 
@@ -940,5 +941,19 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
     if (!isEffectivelyImmutable()) {
       toString();
     }
+  }
+
+  @ExcludeFromCodeCoverageGeneratedReport // ignore CloneNotSupportedException handling code
+  private StringHolder cloneSuper() {
+    try {
+      return (StringHolder) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  @Override
+  public StringHolder clone() {
+    return cloneSuper();
   }
 }
