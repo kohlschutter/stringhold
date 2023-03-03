@@ -21,11 +21,10 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
 
 import liqp.ParseSettings;
 import liqp.RenderSettings;
-import liqp.blocks.Capture;
 
 public final class StringholdLiqpSettings {
 
-  @ExcludeFromCodeCoverageGeneratedReport
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
   private StringholdLiqpSettings() {
     throw new IllegalStateException("No instances");
   }

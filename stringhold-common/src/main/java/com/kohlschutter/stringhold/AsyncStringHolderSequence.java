@@ -93,7 +93,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
   }
 
   @Override
-  @ExcludeFromCodeCoverageGeneratedReport
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "exception unreachable")
   protected int appendToAndReturnLengthImpl(StringBuilder out) {
     try {
       return appendToAndReturnLengthImpl1(out);
@@ -110,7 +110,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
   }
 
   @Override
-  @ExcludeFromCodeCoverageGeneratedReport
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "exception unreachable")
   protected int appendToAndReturnLengthImpl(StringBuffer out) {
     try {
       return appendToAndReturnLengthImpl1(out);

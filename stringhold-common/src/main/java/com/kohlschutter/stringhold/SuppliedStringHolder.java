@@ -34,9 +34,8 @@ class SuppliedStringHolder extends AbstractStringHolder {
   private static final IOExceptionHandler UNREACHABLE_EXCEPTION_HANDLER = new IOExceptionHandler() {
 
     @Override
-    @ExcludeFromCodeCoverageGeneratedReport
+    @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
     public ExceptionResponse onException(IOException exception) {
-      // This could should never be reached
       return ExceptionResponse.ILLEGAL_STATE;
     }
   };

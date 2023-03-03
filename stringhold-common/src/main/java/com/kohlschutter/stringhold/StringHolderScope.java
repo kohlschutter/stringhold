@@ -33,12 +33,12 @@ public interface StringHolderScope {
    */
   StringHolderScope NONE = new StringHolderScope() {
     @Override
-    @ExcludeFromCodeCoverageGeneratedReport
+    @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
     public void add(StringHolder sh) {
     }
 
     @Override
-    @ExcludeFromCodeCoverageGeneratedReport
+    @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
     public void remove(StringHolder sh) {
     }
   };

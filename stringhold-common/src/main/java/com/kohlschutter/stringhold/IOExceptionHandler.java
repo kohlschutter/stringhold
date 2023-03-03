@@ -30,7 +30,7 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
  * @author Christian Kohlschütter
  */
 @FunctionalInterface
-@ExcludeFromCodeCoverageGeneratedReport // jacoco doesn't properly detect coverage here
+@ExcludeFromCodeCoverageGeneratedReport(reason = "jacoco bug")
 public interface IOExceptionHandler {
   /**
    * Throw an IllegalStateException, as this exception should not have happened.

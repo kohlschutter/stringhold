@@ -289,7 +289,7 @@ final class ConditionalStringHolder implements StringHolder {
     return isString();
   }
 
-  @ExcludeFromCodeCoverageGeneratedReport // ignore CloneNotSupportedException handling code
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "exception unreachable")
   private ConditionalStringHolder cloneSuper() {
     try {
       return (ConditionalStringHolder) super.clone();

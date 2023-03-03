@@ -31,16 +31,14 @@ final class SimpleStringHolder extends AbstractStringHolder implements HasKnownL
   }
 
   @Override
-  @ExcludeFromCodeCoverageGeneratedReport
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
   protected String getString() {
-    // should not be reachable; just defensive a measure
     return theString;
   }
 
   @Override
-  @ExcludeFromCodeCoverageGeneratedReport
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
   protected void uncache() {
-    // should not be reachable; just defensive a measure
   }
 
   @Override

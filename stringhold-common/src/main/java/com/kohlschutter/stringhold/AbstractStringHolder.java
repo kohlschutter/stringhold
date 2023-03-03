@@ -943,7 +943,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
     }
   }
 
-  @ExcludeFromCodeCoverageGeneratedReport // ignore CloneNotSupportedException handling code
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "exception unreachable")
   private StringHolder cloneSuper() {
     try {
       return (StringHolder) super.clone();

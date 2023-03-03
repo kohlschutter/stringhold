@@ -91,7 +91,7 @@ final class CommonStrings {
   static final StringHolder EMPTY_STRINGHOLDER = Objects.requireNonNull(COMMON_STRINGS.get(""));
   static final StringHolder NULL_STRINGHOLDER = Objects.requireNonNull(COMMON_STRINGS.get("null"));
 
-  @ExcludeFromCodeCoverageGeneratedReport
+  @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
   private CommonStrings() {
     throw new IllegalStateException("No instances");
   }
