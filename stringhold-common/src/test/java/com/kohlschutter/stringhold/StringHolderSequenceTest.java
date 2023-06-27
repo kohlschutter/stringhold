@@ -53,6 +53,7 @@ public class StringHolderSequenceTest {
     return seq;
   }
 
+  @SuppressWarnings("null")
   @Test
   public void testEmptySequence() throws Exception {
     assertEquals(new StringHolderSequence(), "");

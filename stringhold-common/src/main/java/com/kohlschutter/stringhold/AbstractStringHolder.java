@@ -295,6 +295,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
     return toString().equals(sh.toString());
   }
 
+  @SuppressWarnings("unlikely-arg-type")
   @SuppressFBWarnings("EC_UNRELATED_CLASS_AND_INTERFACE")
   private boolean equalsStringHolder(StringHolder obj) {
     if (isLengthKnown() && obj.isLengthKnown() && length() != obj.length()) {
