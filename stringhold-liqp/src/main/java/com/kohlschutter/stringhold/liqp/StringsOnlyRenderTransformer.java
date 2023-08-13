@@ -57,7 +57,7 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
         @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
         StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(
             StringHolderRenderTransformer.SCOPE_KEY, (k) -> {
-              int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;
+              int maxLen = context.getParser().getLimitMaxSizeRenderedString();
               if (maxLen != Integer.MAX_VALUE) {
                 return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, (
                     stringholder) -> {

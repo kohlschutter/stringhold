@@ -22,17 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import liqp.ProtectionSettings;
-import liqp.RenderSettings;
 import liqp.Template;
 import liqp.TemplateParser;
 
 public class StringsOnlyRenderTransformerTest {
   @Test
   public void testPrerenderStringHolder() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringsOnlyRenderTransformer
-            .getInstance()).build()).build();
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringsOnlyRenderTransformer.getInstance()).build();
 
     String json = "{\"array\" : [1,2,3] }";
 
@@ -44,9 +41,8 @@ public class StringsOnlyRenderTransformerTest {
 
   @Test
   public void testPrerenderString() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringsOnlyRenderTransformer
-            .getInstance()).build()).build();
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringsOnlyRenderTransformer.getInstance()).build();
 
     Template template = parser.parse("Hello World");
 
@@ -56,10 +52,10 @@ public class StringsOnlyRenderTransformerTest {
 
   @Test
   public void testPrerenderLengthExceeded() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringsOnlyRenderTransformer
-            .getInstance()).build()).withProtectionSettings(new ProtectionSettings.Builder()
-                .withMaxSizeRenderedString(2).build()).build();
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringsOnlyRenderTransformer.getInstance()) //
+        .withMaxSizeRenderedString(2) //
+        .build();
 
     String json = "{\"array\" : [1,2,3] }";
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");

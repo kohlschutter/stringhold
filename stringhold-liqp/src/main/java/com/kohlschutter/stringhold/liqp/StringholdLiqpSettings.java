@@ -17,10 +17,11 @@
  */
 package com.kohlschutter.stringhold.liqp;
 
+import java.util.function.Function;
+
 import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 
-import liqp.ParseSettings;
-import liqp.RenderSettings;
+import liqp.TemplateParser;
 
 public final class StringholdLiqpSettings {
 
@@ -29,12 +30,24 @@ public final class StringholdLiqpSettings {
     throw new IllegalStateException("No instances");
   }
 
-  public static final ParseSettings PARSE_SETTINGS = new ParseSettings.Builder() //
-      .with(new Conditional()) //
-      .with(new Conditionally()) //
-      .build();
+  public static TemplateParser.Builder configure(TemplateParser.Builder builder) {
+    return builder //
+        .withInsertion(new Conditional()) //
+        .withInsertion(new Conditionally()) //
+        .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance());
+  }
 
-  public static final RenderSettings RENDER_SETTINGS = new RenderSettings.Builder() //
-      .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance()) //
-      .build();
+  public static TemplateParser newConfiguredTemplateParser() {
+    return configure(new TemplateParser.Builder()).build();
+  }
+
+  public static TemplateParser newConfiguredTemplateParser(
+      Function<TemplateParser.Builder, TemplateParser.Builder> additionalConfiguration) {
+    TemplateParser.Builder builder = new TemplateParser.Builder();
+    configure(builder);
+    if (additionalConfiguration != null) {
+      builder = additionalConfiguration.apply(builder);
+    }
+    return builder.build();
+  }
 }

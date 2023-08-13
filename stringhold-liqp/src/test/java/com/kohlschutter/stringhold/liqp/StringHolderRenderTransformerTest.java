@@ -27,8 +27,6 @@ import org.junit.jupiter.api.Test;
 
 import com.kohlschutter.stringhold.StringHolder;
 
-import liqp.ProtectionSettings;
-import liqp.RenderSettings;
 import liqp.RenderTransformer;
 import liqp.RenderTransformer.ObjectAppender;
 import liqp.Template;
@@ -38,9 +36,8 @@ import liqp.TemplateParser;
 public class StringHolderRenderTransformerTest {
   @Test
   public void testPrerenderStringHolder() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .getSharedCacheInstance()).build()).build();
+    TemplateParser parser = new TemplateParser.Builder().withRenderTransformer(
+        StringHolderRenderTransformer.getSharedCacheInstance()).build();
 
     String json = "{\"array\" : [1,2,3] }";
 
@@ -52,9 +49,8 @@ public class StringHolderRenderTransformerTest {
 
   @Test
   public void testPrerenderString() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .getSharedCacheInstance()).build()).build();
+    TemplateParser parser = new TemplateParser.Builder().withRenderTransformer(
+        StringHolderRenderTransformer.getSharedCacheInstance()).build();
 
     Template template = parser.parse("Hello World");
 
@@ -64,10 +60,10 @@ public class StringHolderRenderTransformerTest {
 
   @Test
   public void testPrerenderLengthExceeded() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .getSharedCacheInstance()).build()).withProtectionSettings(
-                new ProtectionSettings.Builder().withMaxSizeRenderedString(2).build()).build();
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance())
+        .withMaxSizeRenderedString(2) //
+        .build();
 
     String json = "{\"array\" : [1,2,3] }";
     Template template = parser.parse("{% for item in array %}{{ item }}{% endfor %}");
@@ -77,13 +73,9 @@ public class StringHolderRenderTransformerTest {
 
   @Test
   public void testPrerenderLengthExceededVariable() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder() //
-            .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance()) //
-            .build()) //
-        .withProtectionSettings(new ProtectionSettings.Builder() //
-            .withMaxSizeRenderedString(2) //
-            .build()) //
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance()) //
+        .withMaxSizeRenderedString(2) //
         .build();
 
     String json = "{\"array\" : [1,2,3], \"var\" : \"X\" }";
@@ -105,9 +97,9 @@ public class StringHolderRenderTransformerTest {
   }
 
   private Object prerenderComplexForLoop(RenderTransformer transformer) {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(//
-            transformer).build()).withProtectionSettings(new ProtectionSettings.Builder().build())
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(//
+            transformer)//
         .build();
 
     Template template = parser.parse(
@@ -118,9 +110,9 @@ public class StringHolderRenderTransformerTest {
 
   @Test
   public void testNewCachedInstance() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .newCachedInstance()).build()).build();
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringHolderRenderTransformer.newCachedInstance()) //
+        .build();
 
     String json = "{\"array\" : [1,1,1] }";
 
@@ -132,9 +124,8 @@ public class StringHolderRenderTransformerTest {
 
   @Test
   public void testNewUncachedInstance() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder().withRenderSettings(
-        new RenderSettings.Builder().withRenderTransformer(StringHolderRenderTransformer
-            .newUncachedInstance()).build()).build();
+    TemplateParser parser = new TemplateParser.Builder() //
+        .withRenderTransformer(StringHolderRenderTransformer.newUncachedInstance()).build();
 
     String json = "{\"array\" : [1,1,1] }";
 

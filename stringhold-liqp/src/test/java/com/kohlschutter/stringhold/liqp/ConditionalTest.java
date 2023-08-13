@@ -27,24 +27,13 @@ import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.Test;
 
-import liqp.ParseSettings;
-import liqp.RenderSettings;
 import liqp.Template;
 import liqp.TemplateParser;
 
 public class ConditionalTest {
 
   private static final TemplateParser newParser() {
-    TemplateParser parser = new TemplateParser.Builder() //
-        .withRenderSettings(new RenderSettings.Builder() //
-            .withRenderTransformer(StringholdLiqpSettings.RENDER_SETTINGS.getRenderTransformer())
-            .build()) //
-        .withParseSettings(new ParseSettings.Builder() //
-            .with(StringholdLiqpSettings.PARSE_SETTINGS) //
-            .build()) //
-        .build();
-
-    return parser;
+    return StringholdLiqpSettings.newConfiguredTemplateParser();
   }
 
   @Test
@@ -132,17 +121,10 @@ public class ConditionalTest {
 
   @Test
   public void testSetConditional() throws Exception {
-    TemplateParser parser = new TemplateParser.Builder() //
-        .withRenderSettings(new RenderSettings.Builder() //
-            .withRenderTransformer(StringholdLiqpSettings.RENDER_SETTINGS.getRenderTransformer())
-            .withEnvironmentMapConfigurator((envMap) -> {
-              Conditional.setConditional(envMap, "test", true);
-            }) //
-            .build()) //
-        .withParseSettings(new ParseSettings.Builder() //
-            .with(StringholdLiqpSettings.PARSE_SETTINGS) //
-            .build()) //
-        .build();
+    TemplateParser parser = StringholdLiqpSettings.newConfiguredTemplateParser((b) -> b
+        .withEnvironmentMapConfigurator((envMap) -> {
+          Conditional.setConditional(envMap, "test", true);
+        }));
 
     Template template = parser.parse("Hello{% conditionally test %} World{% endconditionally %}");
     assertEquals("Hello World", template.render());
@@ -152,15 +134,8 @@ public class ConditionalTest {
   public void testGetConditional() throws Exception {
     CompletableFuture<Map<String, Object>> envMapFuture = new CompletableFuture<>();
 
-    TemplateParser parser = new TemplateParser.Builder() //
-        .withRenderSettings(new RenderSettings.Builder() //
-            .withRenderTransformer(StringholdLiqpSettings.RENDER_SETTINGS.getRenderTransformer())
-            .withEnvironmentMapConfigurator(envMapFuture::complete) //
-            .build()) //
-        .withParseSettings(new ParseSettings.Builder() //
-            .with(StringholdLiqpSettings.PARSE_SETTINGS) //
-            .build()) //
-        .build();
+    TemplateParser parser = StringholdLiqpSettings.newConfiguredTemplateParser((b) -> b
+        .withEnvironmentMapConfigurator(envMapFuture::complete));
 
     Template template = parser.parse("{% conditional set: test %}");
     assertEquals("", template.renderToObject());
