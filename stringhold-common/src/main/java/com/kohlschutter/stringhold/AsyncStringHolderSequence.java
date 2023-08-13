@@ -35,13 +35,13 @@ import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGenerated
  *
  * @author Christian Kohlschütter
  */
-public final class AsyncStringHolderSequence extends StringHolderSequence {
+final class AsyncStringHolderSequence extends StringHolderSequence {
   private final Function<Supplier<Integer>, CompletableFuture<Integer>> asyncSupplier;
 
   /**
    * Constructs a new, empty {@link AsyncStringHolderSequence}.
    */
-  public AsyncStringHolderSequence() {
+  AsyncStringHolderSequence() {
     this(null);
   }
 
@@ -50,7 +50,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
    *
    * @param executor The executor to use.
    */
-  public AsyncStringHolderSequence(Executor executor) {
+  AsyncStringHolderSequence(Executor executor) {
     this(10, executor);
   }
 
@@ -59,7 +59,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
    *
    * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
    */
-  public AsyncStringHolderSequence(int estimatedNumberOfAppends) {
+  AsyncStringHolderSequence(int estimatedNumberOfAppends) {
     this(estimatedNumberOfAppends, null);
   }
 
@@ -69,7 +69,7 @@ public final class AsyncStringHolderSequence extends StringHolderSequence {
    * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
    * @param executor The executor to use.
    */
-  public AsyncStringHolderSequence(int estimatedNumberOfAppends, Executor executor) {
+  AsyncStringHolderSequence(int estimatedNumberOfAppends, Executor executor) {
     super(estimatedNumberOfAppends);
 
     this.asyncSupplier = executor == null ? CompletableFuture::supplyAsync : (

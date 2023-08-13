@@ -20,6 +20,7 @@ package com.kohlschutter.stringhold;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -40,6 +41,7 @@ import java.util.function.Supplier;
  *
  * @author Christian Kohlschütter
  */
+@SuppressWarnings("PMD.ExcessivePublicCount")
 public interface StringHolder extends CharSequence, HasLength, Comparable<Object>, Cloneable {
   /**
    * Constructs a new {@link StringHolder} with content from the given supplier, assuming a minimum
@@ -258,6 +260,84 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
   static StringHolder withReaderSupplierMinimumAndExpectedLength(int minLen, int expectedLen,
       IOSupplier<Reader> readerSupply, IOExceptionHandler onError) {
     return new ReaderStringHolder(minLen, expectedLen, readerSupply, onError);
+  }
+
+  /**
+   * Constructs a new, empty {@link StringHolderSequence}.
+   * 
+   * @return The new, empty sequence.
+   */
+  static StringHolderSequence newSequence() {
+    return new StringHolderSequence();
+  }
+
+  /**
+   * Constructs a new, empty {@link StringHolderSequence}.
+   * 
+   * @param estimatedNumberOfAppends Estimated number of calls to
+   *          {@link StringHolderSequence#append(Object)}, etc.
+   * 
+   * @return The new, empty sequence.
+   */
+  static StringHolderSequence newSequence(int estimatedNumberOfAppends) {
+    return new StringHolderSequence(estimatedNumberOfAppends);
+  }
+
+  /**
+   * Constructs a new, empty async {@link StringHolderSequence}.
+   * 
+   * {@link StringHolder}s are automatically converted upon append, with appends being run
+   * asynchronously, using temporary intermediate storage, if possible/necessary.
+   * 
+   * @return The new, empty async sequence.
+   */
+  static StringHolderSequence newAsyncSequence() {
+    return new AsyncStringHolderSequence();
+  }
+
+  /**
+   * Constructs a new, empty async {@link StringHolderSequence}.
+   * 
+   * {@link StringHolder}s are automatically converted upon append, with appends being run
+   * asynchronously, using temporary intermediate storage, if possible/necessary.
+   * 
+   * @param executor The executor to use.
+   * 
+   * @return The new, empty async sequence.
+   */
+  static StringHolderSequence newAsyncSequence(Executor executor) {
+    return new AsyncStringHolderSequence(executor);
+  }
+
+  /**
+   * Constructs a new, empty async {@link StringHolderSequence}.
+   * 
+   * {@link StringHolder}s are automatically converted upon append, with appends being run
+   * asynchronously, using temporary intermediate storage, if possible/necessary.
+   * 
+   * @param estimatedNumberOfAppends Estimated number of calls to
+   *          {@link StringHolderSequence#append(Object)}, etc.
+   * 
+   * @return The new, empty async sequence.
+   */
+  static StringHolderSequence newAsyncSequence(int estimatedNumberOfAppends) {
+    return new AsyncStringHolderSequence(estimatedNumberOfAppends);
+  }
+
+  /**
+   * Constructs a new, empty async {@link StringHolderSequence}.
+   * 
+   * {@link StringHolder}s are automatically converted upon append, with appends being run
+   * asynchronously, using temporary intermediate storage, if possible/necessary.
+   * 
+   * @param estimatedNumberOfAppends Estimated number of calls to
+   *          {@link StringHolderSequence#append(Object)}, etc.
+   * @param executor The executor to use.
+   * 
+   * @return The new, empty sequence.
+   */
+  static StringHolderSequence newAsyncSequence(int estimatedNumberOfAppends, Executor executor) {
+    return new AsyncStringHolderSequence(estimatedNumberOfAppends, executor);
   }
 
   /**
@@ -629,5 +709,10 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
     return true;
   }
 
+  /**
+   * Deep-clones this {@link StringHolder}.
+   * 
+   * @return The cloned instance.
+   */
   StringHolder clone();
 }

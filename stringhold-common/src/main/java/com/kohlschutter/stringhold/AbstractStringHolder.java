@@ -945,16 +945,16 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
   }
 
   @ExcludeFromCodeCoverageGeneratedReport(reason = "exception unreachable")
-  private StringHolder cloneSuper() {
+  private AbstractStringHolder cloneSuper() {
     try {
-      return (StringHolder) super.clone();
+      return (AbstractStringHolder) super.clone();
     } catch (CloneNotSupportedException e) {
       throw new IllegalStateException(e);
     }
   }
 
   @Override
-  public StringHolder clone() {
+  public AbstractStringHolder clone() {
     return cloneSuper();
   }
 }

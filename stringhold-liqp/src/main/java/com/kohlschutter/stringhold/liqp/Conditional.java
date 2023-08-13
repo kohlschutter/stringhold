@@ -19,6 +19,8 @@ package com.kohlschutter.stringhold.liqp;
 
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import liqp.TemplateContext;
 import liqp.nodes.LNode;
 import liqp.tags.Tag;
@@ -119,7 +121,8 @@ public final class Conditional extends Tag {
    * @return {@code false}/{@code true} for the "supply" condition once determined, or {@code null}
    *         if not determined yet.
    */
-  public static Boolean getConditionalSuppliedState(Map<String, Object> envMap, String key) {
+  public static @Nullable Boolean getConditionalSuppliedState(Map<String, Object> envMap,
+      String key) {
     Object val = envMap.get(Conditional.ENVMAP_SUPPLIED_PREFIX + key);
     if (val == null) {
       return null;

@@ -33,7 +33,7 @@ import liqp.TemplateParser;
 public class ConditionalTest {
 
   private static final TemplateParser newParser() {
-    return StringholdLiqpSettings.newConfiguredTemplateParser();
+    return StringholdLiqpHelper.newConfiguredTemplateParser();
   }
 
   @Test
@@ -121,7 +121,7 @@ public class ConditionalTest {
 
   @Test
   public void testSetConditional() throws Exception {
-    TemplateParser parser = StringholdLiqpSettings.newConfiguredTemplateParser((b) -> b
+    TemplateParser parser = StringholdLiqpHelper.newConfiguredTemplateParser((b) -> b
         .withEnvironmentMapConfigurator((envMap) -> {
           Conditional.setConditional(envMap, "test", true);
         }));
@@ -134,7 +134,7 @@ public class ConditionalTest {
   public void testGetConditional() throws Exception {
     CompletableFuture<Map<String, Object>> envMapFuture = new CompletableFuture<>();
 
-    TemplateParser parser = StringholdLiqpSettings.newConfiguredTemplateParser((b) -> b
+    TemplateParser parser = StringholdLiqpHelper.newConfiguredTemplateParser((b) -> b
         .withEnvironmentMapConfigurator(envMapFuture::complete));
 
     Template template = parser.parse("{% conditional set: test %}");

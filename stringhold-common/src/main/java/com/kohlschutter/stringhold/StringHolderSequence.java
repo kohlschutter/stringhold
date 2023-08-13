@@ -30,8 +30,9 @@ import java.util.Objects;
  *
  * @author Christian Kohlschütter
  */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class StringHolderSequence extends AbstractStringHolder implements Appendable {
-  protected List<CharSequence> sequence;
+  List<CharSequence> sequence;
 
   private boolean immutable = false;
   private boolean cannotUseCache = false;
@@ -41,7 +42,7 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
    */
-  public StringHolderSequence() {
+  StringHolderSequence() {
     this(10);
   }
 
@@ -50,7 +51,7 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
    *
    * @param estimatedNumberOfAppends Estimated number of calls to {@link #append(Object)}, etc.
    */
-  public StringHolderSequence(int estimatedNumberOfAppends) {
+  StringHolderSequence(int estimatedNumberOfAppends) {
     super(0);
     sequence = new ArrayList<>(estimatedNumberOfAppends);
   }
@@ -142,7 +143,7 @@ public class StringHolderSequence extends AbstractStringHolder implements Append
     } else if (s.isString() || needsStringConversion(s)) {
       checkMutable();
 
-      if (s.getScope() == getScope()) {
+      if (s.getScope() == getScope()) { // NOPMD
         // don't double count
         s.updateScope(StringHolderScope.NONE);
       }

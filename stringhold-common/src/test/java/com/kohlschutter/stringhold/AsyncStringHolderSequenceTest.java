@@ -34,7 +34,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testStringsOnly() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
     sgs.append("Hello").append(" ").append("World");
     assertEquals(3, sgs.numberOfAppends());
 
@@ -45,7 +45,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testStringAndTwoHolders() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
     sgs.append("Hello").append(StringHolder.withSupplier(() -> " ")).append(StringHolder
         .withSupplier(() -> "World"));
     assertEquals(3, sgs.numberOfAppends());
@@ -57,7 +57,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testStringHoldersAndString() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     StringHolder shKnownEmpty = StringHolder.withSupplier(() -> "");
 
@@ -74,7 +74,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testStringedStringHoldersAndString() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     StringHolder sh1 = StringHolder.withSupplier(() -> "Hello");
     StringHolder sh2 = StringHolder.withSupplier(() -> " ");
@@ -92,7 +92,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testMixedStringHolders() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     StringHolder sh1 = StringHolder.withSupplier(() -> "l");
     StringHolder sh2 = StringHolder.withSupplier(() -> " ");
@@ -110,7 +110,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testAppendToStringBuilder() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     StringHolder sh1 = StringHolder.withSupplier(() -> "l");
     StringHolder sh2 = StringHolder.withSupplier(() -> " ");
@@ -127,7 +127,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testAppendToStringBuffer() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     StringHolder sh1 = StringHolder.withSupplier(() -> "l");
     StringHolder sh2 = StringHolder.withSupplier(() -> " ");
@@ -144,7 +144,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testAppendToStringWriter() throws IOException {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     StringHolder sh1 = StringHolder.withSupplier(() -> "l");
     StringHolder sh2 = StringHolder.withSupplier(() -> " ");
@@ -161,7 +161,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testDependentHolders() throws Exception {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     Semaphore sema = new Semaphore(0);
 
@@ -189,7 +189,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testDependentHoldersStringWriter() throws Exception {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence();
 
     Semaphore sema = new Semaphore(0);
 
@@ -220,7 +220,7 @@ public class AsyncStringHolderSequenceTest {
   @Test
   public void testCustomExecutor() throws Exception {
     ExecutorService es = Executors.newSingleThreadExecutor();
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence(es);
+    StringHolderSequence sgs = StringHolder.newAsyncSequence(es);
     sgs.append(StringHolder.withSupplier(() -> "Hello")).append(" ").append(StringHolder
         .withSupplier(() -> "World"));
 
@@ -229,7 +229,7 @@ public class AsyncStringHolderSequenceTest {
 
   @Test
   public void testEstimatedNumberOfAppendsTooLow() {
-    AsyncStringHolderSequence sgs = new AsyncStringHolderSequence(0);
+    StringHolderSequence sgs = StringHolder.newAsyncSequence(0);
     sgs.append("Hello").append(" ").append("World");
     assertEquals(3, sgs.numberOfAppends());
 

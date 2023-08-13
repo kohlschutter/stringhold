@@ -299,7 +299,7 @@ final class ConditionalStringHolder implements StringHolder {
   }
 
   @Override
-  public StringHolder clone() {
+  public ConditionalStringHolder clone() {
     ConditionalStringHolder clone = cloneSuper();
     clone.wrapped = clone.wrapped.clone();
     return clone;

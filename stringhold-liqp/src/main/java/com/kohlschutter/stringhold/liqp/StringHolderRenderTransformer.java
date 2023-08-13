@@ -46,7 +46,7 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
 
   private final WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache;
 
-  private int maximumCacheableLength;
+  private final int maximumCacheableLength;
 
   private StringHolderRenderTransformer(int maximumLength,
       WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache) {
@@ -132,7 +132,7 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
         result = o;
 
         appender = (o2) -> {
-          StringHolderSequence seq = new StringHolderSequence(Math.max(3,
+          StringHolderSequence seq = StringHolder.newSequence(Math.max(3,
               estimatedNumberOfAppends));
 
           seq.updateScope(scope);

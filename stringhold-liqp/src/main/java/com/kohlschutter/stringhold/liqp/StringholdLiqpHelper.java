@@ -22,14 +22,28 @@ import java.util.function.Function;
 import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
 
 import liqp.TemplateParser;
+import liqp.TemplateParser.Builder;
 
-public final class StringholdLiqpSettings {
+/**
+ * Some helper methods that can be useful when working with Liqp.
+ * 
+ * @author Christian Kohlschütter
+ */
+public final class StringholdLiqpHelper {
 
   @ExcludeFromCodeCoverageGeneratedReport(reason = "unreachable")
-  private StringholdLiqpSettings() {
+  private StringholdLiqpHelper() {
     throw new IllegalStateException("No instances");
   }
 
+  /**
+   * Configures the given {@link Builder}, adding {@link Conditionally} and {@link Conditional}, as
+   * well as using the {@link StringHolderRenderTransformer} available through
+   * {@link StringHolderRenderTransformer#getSharedCacheInstance()}..
+   * 
+   * @param builder The builder to configure.
+   * @return The builder.
+   */
   public static TemplateParser.Builder configure(TemplateParser.Builder builder) {
     return builder //
         .withInsertion(new Conditional()) //
@@ -37,10 +51,22 @@ public final class StringholdLiqpSettings {
         .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance());
   }
 
+  /**
+   * Creates a new {@link TemplateParser}, configured via {@link #configure(Builder)}.
+   * 
+   * @return The configured {@link TemplateParser}.
+   */
   public static TemplateParser newConfiguredTemplateParser() {
     return configure(new TemplateParser.Builder()).build();
   }
 
+  /**
+   * Creates a new {@link TemplateParser}, configured via {@link #configure(Builder)}, adding
+   * additional configuration as specified.
+   * 
+   * @param additionalConfiguration The additional configuration.
+   * @return The new template parser.
+   */
   public static TemplateParser newConfiguredTemplateParser(
       Function<TemplateParser.Builder, TemplateParser.Builder> additionalConfiguration) {
     TemplateParser.Builder builder = new TemplateParser.Builder();
