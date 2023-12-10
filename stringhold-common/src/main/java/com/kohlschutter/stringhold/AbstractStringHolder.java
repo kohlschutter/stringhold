@@ -59,6 +59,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
    *
    * @param minLength The minimum length, which must not be larger than the eventual actual length.
    */
+  @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
   protected AbstractStringHolder(int minLength) {
     this(minLength, minLength);
   }
@@ -70,6 +71,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
    * @param minLength The minimum length, which must not be larger than the eventual actual length.
    * @param expectedLength The expected length, which may be larger than the eventual actual length
    */
+  @SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
   protected AbstractStringHolder(int minLength, int expectedLength) {
     super();
     if (minLength < 0) {
@@ -204,6 +206,7 @@ public abstract class AbstractStringHolder extends CharSequenceReleaseShim imple
    *
    * @return The actual length.
    */
+  @SuppressWarnings("PMD.UseStringBufferLength")
   protected int computeLength() {
     return toString().length();
   }

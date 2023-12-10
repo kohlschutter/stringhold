@@ -17,6 +17,7 @@
  */
 package com.kohlschutter.stringhold.liqp;
 
+import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
 import com.kohlschutter.stringhold.LimitedStringHolderScope;
 import com.kohlschutter.stringhold.StringHolder;
 import com.kohlschutter.stringhold.StringHolderScope;
@@ -31,6 +32,7 @@ import liqp.TemplateContext;
  *
  * @author Christian Kohlschütter
  */
+@SuppressFBWarnings("CT_CONSTRUCTOR_THROW")
 public final class StringsOnlyRenderTransformer implements RenderTransformer {
   private static final StringsOnlyRenderTransformer INSTANCE = new StringsOnlyRenderTransformer();
 

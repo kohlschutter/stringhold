@@ -53,6 +53,7 @@ public final class Conditional extends Tag {
     super("conditional");
   }
 
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   @Override
   public Object render(TemplateContext context, LNode... nodes) {
     String args = String.valueOf(nodes[0].render(context));
@@ -99,7 +100,7 @@ public final class Conditional extends Tag {
    */
   public static boolean isConditionalSet(Map<String, Object> envMap, String key) {
     Object val = envMap.get(Conditional.ENVMAP_CONDITIONAL_PREFIX + key);
-    return Boolean.valueOf(String.valueOf(val));
+    return Boolean.parseBoolean(String.valueOf(val));
   }
 
   /**

@@ -36,6 +36,7 @@ import liqp.TemplateContext;
 public final class StringHolderRenderTransformer implements RenderTransformer {
   static final String SCOPE_KEY = StringHolderScope.class.getName();
 
+  @SuppressWarnings("PMD.LooseCoupling")
   private static final WeakHashMap<StringHolderSequence, StringHolderSequence> HOLDER_CACHE =
       new WeakHashMap<>();
 
@@ -44,10 +45,12 @@ public final class StringHolderRenderTransformer implements RenderTransformer {
   private static final StringHolderRenderTransformer INSTANCE = new StringHolderRenderTransformer(
       DEFAULT_MAX_LENGTH, HOLDER_CACHE);
 
+  @SuppressWarnings("PMD.LooseCoupling")
   private final WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache;
 
   private final int maximumCacheableLength;
 
+  @SuppressWarnings("PMD.LooseCoupling")
   private StringHolderRenderTransformer(int maximumLength,
       WeakHashMap<StringHolderSequence, StringHolderSequence> holderCache) {
     this.maximumCacheableLength = maximumLength;
