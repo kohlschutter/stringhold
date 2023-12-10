@@ -35,14 +35,14 @@ import org.junit.jupiter.api.Test;
 public class StringHolderSequenceTest {
 
   private StringHolderSequence foo12barSeq() {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     seq.append("foo");
 
-    StringHolderSequence seq1 = new StringHolderSequence();
+    StringHolderSequence seq1 = StringHolder.newSequence();
     seq.append(seq1);
     seq1.append(".1");
 
-    StringHolderSequence seq2 = new StringHolderSequence();
+    StringHolderSequence seq2 = StringHolder.newSequence();
     seq2.append(".2");
     seq.append((Object) seq2);
 
@@ -56,25 +56,25 @@ public class StringHolderSequenceTest {
   @SuppressWarnings("null")
   @Test
   public void testEmptySequence() throws Exception {
-    assertEquals(new StringHolderSequence(), "");
-    assertEquals(new StringHolderSequence().appendAll(""), "");
-    assertEquals(new StringHolderSequence().appendAll("", ""), "");
-    assertEquals(new StringHolderSequence().appendAll(new StringBuilder(), ""), "");
-    assertEquals(new StringHolderSequence().appendAll(List.of()), "");
-    assertEquals(new StringHolderSequence().appendAll(List.of(new StringBuilder(), "")), "");
+    assertEquals(StringHolder.newSequence(), "");
+    assertEquals(StringHolder.newSequence().appendAll(""), "");
+    assertEquals(StringHolder.newSequence().appendAll("", ""), "");
+    assertEquals(StringHolder.newSequence().appendAll(new StringBuilder(), ""), "");
+    assertEquals(StringHolder.newSequence().appendAll(List.of()), "");
+    assertEquals(StringHolder.newSequence().appendAll(List.of(new StringBuilder(), "")), "");
   }
 
   @Test
   public void testNull() throws Exception {
     // a value that is null -> String.valueOf(null)=="null"
-    assertEquals(new StringHolderSequence().appendAll((Object) null), "null");
+    assertEquals(StringHolder.newSequence().appendAll((Object) null), "null");
 
     // two values that are null -> String.valueOf(null)=="null", twice
-    assertEquals(new StringHolderSequence().appendAll(null, null), "nullnull");
+    assertEquals(StringHolder.newSequence().appendAll(null, null), "nullnull");
 
     // null array is not permitted
     assertThrows(NullPointerException.class, //
-        () -> new StringHolderSequence().appendAll((Object[]) null));
+        () -> StringHolder.newSequence().appendAll((Object[]) null));
   }
 
   @Test
@@ -145,7 +145,7 @@ public class StringHolderSequenceTest {
     StringBuilder sb = new StringBuilder();
 
     StringHolder sh = StringHolder.withSupplier(() -> "");
-    StringHolderSequence seq = new StringHolderSequence().appendAll(sh);
+    StringHolderSequence seq = StringHolder.newSequence().appendAll(sh);
     sh.toString();
     seq.appendTo(new WrappedAppendable(sb));
     assertEquals("", sb.toString());
@@ -157,7 +157,7 @@ public class StringHolderSequenceTest {
 
     StringHolder sh = StringHolder.withSupplierExpectedLength(123, () -> "");
     assertEquals(123, sh.getExpectedLength());
-    StringHolderSequence seq = new StringHolderSequence().appendAll(sh);
+    StringHolderSequence seq = StringHolder.newSequence().appendAll(sh);
     sh.toString();
     assertEquals(0, sh.getExpectedLength());
     seq.appendTo(sb);
@@ -170,7 +170,7 @@ public class StringHolderSequenceTest {
 
     StringHolder sh = StringHolder.withSupplierExpectedLength(123, () -> "");
     assertEquals(123, sh.getExpectedLength());
-    StringHolderSequence seq = new StringHolderSequence().appendAll(sh);
+    StringHolderSequence seq = StringHolder.newSequence().appendAll(sh);
     sh.toString();
     assertEquals(0, sh.getExpectedLength());
     seq.appendTo(sb);
@@ -183,7 +183,7 @@ public class StringHolderSequenceTest {
 
     StringHolder sh = StringHolder.withSupplierExpectedLength(123, () -> "");
     assertEquals(123, sh.getExpectedLength());
-    StringHolderSequence seq = new StringHolderSequence().appendAll(sh);
+    StringHolderSequence seq = StringHolder.newSequence().appendAll(sh);
     sh.toString();
     assertEquals(0, sh.getExpectedLength());
     seq.appendTo(sb);
@@ -194,7 +194,7 @@ public class StringHolderSequenceTest {
   public void testAppendToWithKnownEmpty_Reader() throws Exception {
     StringHolder sh = StringHolder.withSupplierExpectedLength(123, () -> "");
     assertEquals(123, sh.getExpectedLength());
-    StringHolderSequence seq = new StringHolderSequence().appendAll(sh);
+    StringHolderSequence seq = StringHolder.newSequence().appendAll(sh);
     sh.toString();
     assertEquals(0, sh.getExpectedLength());
 
@@ -205,7 +205,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testEmptySequenceReader() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     try (Reader reader = seq.toReader()) {
       assertEquals(-1, reader.read());
     }
@@ -213,7 +213,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testReaderClose() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence().appendAll("A", "B", "C");
+    StringHolderSequence seq = StringHolder.newSequence().appendAll("A", "B", "C");
     try (Reader reader = seq.toReader()) {
       assertTrue(reader.ready());
       reader.close();
@@ -223,9 +223,9 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testReaderRead() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence().appendAll("", StringHolder.withSupplier(
+    StringHolderSequence seq = StringHolder.newSequence().appendAll("", StringHolder.withSupplier(
         () -> ""), "A", "", StringHolder.withSupplier(() -> ""), StringHolder
-            .withSupplierMinimumLength(1, () -> "B"), new StringHolderSequence().appendAll("CDE",
+            .withSupplierMinimumLength(1, () -> "B"), StringHolder.newSequence().appendAll("CDE",
                 "F", "GH"), StringHolder.withSupplier(() -> ""));
     seq.append(StringHolder.withSupplierMinimumLength(0, () -> ""));
     Reader r = seq.toReader();
@@ -272,7 +272,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtStrings() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
 
@@ -290,7 +290,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtStringHoldersSingleChars() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
 
@@ -331,7 +331,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtStringHolders() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
 
@@ -375,7 +375,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtStringHolders2() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(0));
     assertThrows(IndexOutOfBoundsException.class, () -> seq.charAt(-1));
 
@@ -417,7 +417,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtReversedOrder() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
 
     StringHolder sh1 = StringHolder.withSupplier(() -> "aA");
     StringHolder sh2 = StringHolder.withSupplier(() -> "bBBB");
@@ -449,7 +449,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtReversedOrderMinimumLength() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
 
     StringHolder sh1 = StringHolder.withSupplierMinimumLength(2, () -> "aA");
     StringHolder sh2 = StringHolder.withSupplierMinimumLength(4, () -> "bBBB");
@@ -481,7 +481,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCharAtReversedOrderFixedLength() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
 
     StringHolder sh1 = StringHolder.withSupplierFixedLength(2, () -> "aA");
     StringHolder sh2 = StringHolder.withSupplierFixedLength(4, () -> "bBBB");
@@ -517,7 +517,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testLength() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     seq.append("Hello");
     seq.append(' ');
     seq.append(StringHolder.withContent("World"));
@@ -527,7 +527,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testCacheable() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     seq.append("Hello");
     seq.append(' ');
     seq.append(StringHolder.withContent("World"));
@@ -542,7 +542,7 @@ public class StringHolderSequenceTest {
 
   @Test
   public void testAppendCharSequenceHolder() throws Exception {
-    StringHolderSequence seq = new StringHolderSequence();
+    StringHolderSequence seq = StringHolder.newSequence();
     CharSequence cs = StringHolder.withSupplier(() -> "hello");
     seq.append(cs);
     assertEquals("hello", seq.toString());
@@ -552,7 +552,7 @@ public class StringHolderSequenceTest {
   public void testClone() throws Exception {
     AtomicInteger helloSupplies = new AtomicInteger();
 
-    StringHolderSequence seq1 = new StringHolderSequence();
+    StringHolderSequence seq1 = StringHolder.newSequence();
     seq1.append(StringHolder.withSupplier(() -> {
       helloSupplies.incrementAndGet();
       return "hello";
