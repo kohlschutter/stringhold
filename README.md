@@ -113,10 +113,10 @@ A StringHolder that reads contents from a function that supplies StringReader in
 
 A sequence of String(Holder)s, some are nested:
 
-	StringHolderSequence seq = new StringHolderSequence();
+	StringHolderSequence seq = StringHolder.newSequence();
 	seq.append("Hello");
 	seq.append(' ');
-	seq.append(new StringHolderSequence().append(StringHolder.withSupplier(() -> "World"));
+	seq.append(StringHolder.newSequence().append(StringHolder.withSupplier(() -> "World"));
 
 	// Append to a writer
 	try (Writer out = new FileWriter(new File("/tmp/out"))) {
@@ -127,7 +127,7 @@ A sequence of String(Holder)s, some are nested:
 
 A sequence of String(Holder)s that can be assembled/appended out of order via scatter-gatter (speed up overall assembly time through parallelization):
 
-	AsyncStringHolderSequence seq = new AsyncStringHolderSequence();
+	StringHolderSequence seq = StringHolder.newAsyncSequence();
 	seq.append(veryComplexStringHolder);
 	seq.append(anotherStringHolder);
 	
