@@ -143,4 +143,11 @@ public class ConditionalTest {
     assertTrue(Conditional.isConditionalSet(envMap, "test"));
     assertFalse(Conditional.isConditionalSet(envMap, "somethingelse"));
   }
+
+  @Test
+  public void testGetConditionalNoAdditionalConfiguration() throws Exception {
+    TemplateParser parser = StringholdLiqpHelper.newConfiguredTemplateParser(null);
+    Template template = parser.parse("{% conditional set: test %}");
+    assertEquals("", template.renderToObject());
+  }
 }
