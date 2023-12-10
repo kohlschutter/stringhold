@@ -237,4 +237,16 @@ public class AsyncStringHolderSequenceTest {
     assertEquals("Hello World", sgs.toString());
     assertTrue(sgs.isString());
   }
+
+  @Test
+  public void testEstimatedNumberOfAppendsTooLowAsync() {
+    ExecutorService es = Executors.newSingleThreadExecutor();
+    StringHolderSequence sgs = StringHolder.newAsyncSequence(0, es);
+    sgs.append("Hello").append(" ").append("World");
+    assertEquals(3, sgs.numberOfAppends());
+
+    assertFalse(sgs.isString());
+    assertEquals("Hello World", sgs.toString());
+    assertTrue(sgs.isString());
+  }
 }
