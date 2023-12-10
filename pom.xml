@@ -50,8 +50,8 @@
     </distributionManagement>
     <scm>
         <url>https://github.com/kohlschutter/stringhold</url>
-        <connection>scm:git:https://github.com/kohlschutter/stringhold.git</connection>
-        <developerConnection>scm:git:https://github.com/kohlschutter/stringhold.git</developerConnection>
+        <connection>scm:git:git@github.com:kohlschutter/stringhold.git</connection>
+        <developerConnection>scm:git:git@github.com:kohlschutter/stringhold.git</developerConnection>
     </scm>
     <profiles>
         <profile>
