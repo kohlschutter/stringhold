@@ -175,13 +175,13 @@ Add the following dependency:
     <dependency>
         <groupId>com.kohlschutter.stringhold</groupId>
         <artifactId>stringhold-common</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </dependency>
 
 ### Gradle
 
     dependencies {
-        implementation 'com.kohlschutter.stringhold:stringhold-common:1.0.0-SNAPSHOT'
+        implementation 'com.kohlschutter.stringhold:stringhold-common:1.0.0'
     }
 
 ## Building from source
@@ -196,7 +196,7 @@ To reformat code, which simplifies pull requests and restores general sanity, us
 
 # Changelog
 
-### _(2023-XX-XX)_ **stringhold 1.0.0**
+### _(2023-12-10)_ **stringhold 1.0.0**
 
  - Initial release
 
