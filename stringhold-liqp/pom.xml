@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>stringhold-liqp</artifactId>
     <packaging>jar</packaging>
@@ -10,9 +12,11 @@
     </parent>
     <properties>
         <kohlschutter.project.base.directory>${project.parent.basedir}</kohlschutter.project.base.directory>
-        <kohlschutter.project.notice.file>${kohlschutter.project.base.directory}/NOTICE</kohlschutter.project.notice.file>
+        <kohlschutter.project.notice.file>
+            ${kohlschutter.project.base.directory}/NOTICE</kohlschutter.project.notice.file>
         <kohlschutter.multirelease.java8.release>8</kohlschutter.multirelease.java8.release>
         <kohlschutter.multirelease.java.release>15</kohlschutter.multirelease.java.release>
+        <liqp.version>0.8.5.4</liqp.version>
     </properties>
     <dependencies>
         <dependency>
@@ -21,7 +25,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>nl.big-o</groupId>
+            <groupId>com.kohlschutter</groupId>
             <artifactId>liqp</artifactId>
             <version>${liqp.version}</version>
         </dependency>

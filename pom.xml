@@ -19,7 +19,6 @@
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <file.encoding>UTF-8</file.encoding>
         <maven.compile.encoding>UTF-8</maven.compile.encoding>
-        <liqp.version>0.8.5.4-SNAPSHOT</liqp.version>
     </properties>
     <organization>
         <name>Kohlschütter Search Intelligence</name>
