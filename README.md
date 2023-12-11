@@ -196,6 +196,10 @@ To reformat code, which simplifies pull requests and restores general sanity, us
 
 # Changelog
 
+### _(2023-12-11)_ **stringhold 1.0.1*
+
+ - Fix liqp dependency
+
 ### _(2023-12-10)_ **stringhold 1.0.0**
 
  - Initial release
