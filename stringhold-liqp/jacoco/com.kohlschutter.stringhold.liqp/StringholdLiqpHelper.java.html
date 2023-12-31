@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringholdLiqpHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stringhold-liqp</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold.liqp</a> &gt; <span class="el_source">StringholdLiqpHelper.java</span></div><h1>StringholdLiqpHelper.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022, 2023 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold.liqp;
+
+import java.util.function.Function;
+
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+
+import liqp.TemplateParser;
+import liqp.TemplateParser.Builder;
+
+/**
+ * Some helper methods that can be useful when working with Liqp.
+ *
+ * @author Christian Kohlschütter
+ */
+public final class StringholdLiqpHelper {
+
+  @ExcludeFromCodeCoverageGeneratedReport(reason = &quot;unreachable&quot;)
+  private StringholdLiqpHelper() {
+    throw new IllegalStateException(&quot;No instances&quot;);
+  }
+
+  /**
+   * Configures the given {@link Builder}, adding {@link Conditionally} and {@link Conditional}, as
+   * well as using the {@link StringHolderRenderTransformer} available through
+   * {@link StringHolderRenderTransformer#getSharedCacheInstance()}..
+   *
+   * @param builder The builder to configure.
+   * @return The builder.
+   */
+  public static TemplateParser.Builder configure(TemplateParser.Builder builder) {
+<span class="fc" id="L48">    return builder //</span>
+<span class="fc" id="L49">        .withInsertion(new Conditional()) //</span>
+<span class="fc" id="L50">        .withInsertion(new Conditionally()) //</span>
+<span class="fc" id="L51">        .withRenderTransformer(StringHolderRenderTransformer.getSharedCacheInstance());</span>
+  }
+
+  /**
+   * Creates a new {@link TemplateParser}, configured via {@link #configure(Builder)}.
+   *
+   * @return The configured {@link TemplateParser}.
+   */
+  public static TemplateParser newConfiguredTemplateParser() {
+<span class="fc" id="L60">    return configure(new TemplateParser.Builder()).build();</span>
+  }
+
+  /**
+   * Creates a new {@link TemplateParser}, configured via {@link #configure(Builder)}, adding
+   * additional configuration as specified.
+   *
+   * @param additionalConfiguration The additional configuration.
+   * @return The new template parser.
+   */
+  public static TemplateParser newConfiguredTemplateParser(
+      Function&lt;TemplateParser.Builder, TemplateParser.Builder&gt; additionalConfiguration) {
+<span class="fc" id="L72">    TemplateParser.Builder builder = new TemplateParser.Builder();</span>
+<span class="fc" id="L73">    configure(builder);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">    if (additionalConfiguration != null) {</span>
+<span class="fc" id="L75">      builder = additionalConfiguration.apply(builder);</span>
+    }
+<span class="fc" id="L77">    return builder.build();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

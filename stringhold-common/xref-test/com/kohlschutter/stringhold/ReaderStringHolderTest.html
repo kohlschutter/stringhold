@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * stringhold</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022 Christian Kohlschütter</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022, 2023 Christian Kohlschütter</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ReaderStringHolderTest" href="../../../com/kohlschutter/stringhold/ReaderStringHolderTest.html#ReaderStringHolderTest">ReaderStringHolderTest</a> {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>    @Test
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testReaderToString() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>      StringHolder rsh = ReaderStringHolder.withReaderSupplier(() -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      StringHolder rsh = StringHolder.withReaderSupplier(() -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      assertFalse(rsh.isString());
@@ -55,7 +55,7 @@
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Test
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMinimumLength() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(1, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(1, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          <span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      assertEquals(1, rsh.getExpectedLength());
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      assertEquals(<span class="jxr_string">"hello"</span>, rsh.toString());
@@ -64,8 +64,8 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Test
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExpectedLength() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      StringHolder rsh = ReaderStringHolder.withReaderSupplierExpectedLength(555,
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>          () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      StringHolder rsh = StringHolder.withReaderSupplierExpectedLength(555, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      assertEquals(555, rsh.getExpectedLength());
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      assertEquals(<span class="jxr_string">"hello"</span>, rsh.toString());
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      assertEquals(5, rsh.getExpectedLength());
@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>    @Test
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMinimumAndExpectedLength() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumAndExpectedLength(3, 555,
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      StringHolder rsh = StringHolder.withReaderSupplierMinimumAndExpectedLength(3, 555,
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      assertEquals(3, rsh.getMinimumLength());
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      assertEquals(555, rsh.getExpectedLength());
@@ -87,7 +87,7 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      StringWriter out = <strong class="jxr_keyword">new</strong> StringWriter();
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      AtomicInteger supplies = <strong class="jxr_keyword">new</strong> AtomicInteger(0);
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(0, () -&gt; {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(0, () -&gt; {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>        supplies.incrementAndGet();
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      }, (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
@@ -138,13 +138,13 @@
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       }
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     };
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> 
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>     assertThrows(IOException.<strong class="jxr_keyword">class</strong>, () -&gt; ReaderStringHolder.withReaderSupplierMinimumLength(5,
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     assertThrows(IOException.<strong class="jxr_keyword">class</strong>, () -&gt; StringHolder.withReaderSupplierMinimumLength(5,
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.FLUSH)
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>         .appendTo(cantAppendable));
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> 
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     assertThrows(IllegalStateException.<strong class="jxr_keyword">class</strong>, () -&gt; ReaderStringHolder
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>         .withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>             e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE).appendTo(cantAppendable));
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     assertThrows(IllegalStateException.<strong class="jxr_keyword">class</strong>, () -&gt; StringHolder.withReaderSupplierMinimumLength(5,
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE)
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>         .appendTo(cantAppendable));
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>   }
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> 
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>   @Test
@@ -178,11 +178,11 @@
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>       }
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>     };
 <a class="jxr_linenumber" name="L172" href="#L172">172</a> 
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>     assertThrows(IOException.<strong class="jxr_keyword">class</strong>, () -&gt; ReaderStringHolder.withReaderSupplierMinimumLength(5,
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>     assertThrows(IOException.<strong class="jxr_keyword">class</strong>, () -&gt; StringHolder.withReaderSupplierMinimumLength(5,
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>         () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>             e) -&gt; IOExceptionHandler.ExceptionResponse.EXCEPTION_MESSAGE).appendTo(cantAppendable));
 <a class="jxr_linenumber" name="L176" href="#L176">176</a> 
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>     assertThrows(IOException.<strong class="jxr_keyword">class</strong>, () -&gt; ReaderStringHolder.withReaderSupplierMinimumLength(5,
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     assertThrows(IOException.<strong class="jxr_keyword">class</strong>, () -&gt; StringHolder.withReaderSupplierMinimumLength(5,
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>         () -&gt; <strong class="jxr_keyword">new</strong> StringReader(<span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.STACKTRACE)
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>         .appendTo(cantAppendable));
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>   }
@@ -190,7 +190,7 @@
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>   @Test
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testReaderToStringBuilder() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>         <span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>     rsh.appendTo(sb);
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>     assertEquals(<span class="jxr_string">"hello"</span>, sb.toString());
@@ -199,7 +199,7 @@
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>   @Test
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testReaderToStringBuffer() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>     StringBuffer sb = <strong class="jxr_keyword">new</strong> StringBuffer();
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
 <a class="jxr_linenumber" name="L195" href="#L195">195</a>         <span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>     rsh.appendTo(sb);
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>     assertEquals(<span class="jxr_string">"hello"</span>, sb.toString());
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>       }
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>     };
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> StringReader(
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>         <span class="jxr_string">"hello"</span>), (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>     rsh.appendTo(app);
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>     assertEquals(<span class="jxr_string">"hello"</span>, sb.toString());
@@ -238,7 +238,7 @@
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnSupply_empty() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>     <em class="jxr_comment">// Note that we claim a minimum length of 123</em>
 <a class="jxr_linenumber" name="L232" href="#L232">232</a> 
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MyIOException(<span class="jxr_string">"No reader"</span>);
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>     }, (e) -&gt; IOExceptionHandler.ExceptionResponse.EMPTY);
 <a class="jxr_linenumber" name="L236" href="#L236">236</a> 
@@ -255,7 +255,7 @@
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>     <em class="jxr_comment">// Note that we claim a minimum length of 123</em>
 <a class="jxr_linenumber" name="L248" href="#L248">248</a> 
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>     IOException exc = <strong class="jxr_keyword">new</strong> MyIOException(<span class="jxr_string">"No reader"</span>);
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>       <strong class="jxr_keyword">throw</strong> exc;
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>     }, (e) -&gt; IOExceptionHandler.ExceptionResponse.EXCEPTION_MESSAGE);
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>     assertEquals(exc.toString(), rsh.toString());
@@ -269,7 +269,7 @@
 <a class="jxr_linenumber" name="L261" href="#L261">261</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnSupply_flush() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>     <em class="jxr_comment">// Note that we claim a minimum length of 123</em>
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
 <a class="jxr_linenumber" name="L265" href="#L265">265</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MyIOException(<span class="jxr_string">"No reader"</span>);
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>     }, (e) -&gt; IOExceptionHandler.ExceptionResponse.FLUSH);
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>     assertEquals(<span class="jxr_string">""</span>, rsh.toString());
@@ -283,7 +283,7 @@
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnSupply_stacktrace() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>     <em class="jxr_comment">// Note that we claim a minimum length of 123</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> 
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MyIOException(<span class="jxr_string">"No reader"</span>);
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>     }, (e) -&gt; IOExceptionHandler.ExceptionResponse.STACKTRACE);
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>     assertNotEquals(<span class="jxr_string">""</span>, rsh.toString());
@@ -297,7 +297,7 @@
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>   @Test
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnSupply_illegalState() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; {
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MyIOException(<span class="jxr_string">"No reader"</span>);
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>     }, (e) -&gt; IOExceptionHandler.ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>     <strong class="jxr_keyword">try</strong> (Reader r = rsh.toReader()) {
@@ -328,7 +328,7 @@
 <a class="jxr_linenumber" name="L320" href="#L320">320</a> 
 <a class="jxr_linenumber" name="L321" href="#L321">321</a>   @Test
 <a class="jxr_linenumber" name="L322" href="#L322">322</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnAppend_flush() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
 <a class="jxr_linenumber" name="L324" href="#L324">324</a> 
 <a class="jxr_linenumber" name="L325" href="#L325">325</a>       @Override
 <a class="jxr_linenumber" name="L326" href="#L326">326</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read(<strong class="jxr_keyword">char</strong>[] cbuf, <strong class="jxr_keyword">int</strong> off, <strong class="jxr_keyword">int</strong> len) <strong class="jxr_keyword">throws</strong> IOException {
@@ -384,7 +384,7 @@
 <a class="jxr_linenumber" name="L376" href="#L376">376</a> 
 <a class="jxr_linenumber" name="L377" href="#L377">377</a>   @Test
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnAppend_empty() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(123, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(123, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
 <a class="jxr_linenumber" name="L380" href="#L380">380</a> 
 <a class="jxr_linenumber" name="L381" href="#L381">381</a>       @Override
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read(<strong class="jxr_keyword">char</strong>[] cbuf, <strong class="jxr_keyword">int</strong> off, <strong class="jxr_keyword">int</strong> len) <strong class="jxr_keyword">throws</strong> IOException {
@@ -440,7 +440,7 @@
 <a class="jxr_linenumber" name="L432" href="#L432">432</a> 
 <a class="jxr_linenumber" name="L433" href="#L433">433</a>   @Test
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnAppend_exceptionMessage() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
 <a class="jxr_linenumber" name="L436" href="#L436">436</a> 
 <a class="jxr_linenumber" name="L437" href="#L437">437</a>       @Override
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read(<strong class="jxr_keyword">char</strong>[] cbuf, <strong class="jxr_keyword">int</strong> off, <strong class="jxr_keyword">int</strong> len) <strong class="jxr_keyword">throws</strong> IOException {
@@ -499,7 +499,7 @@
 <a class="jxr_linenumber" name="L491" href="#L491">491</a> 
 <a class="jxr_linenumber" name="L492" href="#L492">492</a>   @Test
 <a class="jxr_linenumber" name="L493" href="#L493">493</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testExceptionOnAppend_stacktrace() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>     StringHolder rsh = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>     StringHolder rsh = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; <strong class="jxr_keyword">new</strong> Reader() {
 <a class="jxr_linenumber" name="L495" href="#L495">495</a> 
 <a class="jxr_linenumber" name="L496" href="#L496">496</a>       @Override
 <a class="jxr_linenumber" name="L497" href="#L497">497</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> read(<strong class="jxr_keyword">char</strong>[] cbuf, <strong class="jxr_keyword">int</strong> off, <strong class="jxr_keyword">int</strong> len) <strong class="jxr_keyword">throws</strong> IOException {
@@ -558,7 +558,7 @@
 <a class="jxr_linenumber" name="L550" href="#L550">550</a>   @Test
 <a class="jxr_linenumber" name="L551" href="#L551">551</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEqualsWithTrouble() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L552" href="#L552">552</a>     <em class="jxr_comment">// holder initially claims a minimum length of 5</em>
-<a class="jxr_linenumber" name="L553" href="#L553">553</a>     StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; {
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>     StringHolder sh1 = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; {
 <a class="jxr_linenumber" name="L554" href="#L554">554</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException();
 <a class="jxr_linenumber" name="L555" href="#L555">555</a>     }, (e) -&gt; ExceptionResponse.EMPTY);
 <a class="jxr_linenumber" name="L556" href="#L556">556</a> 
@@ -572,7 +572,7 @@
 <a class="jxr_linenumber" name="L564" href="#L564">564</a>     StringHolder sh2 = StringHolder.withSupplierMinimumLength(0, () -&gt; <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L565" href="#L565">565</a>     assertEquals(sh2, sh1);
 <a class="jxr_linenumber" name="L566" href="#L566">566</a> 
-<a class="jxr_linenumber" name="L567" href="#L567">567</a>     sh1.resizeBy(3, -1000);
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>     ((AbstractStringHolder) sh1).resizeBy(3, -1000);
 <a class="jxr_linenumber" name="L568" href="#L568">568</a>     assertEquals(3, sh1.getMinimumLength());
 <a class="jxr_linenumber" name="L569" href="#L569">569</a>     assertEquals(3, sh1.getExpectedLength());
 <a class="jxr_linenumber" name="L570" href="#L570">570</a>   }

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConditionalStringHolder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stringhold-common</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold</a> &gt; <span class="el_source">ConditionalStringHolder.java</span></div><h1>ConditionalStringHolder.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022, 2023 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.function.Predicate;
+
+import com.kohlschutter.annotations.compiletime.ExcludeFromCodeCoverageGeneratedReport;
+import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
+
+/**
+ * A {@link StringHolder} that may conditionally be included/excluded.
+ *
+ * @author Christian Kohlschütter
+ */
+final class ConditionalStringHolder implements StringHolder {
+  private StringHolder wrapped;
+  private final Predicate&lt;StringHolder&gt; include;
+
+  @SuppressFBWarnings(&quot;IS2_INCONSISTENT_SYNC&quot;)
+  private Boolean excluded;
+
+  /**
+   * Constructs a conditional wrapper around the given {@link StringHolder}; the given
+   * {@code include} supplier controls whether the {@link StringHolder} is included, or effectively
+   * empty.
+   *
+   * @param wrapped The wrapped {@link StringHolder}.
+   * @param include Controls the inclusion of that {@link StringHolder}; {@code false} means
+   *          &quot;excluded&quot;.
+   */
+<span class="fc" id="L49">  ConditionalStringHolder(StringHolder wrapped, Predicate&lt;StringHolder&gt; include) {</span>
+<span class="fc" id="L50">    this.wrapped = wrapped;</span>
+<span class="fc" id="L51">    this.include = include;</span>
+<span class="fc" id="L52">  }</span>
+
+  private boolean isKnownExcluded() {
+<span class="fc bfc" id="L55" title="All 4 branches covered.">    return excluded != null &amp;&amp; excluded;</span>
+  }
+
+  private synchronized boolean isExcluded() {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">    if (excluded == null) {</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">      excluded = !include.test(this);</span>
+    }
+<span class="fc" id="L62">    return excluded;</span>
+  }
+
+  @Override
+  public char charAt(int index) {
+<span class="fc bfc" id="L67" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L68">      throw new IndexOutOfBoundsException();</span>
+    }
+<span class="fc" id="L70">    return wrapped.charAt(index);</span>
+  }
+
+  @Override
+  public CharSequence subSequence(int start, int end) {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    if (start == end) {</span>
+<span class="fc" id="L76">      return &quot;&quot;;</span>
+    }
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L79">      throw new IndexOutOfBoundsException();</span>
+    }
+<span class="fc" id="L81">    return wrapped.subSequence(start, end);</span>
+  }
+
+  @Override
+  public boolean isString() {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    if (excluded == null) {</span>
+<span class="fc" id="L87">      return false;</span>
+    }
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    if (isKnownExcluded()) {</span>
+<span class="fc" id="L90">      return true;</span>
+    } else {
+<span class="fc" id="L92">      return wrapped.isString();</span>
+    }
+  }
+
+  @Override
+  public Reader toReader() throws IOException {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L99">      return ReaderShim.nullReader();</span>
+    }
+<span class="fc" id="L101">    return wrapped.toReader();</span>
+  }
+
+  @Override
+  public void appendTo(Appendable out) throws IOException {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L107">      return;</span>
+    }
+<span class="fc" id="L109">    wrapped.appendTo(out);</span>
+<span class="fc" id="L110">  }</span>
+
+  @Override
+  public void appendTo(StringBuilder out) {
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L115">      return;</span>
+    }
+<span class="fc" id="L117">    wrapped.appendTo(out);</span>
+<span class="fc" id="L118">  }</span>
+
+  @Override
+  public void appendTo(StringBuffer out) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L123">      return;</span>
+    }
+<span class="fc" id="L125">    wrapped.appendTo(out);</span>
+<span class="fc" id="L126">  }</span>
+
+  @Override
+  public void appendTo(Writer out) throws IOException {
+<span class="fc bfc" id="L130" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L131">      return;</span>
+    }
+<span class="fc" id="L133">    wrapped.appendTo(out);</span>
+<span class="fc" id="L134">  }</span>
+
+  @Override
+  public int appendToAndReturnLength(Appendable out) throws IOException {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L139">      return 0;</span>
+    }
+<span class="fc" id="L141">    return wrapped.appendToAndReturnLength(out);</span>
+  }
+
+  @Override
+  public int appendToAndReturnLength(StringBuilder out) {
+<span class="fc bfc" id="L146" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L147">      return 0;</span>
+    }
+<span class="fc" id="L149">    return wrapped.appendToAndReturnLength(out);</span>
+  }
+
+  @Override
+  public int appendToAndReturnLength(StringBuffer out) {
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L155">      return 0;</span>
+    }
+<span class="fc" id="L157">    return wrapped.appendToAndReturnLength(out);</span>
+  }
+
+  @Override
+  public int appendToAndReturnLength(Writer out) throws IOException {
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L163">      return 0;</span>
+    }
+<span class="fc" id="L165">    return wrapped.appendToAndReturnLength(out);</span>
+  }
+
+  @Override
+  public int getMinimumLength() {
+<span class="fc" id="L170">    return 0;</span>
+  }
+
+  @Override
+  public int getExpectedLength() {
+<span class="fc bfc" id="L175" title="All 2 branches covered.">    if (isKnownExcluded()) {</span>
+<span class="fc" id="L176">      return 0;</span>
+    }
+<span class="fc" id="L178">    return wrapped.getExpectedLength();</span>
+  }
+
+  @Override
+  public void setExpectedLength(int len) {
+<span class="fc bfc" id="L183" title="All 2 branches covered.">    if (isKnownExcluded()) {</span>
+<span class="fc" id="L184">      return;</span>
+    }
+<span class="fc" id="L186">    wrapped.setExpectedLength(len);</span>
+<span class="fc" id="L187">  }</span>
+
+  @Override
+  public int length() {
+<span class="fc bfc" id="L191" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L192">      return 0;</span>
+    }
+
+<span class="fc" id="L195">    return wrapped.length();</span>
+  }
+
+  @Override
+  public boolean isKnownEmpty() {
+<span class="fc bfc" id="L200" title="All 2 branches covered.">    if (isKnownExcluded()) {</span>
+<span class="fc" id="L201">      return true;</span>
+    }
+
+<span class="fc" id="L204">    return wrapped.isKnownEmpty();</span>
+  }
+
+  @Override
+  public boolean isLengthKnown() {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">    if (isKnownExcluded()) {</span>
+<span class="fc" id="L210">      return true;</span>
+    }
+
+<span class="fc" id="L213">    return wrapped.isLengthKnown();</span>
+  }
+
+  @Override
+  public boolean checkError() {
+<span class="fc" id="L218">    return wrapped.checkError();</span>
+  }
+
+  @Override
+  public StringHolderScope getScope() {
+<span class="fc" id="L223">    return wrapped.getScope();</span>
+  }
+
+  @Override
+  public StringHolderScope updateScope(StringHolderScope newScope) {
+<span class="fc" id="L228">    return wrapped.updateScope(newScope);</span>
+  }
+
+  @Override
+  public Object asContent() {
+<span class="fc bfc" id="L233" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L234">      return &quot;&quot;;</span>
+    }
+<span class="fc" id="L236">    return wrapped.asContent();</span>
+  }
+
+  @Override
+  public int compareTo(CharSequence o) {
+<span class="fc bfc" id="L241" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">      if (CharSequenceReleaseShim.isEmpty(o)) {</span>
+<span class="fc" id="L243">        return 0;</span>
+      } else {
+<span class="fc" id="L245">        return -1;</span>
+      }
+    }
+
+<span class="fc" id="L249">    return wrapped.compareTo(o);</span>
+  }
+
+  @Override
+  public int compareTo(StringHolder o) {
+<span class="fc bfc" id="L254" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc bfc" id="L255" title="All 2 branches covered.">      if (o.isEmpty()) {</span>
+<span class="fc" id="L256">        return 0;</span>
+      } else {
+<span class="fc" id="L258">        return -1;</span>
+      }
+    }
+
+<span class="fc" id="L262">    return wrapped.compareTo(o);</span>
+  }
+
+  @Override
+  public boolean isEffectivelyImmutable() {
+<span class="fc bfc" id="L267" title="All 2 branches covered.">    if (isKnownExcluded()) {</span>
+<span class="fc" id="L268">      return true;</span>
+    }
+<span class="fc" id="L270">    return wrapped.isEffectivelyImmutable();</span>
+  }
+
+  @Override
+  public void markEffectivelyImmutable() {
+<span class="fc" id="L275">    isExcluded(); // trigger init</span>
+<span class="fc" id="L276">    wrapped.markEffectivelyImmutable();</span>
+<span class="fc" id="L277">  }</span>
+
+  @Override
+  public String toString() {
+<span class="fc bfc" id="L281" title="All 2 branches covered.">    if (isExcluded()) {</span>
+<span class="fc" id="L282">      return &quot;&quot;;</span>
+    }
+<span class="fc" id="L284">    return wrapped.toString();</span>
+  }
+
+  @Override
+  public boolean isCacheable() {
+<span class="fc" id="L289">    return isString();</span>
+  }
+
+  @ExcludeFromCodeCoverageGeneratedReport(reason = &quot;exception unreachable&quot;)
+  private ConditionalStringHolder cloneSuper() {
+    try {
+      return (ConditionalStringHolder) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  @Override
+  public ConditionalStringHolder clone() {
+<span class="fc" id="L303">    ConditionalStringHolder clone = cloneSuper();</span>
+<span class="fc" id="L304">    clone.wrapped = clone.wrapped.clone();</span>
+<span class="fc" id="L305">    return clone;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

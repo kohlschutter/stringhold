@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>LimitedStringHolderScope.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">stringhold-codecoverage</a> &gt; <a href="../index.html" class="el_bundle">stringhold-common</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold</a> &gt; <span class="el_source">LimitedStringHolderScope.java</span></div><h1>LimitedStringHolderScope.java</h1><pre class="source lang-java linenums">/*
  * stringhold
  *
- * Copyright 2022 Christian Kohlschütter
+ * Copyright 2022, 2023 Christian Kohlschütter
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.kohlschutter.stringhold;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * A {@link StringHolderScope} that keeps track of the aggregate minimum length of all associated
@@ -32,22 +33,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Christian Kohlschütter
  */
 public final class LimitedStringHolderScope implements StringHolderScope {
-<span class="fc" id="L35">  private final AtomicInteger minimumLength = new AtomicInteger();</span>
-<span class="fc" id="L36">  private final AtomicInteger expectedLength = new AtomicInteger();</span>
+<span class="fc" id="L36">  private final AtomicInteger minimumLength = new AtomicInteger();</span>
+<span class="fc" id="L37">  private final AtomicInteger expectedLength = new AtomicInteger();</span>
   private final int minLengthLimit;
   private final int expectedLengthLimit;
-  private final Runnable onLimitExceeded;
+  private final Consumer&lt;StringHolder&gt; onLimitExceeded;
 
   private LimitedStringHolderScope() {
-<span class="fc" id="L42">    this(Integer.MAX_VALUE, Integer.MAX_VALUE, null);</span>
-<span class="fc" id="L43">  }</span>
+<span class="fc" id="L43">    this(Integer.MAX_VALUE, Integer.MAX_VALUE, null);</span>
+<span class="fc" id="L44">  }</span>
 
   private LimitedStringHolderScope(int minLengthLimit, int expectedLengthLimit,
-<span class="fc" id="L46">      Runnable onLimitExceeded) {</span>
-<span class="fc" id="L47">    this.minLengthLimit = minLengthLimit;</span>
-<span class="fc" id="L48">    this.expectedLengthLimit = expectedLengthLimit;</span>
-<span class="fc" id="L49">    this.onLimitExceeded = onLimitExceeded;</span>
-<span class="fc" id="L50">  }</span>
+<span class="fc" id="L47">      Consumer&lt;StringHolder&gt; onLimitExceeded) {</span>
+<span class="fc" id="L48">    this.minLengthLimit = minLengthLimit;</span>
+<span class="fc" id="L49">    this.expectedLengthLimit = expectedLengthLimit;</span>
+<span class="fc" id="L50">    this.onLimitExceeded = onLimitExceeded;</span>
+<span class="fc" id="L51">  }</span>
 
   /**
    * Constructs a new {@link LimitedStringHolderScope} with no length limits.
@@ -58,7 +59,7 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withNoLimits() {
-<span class="fc" id="L61">    return new LimitedStringHolderScope();</span>
+<span class="fc" id="L62">    return new LimitedStringHolderScope();</span>
   }
 
   /**
@@ -72,8 +73,8 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withUpperLimitForMinimumLength(int minLengthLimit,
-      Runnable onLimitExceeded) {
-<span class="fc" id="L76">    return new LimitedStringHolderScope(minLengthLimit, Integer.MAX_VALUE, Objects.requireNonNull(</span>
+      Consumer&lt;StringHolder&gt; onLimitExceeded) {
+<span class="fc" id="L77">    return new LimitedStringHolderScope(minLengthLimit, Integer.MAX_VALUE, Objects.requireNonNull(</span>
         onLimitExceeded));
   }
 
@@ -88,9 +89,9 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withUpperLimitForExpectedLength(int expectedLengthLimit,
-      Runnable onLimitExceeded) {
-<span class="fc" id="L92">    return new LimitedStringHolderScope(expectedLengthLimit, expectedLengthLimit, Objects</span>
-<span class="fc" id="L93">        .requireNonNull(onLimitExceeded));</span>
+      Consumer&lt;StringHolder&gt; onLimitExceeded) {
+<span class="fc" id="L93">    return new LimitedStringHolderScope(expectedLengthLimit, expectedLengthLimit, Objects</span>
+<span class="fc" id="L94">        .requireNonNull(onLimitExceeded));</span>
   }
 
   /**
@@ -106,8 +107,8 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The new scope.
    */
   public static LimitedStringHolderScope withUpperLimitForMinimumAndExpectedLength(
-      int minLengthLimit, int expectedLengthLimit, Runnable onLimitExceeded) {
-<span class="fc" id="L110">    return new LimitedStringHolderScope(minLengthLimit, expectedLengthLimit, Objects.requireNonNull(</span>
+      int minLengthLimit, int expectedLengthLimit, Consumer&lt;StringHolder&gt; onLimitExceeded) {
+<span class="fc" id="L111">    return new LimitedStringHolderScope(minLengthLimit, expectedLengthLimit, Objects.requireNonNull(</span>
         onLimitExceeded));
   }
 
@@ -118,7 +119,7 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The aggregate minimum length.
    */
   public int getMinimumLength() {
-<span class="fc" id="L121">    return minimumLength.get();</span>
+<span class="fc" id="L122">    return minimumLength.get();</span>
   }
 
   /**
@@ -128,33 +129,33 @@ public final class LimitedStringHolderScope implements StringHolderScope {
    * @return The aggregate expected length.
    */
   public int getExpectedLength() {
-<span class="fc" id="L131">    return expectedLength.get();</span>
+<span class="fc" id="L132">    return expectedLength.get();</span>
   }
 
   @Override
   public void add(StringHolder sh) {
-<span class="fc" id="L136">    int ml = minimumLength.addAndGet(sh.getMinimumLength());</span>
-<span class="fc" id="L137">    int el = expectedLength.addAndGet(sh.getExpectedLength());</span>
+<span class="fc" id="L137">    int ml = minimumLength.addAndGet(sh.getMinimumLength());</span>
+<span class="fc" id="L138">    int el = expectedLength.addAndGet(sh.getExpectedLength());</span>
 
-<span class="fc bfc" id="L139" title="All 4 branches covered.">    if (ml &gt; minLengthLimit || el &gt; expectedLengthLimit) {</span>
-<span class="fc" id="L140">      onLimitExceeded.run();</span>
+<span class="fc bfc" id="L140" title="All 4 branches covered.">    if (ml &gt; minLengthLimit || el &gt; expectedLengthLimit) {</span>
+<span class="fc" id="L141">      onLimitExceeded.accept(sh);</span>
     }
-<span class="fc" id="L142">  }</span>
+<span class="fc" id="L143">  }</span>
 
   @Override
   public void remove(StringHolder sh) {
-<span class="fc" id="L146">    minimumLength.addAndGet(-sh.getMinimumLength());</span>
-<span class="fc" id="L147">    expectedLength.addAndGet(-sh.getExpectedLength());</span>
-<span class="fc" id="L148">  }</span>
+<span class="fc" id="L147">    minimumLength.addAndGet(-sh.getMinimumLength());</span>
+<span class="fc" id="L148">    expectedLength.addAndGet(-sh.getExpectedLength());</span>
+<span class="fc" id="L149">  }</span>
 
   @Override
-  public void resizeBy(StringHolder sh, int minBy, int expBy) {
-<span class="fc" id="L152">    int ml = minimumLength.addAndGet(minBy);</span>
-<span class="fc" id="L153">    int el = expectedLength.addAndGet(expBy);</span>
+  public void resizeBy(int minBy, int expBy) {
+<span class="fc" id="L153">    int ml = minimumLength.addAndGet(minBy);</span>
+<span class="fc" id="L154">    int el = expectedLength.addAndGet(expBy);</span>
 
-<span class="fc bfc" id="L155" title="All 4 branches covered.">    if (ml &gt; minLengthLimit || el &gt; expectedLengthLimit) {</span>
-<span class="fc" id="L156">      onLimitExceeded.run();</span>
+<span class="fc bfc" id="L156" title="All 4 branches covered.">    if (ml &gt; minLengthLimit || el &gt; expectedLengthLimit) {</span>
+<span class="fc" id="L157">      onLimitExceeded.accept(null);</span>
     }
-<span class="fc" id="L158">  }</span>
+<span class="fc" id="L159">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>StringsOnlyRenderTransformer.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">stringhold-codecoverage</a> &gt; <a href="../index.html" class="el_bundle">stringhold-liqp</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold.liqp</a> &gt; <span class="el_source">StringsOnlyRenderTransformer.java</span></div><h1>StringsOnlyRenderTransformer.java</h1><pre class="source lang-java linenums">/*
  * stringhold
  *
- * Copyright 2022 Christian Kohlschütter
+ * Copyright 2022, 2023 Christian Kohlschütter
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  */
 package com.kohlschutter.stringhold.liqp;
 
+import com.kohlschutter.annotations.compiletime.SuppressFBWarnings;
 import com.kohlschutter.stringhold.LimitedStringHolderScope;
 import com.kohlschutter.stringhold.StringHolder;
 import com.kohlschutter.stringhold.StringHolderScope;
@@ -31,8 +32,9 @@ import liqp.TemplateContext;
  *
  * @author Christian Kohlschütter
  */
+@SuppressFBWarnings(&quot;CT_CONSTRUCTOR_THROW&quot;)
 public final class StringsOnlyRenderTransformer implements RenderTransformer {
-<span class="fc" id="L35">  private static final StringsOnlyRenderTransformer INSTANCE = new StringsOnlyRenderTransformer();</span>
+<span class="fc" id="L37">  private static final StringsOnlyRenderTransformer INSTANCE = new StringsOnlyRenderTransformer();</span>
 
   private StringsOnlyRenderTransformer() {
   }
@@ -43,38 +45,36 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
    * @return The instance.
    */
   public static StringsOnlyRenderTransformer getInstance() {
-<span class="fc" id="L46">    return INSTANCE;</span>
+<span class="fc" id="L48">    return INSTANCE;</span>
   }
 
   @Override
   public Controller newObjectAppender(TemplateContext context, int estimatedNumberOfAppends) {
-<span class="fc" id="L51">    return new Controller() {</span>
-<span class="fc" id="L52">      private Object result = &quot;&quot;;</span>
-<span class="fc" id="L53">      private ObjectAppender appender = (o) -&gt; {</span>
-<span class="fc" id="L54">        StringHolder sh = StringHolder.withContent(o);</span>
-<span class="fc" id="L55">        result = sh;</span>
+<span class="fc" id="L53">    return new Controller() {</span>
+<span class="fc" id="L54">      private Object result = &quot;&quot;;</span>
+<span class="fc" id="L55">      private ObjectAppender appender = (o) -&gt; {</span>
+<span class="fc" id="L56">        StringHolder sh = StringHolder.withContent(o);</span>
+<span class="fc" id="L57">        result = sh;</span>
 
         @SuppressWarnings(&quot;PMD.AvoidThrowingRawExceptionTypes&quot;)
-<span class="fc" id="L58">        StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(</span>
+<span class="fc" id="L60">        StringHolderScope scope = (StringHolderScope) context.getEnvironmentMap().computeIfAbsent(</span>
             StringHolderRenderTransformer.SCOPE_KEY, (k) -&gt; {
-<span class="fc" id="L60">              int maxLen = context.getParser().getProtectionSettings().maxSizeRenderedString;</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">              if (maxLen != Integer.MAX_VALUE) {</span>
-<span class="fc" id="L62">                return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, () -&gt; {</span>
-<span class="fc" id="L63">                  throw new RuntimeException(&quot;rendered string exceeds &quot; + maxLen);</span>
+<span class="fc" id="L62">              int maxLen = context.getParser().getLimitMaxSizeRenderedString();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">              if (maxLen != Integer.MAX_VALUE) {</span>
+<span class="fc" id="L64">                return LimitedStringHolderScope.withUpperLimitForMinimumLength(maxLen, (</span>
+                    stringholder) -&gt; {
+<span class="fc" id="L66">                  throw new RuntimeException(&quot;rendered string exceeds &quot; + maxLen);</span>
                 });
               } else {
-<span class="fc" id="L66">                return StringHolderScope.NONE;</span>
+<span class="fc" id="L69">                return StringHolderScope.NONE;</span>
               }
             });
 
-<span class="fc" id="L70">        sh.updateScope(scope);</span>
+<span class="fc" id="L73">        sh.updateScope(scope);</span>
 
-<span class="fc" id="L72">        appender = (o2) -&gt; {</span>
-<span class="fc" id="L73">          StringOnlySequence seq = new StringOnlySequence(estimatedNumberOfAppends);</span>
-<span class="fc" id="L74">          seq.updateScope(scope);</span>
-
-          // do not double-count
-<span class="fc" id="L77">          ((StringHolder) result).updateScope(null);</span>
+<span class="fc" id="L75">        appender = (o2) -&gt; {</span>
+<span class="fc" id="L76">          StringOnlySequence seq = new StringOnlySequence(estimatedNumberOfAppends);</span>
+<span class="fc" id="L77">          seq.updateScope(scope);</span>
 
 <span class="fc" id="L79">          seq.append(result);</span>
 <span class="fc" id="L80">          result = seq;</span>
@@ -100,4 +100,4 @@ public final class StringsOnlyRenderTransformer implements RenderTransformer {
 <span class="fc" id="L100">    return String.valueOf(obj);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

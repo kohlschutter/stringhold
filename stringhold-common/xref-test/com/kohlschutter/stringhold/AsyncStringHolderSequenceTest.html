@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * stringhold</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022 Christian Kohlschütter</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022, 2023 Christian Kohlschütter</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>    @Test
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testStringsOnly() {
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      sgs.append(<span class="jxr_string">"Hello"</span>).append(<span class="jxr_string">" "</span>).append(<span class="jxr_string">"World"</span>);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      assertEquals(3, sgs.numberOfAppends());
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Test
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testStringAndTwoHolders() {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      sgs.append(<span class="jxr_string">"Hello"</span>).append(StringHolder.withSupplier(() -&gt; <span class="jxr_string">" "</span>)).append(StringHolder
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>          .withSupplier(() -&gt; <span class="jxr_string">"World"</span>));
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      assertEquals(3, sgs.numberOfAppends());
@@ -65,7 +65,7 @@
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>    @Test
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testStringHoldersAndString() {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      StringHolder shKnownEmpty = StringHolder.withSupplier(() -&gt; <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
@@ -82,7 +82,7 @@
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>    @Test
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testStringedStringHoldersAndString() {
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      StringHolder sh1 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">"Hello"</span>);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      StringHolder sh2 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">" "</span>);
@@ -100,7 +100,7 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>    @Test
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMixedStringHolders() {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      StringHolder sh1 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">"l"</span>);
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      StringHolder sh2 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">" "</span>);
@@ -118,7 +118,7 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> 
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>   @Test
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAppendToStringBuilder() {
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> 
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     StringHolder sh1 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">"l"</span>);
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     StringHolder sh2 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">" "</span>);
@@ -135,7 +135,7 @@
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>   @Test
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAppendToStringBuffer() {
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>     StringHolder sh1 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">"l"</span>);
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     StringHolder sh2 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">" "</span>);
@@ -152,7 +152,7 @@
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>   @Test
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAppendToStringWriter() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L148" href="#L148">148</a> 
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     StringHolder sh1 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">"l"</span>);
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     StringHolder sh2 = StringHolder.withSupplier(() -&gt; <span class="jxr_string">" "</span>);
@@ -169,7 +169,7 @@
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> 
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>   @Test
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testDependentHolders() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L165" href="#L165">165</a> 
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>     Semaphore sema = <strong class="jxr_keyword">new</strong> Semaphore(0);
 <a class="jxr_linenumber" name="L167" href="#L167">167</a> 
@@ -197,7 +197,7 @@
 <a class="jxr_linenumber" name="L189" href="#L189">189</a> 
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>   @Test
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testDependentHoldersStringWriter() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence();
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence();
 <a class="jxr_linenumber" name="L193" href="#L193">193</a> 
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>     Semaphore sema = <strong class="jxr_keyword">new</strong> Semaphore(0);
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> 
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>   @Test
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCustomExecutor() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>     ExecutorService es = Executors.newSingleThreadExecutor();
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence(es);
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence(es);
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>     sgs.append(StringHolder.withSupplier(() -&gt; <span class="jxr_string">"Hello"</span>)).append(<span class="jxr_string">" "</span>).append(StringHolder
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>         .withSupplier(() -&gt; <span class="jxr_string">"World"</span>));
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 
@@ -237,7 +237,7 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a> 
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>   @Test
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEstimatedNumberOfAppendsTooLow() {
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     AsyncStringHolderSequence sgs = <strong class="jxr_keyword">new</strong> AsyncStringHolderSequence(0);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence(0);
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>     sgs.append(<span class="jxr_string">"Hello"</span>).append(<span class="jxr_string">" "</span>).append(<span class="jxr_string">"World"</span>);
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>     assertEquals(3, sgs.numberOfAppends());
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> 
@@ -245,7 +245,19 @@
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>     assertEquals(<span class="jxr_string">"Hello World"</span>, sgs.toString());
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>     assertTrue(sgs.isString());
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>   }
-<a class="jxr_linenumber" name="L240" href="#L240">240</a> }
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> 
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>   @Test
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testEstimatedNumberOfAppendsTooLowAsync() {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     ExecutorService es = Executors.newSingleThreadExecutor();
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>     StringHolderSequence sgs = StringHolder.newAsyncSequence(0, es);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     sgs.append(<span class="jxr_string">"Hello"</span>).append(<span class="jxr_string">" "</span>).append(<span class="jxr_string">"World"</span>);
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     assertEquals(3, sgs.numberOfAppends());
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     assertFalse(sgs.isString());
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     assertEquals(<span class="jxr_string">"Hello World"</span>, sgs.toString());
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     assertTrue(sgs.isString());
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>   }
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014&#x2013;2023 <a href="https://www.kohlschutter.com/">Kohlschütter Search Intelligence</a>. All rights reserved.</div>

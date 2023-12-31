@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Conditional.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stringhold-liqp</a> &gt; <a href="index.source.html" class="el_package">com.kohlschutter.stringhold.liqp</a> &gt; <span class="el_source">Conditional.java</span></div><h1>Conditional.java</h1><pre class="source lang-java linenums">/*
+ * stringhold
+ *
+ * Copyright 2022, 2023 Christian Kohlschütter
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.kohlschutter.stringhold.liqp;
+
+import java.util.Map;
+
+import org.eclipse.jdt.annotation.Nullable;
+
+import liqp.TemplateContext;
+import liqp.nodes.LNode;
+import liqp.tags.Tag;
+
+/**
+ * Sets/gets the conditional state for a certain conditional-key.
+ * &lt;p&gt;
+ * Examples: &lt;pre&gt;&lt;code&gt;
+ * {% conditional get: someState %} // false
+ * {% conditional set: someState %} // no output
+ * {% conditional get: someState %} // true
+ * {% conditional clear: someState %} // no output
+ * {% conditional get: someState %} // false
+ * &lt;/code&gt;&lt;/pre&gt;
+ *
+ * &lt;b&gt;NOTE:&lt;/b&gt; By default, conditionals are {@code true}. The behavior of declaring a conditional
+ * tag within a conditionally block is currently undefined.
+ *
+ * @author Christian Kohlschütter
+ * @see Conditionally
+ */
+public final class Conditional extends Tag {
+  static final String ENVMAP_CONDITIONAL_PREFIX = &quot; stringhold.conditional.&quot;;
+  static final String ENVMAP_SUPPLIED_PREFIX = &quot; stringhold.conditional-supplied.&quot;;
+
+  /**
+   * Constructs a new &quot;conditional&quot; {@link Tag}.
+   */
+  public Conditional() {
+<span class="fc" id="L53">    super(&quot;conditional&quot;);</span>
+<span class="fc" id="L54">  }</span>
+
+  @SuppressWarnings(&quot;PMD.UnnecessaryBoxing&quot;)
+  @Override
+  public Object render(TemplateContext context, LNode... nodes) {
+<span class="fc" id="L59">    String args = String.valueOf(nodes[0].render(context));</span>
+
+<span class="fc" id="L61">    String[] parts = args.split(&quot;:&quot;);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (parts.length != 2) {</span>
+<span class="fc" id="L63">      throw new IllegalArgumentException(args);</span>
+    }
+
+<span class="fc" id="L66">    String command = parts[0];</span>
+<span class="fc" id="L67">    String key = parts[1];</span>
+
+    boolean b;
+<span class="fc bfc" id="L70" title="All 4 branches covered.">    switch (command) {</span>
+      case &quot;set&quot;:
+<span class="fc" id="L72">        b = true;</span>
+<span class="fc" id="L73">        break;</span>
+      case &quot;clear&quot;:
+<span class="fc" id="L75">        b = false;</span>
+<span class="fc" id="L76">        break;</span>
+      case &quot;get&quot;:
+<span class="fc" id="L78">        return isConditionalSet(context.getEnvironmentMap(), key);</span>
+      default:
+<span class="fc" id="L80">        throw new IllegalArgumentException(&quot;Illegal conditional command: &quot; + command);</span>
+    }
+
+<span class="fc" id="L83">    Map&lt;String, Object&gt; map = context.getEnvironmentMap();</span>
+<span class="fc" id="L84">    Boolean supplied = getConditionalSuppliedState(map, key);</span>
+<span class="fc bfc" id="L85" title="All 4 branches covered.">    if (supplied != null &amp;&amp; supplied.booleanValue() != b) {</span>
+<span class="fc" id="L86">      throw new IllegalStateException(&quot;Conditional already accessed: &quot; + key);</span>
+    }
+
+<span class="fc" id="L89">    setConditional(map, key, b);</span>
+
+<span class="fc" id="L91">    return null;</span>
+  }
+
+  /**
+   * Checks if the conditional identified by the given key is set.
+   *
+   * @param envMap The environment map.
+   * @param key The key, without its internal prefix.
+   * @return {@code true} if set.
+   */
+  public static boolean isConditionalSet(Map&lt;String, Object&gt; envMap, String key) {
+<span class="fc" id="L102">    Object val = envMap.get(Conditional.ENVMAP_CONDITIONAL_PREFIX + key);</span>
+<span class="fc" id="L103">    return Boolean.parseBoolean(String.valueOf(val));</span>
+  }
+
+  /**
+   * Checks if the conditional identified by the given key is set.
+   *
+   * @param envMap The environment map.
+   * @param key The key, without its internal prefix.
+   * @param on {@code true} if set, {@code false} if clear.
+   */
+  public static void setConditional(Map&lt;String, Object&gt; envMap, String key, boolean on) {
+<span class="fc" id="L114">    envMap.put(Conditional.ENVMAP_CONDITIONAL_PREFIX + key, on);</span>
+<span class="fc" id="L115">  }</span>
+
+  /**
+   * Checks the &quot;supplied&quot; state of the conditional identified by the given key.
+   *
+   * @param envMap The environment map.
+   * @param key The key, without its internal prefix.
+   * @return {@code false}/{@code true} for the &quot;supply&quot; condition once determined, or {@code null}
+   *         if not determined yet.
+   */
+  public static @Nullable Boolean getConditionalSuppliedState(Map&lt;String, Object&gt; envMap,
+      String key) {
+<span class="fc" id="L127">    Object val = envMap.get(Conditional.ENVMAP_SUPPLIED_PREFIX + key);</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">    if (val == null) {</span>
+<span class="fc" id="L129">      return null;</span>
+    }
+<span class="fc" id="L131">    return Boolean.valueOf(String.valueOf(val));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

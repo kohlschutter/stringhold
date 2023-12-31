@@ -1,30 +1,36 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LazyInitReaderReleaseShim.KickstartPlaceholderReleaseShim,0,12,0,0,0,2,0,2,0,2
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,IOExceptionHandler.ExceptionResponse,0,33,0,0,0,6,0,1,0,1
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,ConditionalStringHolder,0,304,0,60,0,98,0,62,0,32
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,ReaderShim,0,5,0,0,0,2,0,2,0,2
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolderScope,0,8,0,0,0,4,0,4,0,4
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,HasKnownLength,0,2,0,0,0,1,0,1,0,1
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolderSequence.StringSequenceReader,0,131,0,14,0,38,0,14,0,7
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,ReaderStringHolder,0,302,0,21,0,87,0,21,0,9
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,CharSequenceReleaseShim,0,13,0,2,0,3,0,4,0,3
-stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,SuppliedStringHolder,0,376,0,56,0,109,0,43,0,14
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,SuppliedStringHolder,0,390,0,56,0,112,0,44,0,15
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,AbstractStringHolder,0,1216,0,212,0,365,0,166,0,60
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,AsyncStringHolderSequence,0,267,0,28,0,64,0,28,0,14
-stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolderSequence,0,811,0,120,0,222,0,90,0,30
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolderSequence,0,894,0,134,0,243,0,99,0,32
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,SimpleStringHolder,0,10,0,0,0,4,0,2,0,2
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LazyInitReader.KickstartPlaceholder,0,68,0,0,0,16,0,11,0,11
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LazyInitReaderReleaseShim,0,8,0,0,0,2,0,2,0,2
-stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LimitedStringHolderScope,0,128,0,8,0,29,0,15,0,11
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LimitedStringHolderScope,0,130,0,8,0,29,0,15,0,11
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,HasLength,0,26,0,8,0,6,0,8,0,4
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,CachedIOSupplier,0,39,0,4,0,12,0,4,0,2
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,CommonStrings,0,366,0,18,0,40,0,13,0,4
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolderScope.new StringHolderScope() {...},0,3,0,0,0,1,0,1,0,1
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,FixedLengthSuppliedStringHolder,0,41,0,2,0,12,0,6,0,5
-stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolder,0,1468,0,253,0,423,0,203,0,76
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolder,0,434,0,79,0,104,0,71,0,31
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,HasMinimumLength,0,3,0,0,0,1,0,1,0,1
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LazyInitReader,0,108,0,4,0,25,0,19,0,17
-stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringOnlySequence,0,10,0,0,0,5,0,3,0,3
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringOnlySequence,0,14,0,0,0,6,0,4,0,4
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,SuppliedStringHolder.new IOExceptionHandler() {...},0,3,0,0,0,1,0,1,0,1
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,HasExpectedLength,0,2,0,0,0,1,0,1,0,1
-stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringsOnlyRenderTransformer.new RenderTransformer.ObjectAppender.Controller() {...},0,117,0,2,0,25,0,8,0,7
+stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringsOnlyRenderTransformer.new RenderTransformer.ObjectAppender.Controller() {...},0,110,0,2,0,24,0,8,0,7
+stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,Conditionally,0,47,0,0,0,12,0,4,0,4
 stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringsOnlyRenderTransformer,0,17,0,0,0,4,0,4,0,4
-stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringHolderRenderTransformer.new RenderTransformer.ObjectAppender.Controller() {...},0,106,0,6,0,22,0,8,0,5
-stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringHolderRenderTransformer,0,116,0,8,0,29,0,14,0,10
+stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,Conditional,0,113,0,12,0,29,0,12,0,5
+stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringHolderRenderTransformer.new RenderTransformer.ObjectAppender.Controller() {...},0,86,0,2,0,18,0,6,0,5
+stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringholdLiqpHelper,0,35,0,2,0,10,0,4,0,3
+stringhold-codecoverage/stringhold-liqp,com.kohlschutter.stringhold.liqp,StringHolderRenderTransformer,0,137,0,12,0,33,0,17,0,11

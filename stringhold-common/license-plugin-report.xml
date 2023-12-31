@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1675636671539">
-    <module artifactId="stringhold-common" groupId="com.kohlschutter.stringhold" version="1.0.0-SNAPSHOT"/>
+<licensePluginReport goal="CHECK" timestamp="1704026791897">
+    <module artifactId="stringhold-common" groupId="com.kohlschutter.stringhold" version="1.0.2-SNAPSHOT"/>
     <files>
+        <file path="src/main/java/com/kohlschutter/stringhold/AbstractStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/AsyncStringHolderSequence.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CachedIOSupplier.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/CommonStrings.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/ConditionalStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/FixedLengthSuppliedStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/HasExpectedLength.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/HasKnownLength.java" result="PRESENT"/>
@@ -16,6 +18,7 @@
         <file path="src/main/java/com/kohlschutter/stringhold/LazyInitReader.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/LazyInitReaderReleaseShim.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/LimitedStringHolderScope.java" result="PRESENT"/>
+        <file path="src/main/java/com/kohlschutter/stringhold/ReaderShim.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/ReaderStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/SimpleStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/StringHolder.java" result="PRESENT"/>
@@ -23,14 +26,17 @@
         <file path="src/main/java/com/kohlschutter/stringhold/StringHolderSequence.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/StringOnlySequence.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/SuppliedStringHolder.java" result="PRESENT"/>
+        <file path="src/main/java10/com/kohlschutter/stringhold/ReaderShim.java" result="PRESENT"/>
         <file path="src/main/java14/com/kohlschutter/stringhold/CharSequenceReleaseShim.java" result="PRESENT"/>
         <file path="src/main/java9/com/kohlschutter/stringhold/LazyInitReaderReleaseShim.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/AsyncStringHolderSequenceTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/CachedIOSupplierTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/CompareTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/ConditionalStringHolderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/HasLengthTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/LazyInitReaderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/LimitedStringHolderScopeTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/kohlschutter/stringhold/ReaderShimTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/ReaderStringHolderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/SimpleStringHolderTest.java" result="PRESENT"/>
         <file path="src/test/java/com/kohlschutter/stringhold/StringHolderScopeTest.java" result="PRESENT"/>

@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * stringhold</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022 Christian Kohlschütter</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022, 2023 Christian Kohlschütter</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -293,7 +293,7 @@
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     assertInstanceOf(CustomAppendStringHolder.<strong class="jxr_keyword">class</strong>, content);
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>   }
 <a class="jxr_linenumber" name="L287" href="#L287">287</a> 
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> CustomAppendStringHolder <strong class="jxr_keyword">extends</strong> StringHolder {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> CustomAppendStringHolder <strong class="jxr_keyword">extends</strong> AbstractStringHolder {
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>     <strong class="jxr_keyword">public</strong> CustomAppendStringHolder() {
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>       <strong class="jxr_keyword">super</strong>();
@@ -360,7 +360,7 @@
 <a class="jxr_linenumber" name="L352" href="#L352">352</a>     assertEquals(<span class="jxr_string">"Hello"</span>, sw.toString());
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> 
 <a class="jxr_linenumber" name="L354" href="#L354">354</a>     sw = <strong class="jxr_keyword">new</strong> StringWriter();
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>     sh.newReader().transferTo(sw);
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>     sh.toReader().transferTo(sw);
 <a class="jxr_linenumber" name="L356" href="#L356">356</a>     assertEquals(<span class="jxr_string">"Hello"</span>, sw.toString());
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>   }
 <a class="jxr_linenumber" name="L358" href="#L358">358</a> 
@@ -383,7 +383,7 @@
 <a class="jxr_linenumber" name="L375" href="#L375">375</a>     assertEquals(<span class="jxr_string">"123"</span>, sw.toString());
 <a class="jxr_linenumber" name="L376" href="#L376">376</a> 
 <a class="jxr_linenumber" name="L377" href="#L377">377</a>     sw = <strong class="jxr_keyword">new</strong> StringWriter();
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>     StringHolder.withSupplier(() -&gt; 123).newReader().transferTo(sw);
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>     StringHolder.withSupplier(() -&gt; 123).toReader().transferTo(sw);
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>     assertEquals(<span class="jxr_string">"123"</span>, sw.toString());
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>   }
 <a class="jxr_linenumber" name="L381" href="#L381">381</a> 
@@ -406,13 +406,13 @@
 <a class="jxr_linenumber" name="L398" href="#L398">398</a>     assertEquals(<span class="jxr_string">"null"</span>, sw.toString());
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> 
 <a class="jxr_linenumber" name="L400" href="#L400">400</a>     sw = <strong class="jxr_keyword">new</strong> StringWriter();
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>     StringHolder.withSupplier(() -&gt; <strong class="jxr_keyword">null</strong>).newReader().transferTo(sw);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>     StringHolder.withSupplier(() -&gt; <strong class="jxr_keyword">null</strong>).toReader().transferTo(sw);
 <a class="jxr_linenumber" name="L402" href="#L402">402</a>     assertEquals(<span class="jxr_string">"null"</span>, sw.toString());
 <a class="jxr_linenumber" name="L403" href="#L403">403</a>   }
 <a class="jxr_linenumber" name="L404" href="#L404">404</a> 
 <a class="jxr_linenumber" name="L405" href="#L405">405</a>   @Test
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testAppendCustom() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>     StringHolder sh = StringHolder.withSupplier(() -&gt; <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     StringHolder sh = StringHolder.withSupplier(() -&gt; <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L408" href="#L408">408</a> 
 <a class="jxr_linenumber" name="L409" href="#L409">409</a>       @Override
 <a class="jxr_linenumber" name="L410" href="#L410">410</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -467,7 +467,7 @@
 <a class="jxr_linenumber" name="L459" href="#L459">459</a>     assertEquals(<span class="jxr_string">"Hello"</span>, sw.toString());
 <a class="jxr_linenumber" name="L460" href="#L460">460</a> 
 <a class="jxr_linenumber" name="L461" href="#L461">461</a>     sw = <strong class="jxr_keyword">new</strong> StringWriter();
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>     sh.newReader().transferTo(sw);
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>     sh.toReader().transferTo(sw);
 <a class="jxr_linenumber" name="L463" href="#L463">463</a>     assertEquals(<span class="jxr_string">"Hello"</span>, sw.toString());
 <a class="jxr_linenumber" name="L464" href="#L464">464</a>   }
 <a class="jxr_linenumber" name="L465" href="#L465">465</a> 

@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * stringhold</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022 Christian Kohlschütter</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022, 2023 Christian Kohlschütter</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     <em class="jxr_comment">// holder 1 claims minimum length of 5, but has checkError() == true</em>
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>     <em class="jxr_comment">// holder 2 claims minimum length of 5</em>
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>       StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>       StringHolder sh1 = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; {
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException();
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>       }, (e) -&gt; ExceptionResponse.EMPTY);
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>       StringHolder sh2 = StringHolder.withSupplierMinimumLength(5, () -&gt; <span class="jxr_string">"12345"</span>);
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> 
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     <em class="jxr_comment">// holder 1 claims minimum length of 5, but has checkError() == true</em>
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     {
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>       StringHolder sh1 = ReaderStringHolder.withReaderSupplierMinimumLength(5, () -&gt; {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>       StringHolder sh1 = StringHolder.withReaderSupplierMinimumLength(5, () -&gt; {
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException();
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>       }, (e) -&gt; ExceptionResponse.ILLEGAL_STATE);
 <a class="jxr_linenumber" name="L120" href="#L120">120</a> 
@@ -136,7 +136,7 @@
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>       <em class="jxr_comment">// holder 1 is in unclear error state, but not String yet, claiming a minimum length of 10</em>
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>       StringHolder brokenSh = <strong class="jxr_keyword">new</strong> StringHolder(10) {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>       StringHolder brokenSh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(10) {
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>           setError();
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         }
@@ -336,7 +336,7 @@
 <a class="jxr_linenumber" name="L328" href="#L328">328</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>       }
 <a class="jxr_linenumber" name="L330" href="#L330">330</a>     };
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L332" href="#L332">332</a> 
 <a class="jxr_linenumber" name="L333" href="#L333">333</a>       @Override
 <a class="jxr_linenumber" name="L334" href="#L334">334</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -345,7 +345,7 @@
 <a class="jxr_linenumber" name="L337" href="#L337">337</a>     }.appendToAndReturnLength(app));
 <a class="jxr_linenumber" name="L338" href="#L338">338</a> 
 <a class="jxr_linenumber" name="L339" href="#L339">339</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L341" href="#L341">341</a> 
 <a class="jxr_linenumber" name="L342" href="#L342">342</a>       @Override
 <a class="jxr_linenumber" name="L343" href="#L343">343</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -355,7 +355,7 @@
 <a class="jxr_linenumber" name="L347" href="#L347">347</a>     assertTrue(sb.isEmpty());
 <a class="jxr_linenumber" name="L348" href="#L348">348</a> 
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>     StringBuffer sbuf = <strong class="jxr_keyword">new</strong> StringBuffer();
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L351" href="#L351">351</a> 
 <a class="jxr_linenumber" name="L352" href="#L352">352</a>       @Override
 <a class="jxr_linenumber" name="L353" href="#L353">353</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -365,7 +365,7 @@
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>     assertTrue(sbuf.isEmpty());
 <a class="jxr_linenumber" name="L358" href="#L358">358</a> 
 <a class="jxr_linenumber" name="L359" href="#L359">359</a>     StringWriter sw = <strong class="jxr_keyword">new</strong> StringWriter();
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L361" href="#L361">361</a> 
 <a class="jxr_linenumber" name="L362" href="#L362">362</a>       @Override
 <a class="jxr_linenumber" name="L363" href="#L363">363</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -622,7 +622,7 @@
 <a class="jxr_linenumber" name="L614" href="#L614">614</a> 
 <a class="jxr_linenumber" name="L615" href="#L615">615</a>   @Test
 <a class="jxr_linenumber" name="L616" href="#L616">616</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIncreaseLength() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L617" href="#L617">617</a>     StringHolder customHolder = <strong class="jxr_keyword">new</strong> StringHolder(0, 8) {
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>     StringHolder customHolder = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0, 8) {
 <a class="jxr_linenumber" name="L618" href="#L618">618</a>       {
 <a class="jxr_linenumber" name="L619" href="#L619">619</a>         resizeBy(1, -1);
 <a class="jxr_linenumber" name="L620" href="#L620">620</a>       }
@@ -643,7 +643,7 @@
 <a class="jxr_linenumber" name="L635" href="#L635">635</a> 
 <a class="jxr_linenumber" name="L636" href="#L636">636</a>   @Test
 <a class="jxr_linenumber" name="L637" href="#L637">637</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIncreaseLengthNegativeValue() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L638" href="#L638">638</a>     assertThrows(IllegalArgumentException.<strong class="jxr_keyword">class</strong>, () -&gt; <strong class="jxr_keyword">new</strong> StringHolder(6, 0) {
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>     assertThrows(IllegalArgumentException.<strong class="jxr_keyword">class</strong>, () -&gt; <strong class="jxr_keyword">new</strong> AbstractStringHolder(6, 0) {
 <a class="jxr_linenumber" name="L639" href="#L639">639</a>       {
 <a class="jxr_linenumber" name="L640" href="#L640">640</a>         <em class="jxr_comment">// using a negative increment for the minimum length is not allowed, unless checkError() is</em>
 <a class="jxr_linenumber" name="L641" href="#L641">641</a>         <em class="jxr_comment">// true.</em>
@@ -659,7 +659,7 @@
 <a class="jxr_linenumber" name="L651" href="#L651">651</a> 
 <a class="jxr_linenumber" name="L652" href="#L652">652</a>   @Test
 <a class="jxr_linenumber" name="L653" href="#L653">653</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIncreaseLengthNegativeValueTrouble() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L654" href="#L654">654</a>     <strong class="jxr_keyword">new</strong> StringHolder(6, 0) {
+<a class="jxr_linenumber" name="L654" href="#L654">654</a>     <strong class="jxr_keyword">new</strong> AbstractStringHolder(6, 0) {
 <a class="jxr_linenumber" name="L655" href="#L655">655</a>       {
 <a class="jxr_linenumber" name="L656" href="#L656">656</a>         <em class="jxr_comment">// using a negative increment for the minimum length is not allowed</em>
 <a class="jxr_linenumber" name="L657" href="#L657">657</a>         <em class="jxr_comment">// unless checkError() is true.</em>
@@ -679,7 +679,7 @@
 <a class="jxr_linenumber" name="L671" href="#L671">671</a> 
 <a class="jxr_linenumber" name="L672" href="#L672">672</a>   @Test
 <a class="jxr_linenumber" name="L673" href="#L673">673</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testUpdateLengthLesserValue() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L674" href="#L674">674</a>     assertThrows(IllegalStateException.<strong class="jxr_keyword">class</strong>, () -&gt; <strong class="jxr_keyword">new</strong> StringHolder(6, 0) {
+<a class="jxr_linenumber" name="L674" href="#L674">674</a>     assertThrows(IllegalStateException.<strong class="jxr_keyword">class</strong>, () -&gt; <strong class="jxr_keyword">new</strong> AbstractStringHolder(6, 0) {
 <a class="jxr_linenumber" name="L675" href="#L675">675</a>       {
 <a class="jxr_linenumber" name="L676" href="#L676">676</a>         <em class="jxr_comment">// using a value smaller than the current minimum is not allowed, unless checkError() is</em>
 <a class="jxr_linenumber" name="L677" href="#L677">677</a>         <em class="jxr_comment">// true</em>
@@ -695,7 +695,7 @@
 <a class="jxr_linenumber" name="L687" href="#L687">687</a> 
 <a class="jxr_linenumber" name="L688" href="#L688">688</a>   @Test
 <a class="jxr_linenumber" name="L689" href="#L689">689</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testUpdateLengthLesserValueTrouble() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L690" href="#L690">690</a>     <strong class="jxr_keyword">new</strong> StringHolder(6, 0) {
+<a class="jxr_linenumber" name="L690" href="#L690">690</a>     <strong class="jxr_keyword">new</strong> AbstractStringHolder(6, 0) {
 <a class="jxr_linenumber" name="L691" href="#L691">691</a>       {
 <a class="jxr_linenumber" name="L692" href="#L692">692</a>         <em class="jxr_comment">//</em>
 <a class="jxr_linenumber" name="L693" href="#L693">693</a>         assertEquals(6, getMinimumLength());
@@ -718,7 +718,7 @@
 <a class="jxr_linenumber" name="L710" href="#L710">710</a> 
 <a class="jxr_linenumber" name="L711" href="#L711">711</a>   @Test
 <a class="jxr_linenumber" name="L712" href="#L712">712</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testUpdateLengthLesserValueTroubleCleared() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L713" href="#L713">713</a>     assertThrows(IllegalStateException.<strong class="jxr_keyword">class</strong>, () -&gt; <strong class="jxr_keyword">new</strong> StringHolder(6, 0) {
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>     assertThrows(IllegalStateException.<strong class="jxr_keyword">class</strong>, () -&gt; <strong class="jxr_keyword">new</strong> AbstractStringHolder(6, 0) {
 <a class="jxr_linenumber" name="L714" href="#L714">714</a>       {
 <a class="jxr_linenumber" name="L715" href="#L715">715</a>         <em class="jxr_comment">// using a value smaller than the current minimum is not allowed</em>
 <a class="jxr_linenumber" name="L716" href="#L716">716</a>         <em class="jxr_comment">// unless checkError() is true</em>
@@ -742,15 +742,15 @@
 <a class="jxr_linenumber" name="L734" href="#L734">734</a>     StringHolder sh = StringHolder.withSupplierMinimumLength(Integer.MAX_VALUE - 1, () -&gt; <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L735" href="#L735">735</a>     assertEquals(Integer.MAX_VALUE - 1, sh.getMinimumLength());
 <a class="jxr_linenumber" name="L736" href="#L736">736</a> 
-<a class="jxr_linenumber" name="L737" href="#L737">737</a>     sh.resizeBy(1, 0);
+<a class="jxr_linenumber" name="L737" href="#L737">737</a>     ((AbstractStringHolder) sh).resizeBy(1, 0);
 <a class="jxr_linenumber" name="L738" href="#L738">738</a>     assertEquals(Integer.MAX_VALUE, sh.getMinimumLength());
 <a class="jxr_linenumber" name="L739" href="#L739">739</a> 
 <a class="jxr_linenumber" name="L740" href="#L740">740</a>     <em class="jxr_comment">// we increase beyond Integer.MAX_VALUE, and don't overflow</em>
-<a class="jxr_linenumber" name="L741" href="#L741">741</a>     sh.resizeBy(1, 0);
+<a class="jxr_linenumber" name="L741" href="#L741">741</a>     ((AbstractStringHolder) sh).resizeBy(1, 0);
 <a class="jxr_linenumber" name="L742" href="#L742">742</a>     assertEquals(Integer.MAX_VALUE, sh.getMinimumLength());
 <a class="jxr_linenumber" name="L743" href="#L743">743</a>   }
 <a class="jxr_linenumber" name="L744" href="#L744">744</a> 
-<a class="jxr_linenumber" name="L745" href="#L745">745</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> BrokenStringHolder <strong class="jxr_keyword">extends</strong> StringHolder {
+<a class="jxr_linenumber" name="L745" href="#L745">745</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> BrokenStringHolder <strong class="jxr_keyword">extends</strong> AbstractStringHolder {
 <a class="jxr_linenumber" name="L746" href="#L746">746</a>     <strong class="jxr_keyword">protected</strong> BrokenStringHolder() {
 <a class="jxr_linenumber" name="L747" href="#L747">747</a>       <strong class="jxr_keyword">super</strong>(0);
 <a class="jxr_linenumber" name="L748" href="#L748">748</a>     }
@@ -817,7 +817,7 @@
 <a class="jxr_linenumber" name="L809" href="#L809">809</a> 
 <a class="jxr_linenumber" name="L810" href="#L810">810</a>   @Test
 <a class="jxr_linenumber" name="L811" href="#L811">811</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIsEmptyWhenKnownEmpty() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L812" href="#L812">812</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L812" href="#L812">812</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L813" href="#L813">813</a> 
 <a class="jxr_linenumber" name="L814" href="#L814">814</a>       @Override
 <a class="jxr_linenumber" name="L815" href="#L815">815</a>       <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
@@ -843,7 +843,7 @@
 <a class="jxr_linenumber" name="L835" href="#L835">835</a> 
 <a class="jxr_linenumber" name="L836" href="#L836">836</a>   @Test
 <a class="jxr_linenumber" name="L837" href="#L837">837</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testKnownEmpty_customZero() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L838" href="#L838">838</a>     assertFalse(<strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L838" href="#L838">838</a>     assertFalse(<strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L839" href="#L839">839</a> 
 <a class="jxr_linenumber" name="L840" href="#L840">840</a>       @Override
 <a class="jxr_linenumber" name="L841" href="#L841">841</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -855,7 +855,7 @@
 <a class="jxr_linenumber" name="L847" href="#L847">847</a> 
 <a class="jxr_linenumber" name="L848" href="#L848">848</a>   @Test
 <a class="jxr_linenumber" name="L849" href="#L849">849</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testKnownEmpty_customNonZero() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L850" href="#L850">850</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L850" href="#L850">850</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L851" href="#L851">851</a> 
 <a class="jxr_linenumber" name="L852" href="#L852">852</a>       @Override
 <a class="jxr_linenumber" name="L853" href="#L853">853</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -869,7 +869,7 @@
 <a class="jxr_linenumber" name="L861" href="#L861">861</a> 
 <a class="jxr_linenumber" name="L862" href="#L862">862</a>   @Test
 <a class="jxr_linenumber" name="L863" href="#L863">863</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testKnownEmpty_custom_broken() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L864" href="#L864">864</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L864" href="#L864">864</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L865" href="#L865">865</a> 
 <a class="jxr_linenumber" name="L866" href="#L866">866</a>       @Override
 <a class="jxr_linenumber" name="L867" href="#L867">867</a>       <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
@@ -891,7 +891,7 @@
 <a class="jxr_linenumber" name="L883" href="#L883">883</a> 
 <a class="jxr_linenumber" name="L884" href="#L884">884</a>   @Test
 <a class="jxr_linenumber" name="L885" href="#L885">885</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testKnownEmpty_custom_broken_computeLength() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L886" href="#L886">886</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder(0, 5) {
+<a class="jxr_linenumber" name="L886" href="#L886">886</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0, 5) {
 <a class="jxr_linenumber" name="L887" href="#L887">887</a> 
 <a class="jxr_linenumber" name="L888" href="#L888">888</a>       @Override
 <a class="jxr_linenumber" name="L889" href="#L889">889</a>       <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
@@ -919,7 +919,7 @@
 <a class="jxr_linenumber" name="L911" href="#L911">911</a> 
 <a class="jxr_linenumber" name="L912" href="#L912">912</a>   @Test
 <a class="jxr_linenumber" name="L913" href="#L913">913</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testKnownEmpty_custom_setTheStringDirectly() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L914" href="#L914">914</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L914" href="#L914">914</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L915" href="#L915">915</a>       {
 <a class="jxr_linenumber" name="L916" href="#L916">916</a>         theString = <span class="jxr_string">"foo"</span>;
 <a class="jxr_linenumber" name="L917" href="#L917">917</a>       }
@@ -942,7 +942,7 @@
 <a class="jxr_linenumber" name="L934" href="#L934">934</a> 
 <a class="jxr_linenumber" name="L935" href="#L935">935</a>   @Test
 <a class="jxr_linenumber" name="L936" href="#L936">936</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testKnownEmpty_customEmpty_setTheStringDirectly() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L937" href="#L937">937</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L938" href="#L938">938</a>       {
 <a class="jxr_linenumber" name="L939" href="#L939">939</a>         theString = <span class="jxr_string">""</span>;
 <a class="jxr_linenumber" name="L940" href="#L940">940</a>       }
@@ -976,7 +976,7 @@
 <a class="jxr_linenumber" name="L968" href="#L968">968</a>     }
 <a class="jxr_linenumber" name="L969" href="#L969">969</a> 
 <a class="jxr_linenumber" name="L970" href="#L970">970</a>     {
-<a class="jxr_linenumber" name="L971" href="#L971">971</a>       StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder(4) {
+<a class="jxr_linenumber" name="L971" href="#L971">971</a>       StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(4) {
 <a class="jxr_linenumber" name="L972" href="#L972">972</a>         @Override
 <a class="jxr_linenumber" name="L973" href="#L973">973</a>         <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
 <a class="jxr_linenumber" name="L974" href="#L974">974</a>           <strong class="jxr_keyword">return</strong> 4;
@@ -1004,7 +1004,7 @@
 <a class="jxr_linenumber" name="L996" href="#L996">996</a> 
 <a class="jxr_linenumber" name="L997" href="#L997">997</a>   @Test
 <a class="jxr_linenumber" name="L998" href="#L998">998</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testLengthKnown_customZero() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L999" href="#L999">999</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L999" href="#L999">999</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L1000" href="#L1000">1000</a>       @Override
 <a class="jxr_linenumber" name="L1001" href="#L1001">1001</a>       <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
 <a class="jxr_linenumber" name="L1002" href="#L1002">1002</a>         <strong class="jxr_keyword">return</strong> 0;
@@ -1027,7 +1027,7 @@
 <a class="jxr_linenumber" name="L1019" href="#L1019">1019</a> 
 <a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>   @Test
 <a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testLengthKnown_custom_broken() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>     StringHolder customSh = <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>       @Override
 <a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>       <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
 <a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>         <strong class="jxr_keyword">return</strong> 5;
@@ -1131,7 +1131,7 @@
 <a class="jxr_linenumber" name="L1123" href="#L1123">1123</a>     assertInstanceOf(String.<strong class="jxr_keyword">class</strong>, content);
 <a class="jxr_linenumber" name="L1124" href="#L1124">1124</a>     assertEquals(<span class="jxr_string">"test"</span>, content);
 <a class="jxr_linenumber" name="L1125" href="#L1125">1125</a> 
-<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a>     sh = <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L1126" href="#L1126">1126</a>     sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L1127" href="#L1127">1127</a> 
 <a class="jxr_linenumber" name="L1128" href="#L1128">1128</a>       @Override
 <a class="jxr_linenumber" name="L1129" href="#L1129">1129</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -1145,7 +1145,7 @@
 <a class="jxr_linenumber" name="L1137" href="#L1137">1137</a> 
 <a class="jxr_linenumber" name="L1138" href="#L1138">1138</a>   @Test
 <a class="jxr_linenumber" name="L1139" href="#L1139">1139</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testComputeLength() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L1140" href="#L1140">1140</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L1141" href="#L1141">1141</a> 
 <a class="jxr_linenumber" name="L1142" href="#L1142">1142</a>       @Override
 <a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -1169,7 +1169,7 @@
 <a class="jxr_linenumber" name="L1161" href="#L1161">1161</a>     assertEquals(StringHolder.withContent(<span class="jxr_string">"Hello"</span>, StringHolder.withSupplierFixedLength(1,
 <a class="jxr_linenumber" name="L1162" href="#L1162">1162</a>         () -&gt; <span class="jxr_string">" "</span>), <strong class="jxr_keyword">new</strong> StringHolderSequence(), <span class="jxr_string">"World"</span>), <span class="jxr_string">"Hello World"</span>);
 <a class="jxr_linenumber" name="L1163" href="#L1163">1163</a>     assertEquals(StringHolder.withContent(<span class="jxr_string">"Hello"</span>, StringHolder.withSupplierFixedLength(1,
-<a class="jxr_linenumber" name="L1164" href="#L1164">1164</a>         () -&gt; <span class="jxr_string">" "</span>), <strong class="jxr_keyword">new</strong> StringHolderSequence().append(<strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L1164" href="#L1164">1164</a>         () -&gt; <span class="jxr_string">" "</span>), <strong class="jxr_keyword">new</strong> StringHolderSequence().append(<strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L1165" href="#L1165">1165</a> 
 <a class="jxr_linenumber" name="L1166" href="#L1166">1166</a>           @Override
 <a class="jxr_linenumber" name="L1167" href="#L1167">1167</a>           <strong class="jxr_keyword">protected</strong> String getString() {
@@ -1244,7 +1244,7 @@
 <a class="jxr_linenumber" name="L1236" href="#L1236">1236</a> 
 <a class="jxr_linenumber" name="L1237" href="#L1237">1237</a>   @Test
 <a class="jxr_linenumber" name="L1238" href="#L1238">1238</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testUpdateHashCode() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L1239" href="#L1239">1239</a>     assertEquals(<span class="jxr_string">"Hello World"</span>.hashCode(), <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L1239" href="#L1239">1239</a>     assertEquals(<span class="jxr_string">"Hello World"</span>.hashCode(), <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L1240" href="#L1240">1240</a> 
 <a class="jxr_linenumber" name="L1241" href="#L1241">1241</a>       @Override
 <a class="jxr_linenumber" name="L1242" href="#L1242">1242</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -1253,7 +1253,7 @@
 <a class="jxr_linenumber" name="L1245" href="#L1245">1245</a> 
 <a class="jxr_linenumber" name="L1246" href="#L1246">1246</a>     }.updateHashCode(<span class="jxr_string">"Hello"</span>.hashCode()));
 <a class="jxr_linenumber" name="L1247" href="#L1247">1247</a> 
-<a class="jxr_linenumber" name="L1248" href="#L1248">1248</a>     assertEquals(<span class="jxr_string">"Hello World"</span>.hashCode(), <strong class="jxr_keyword">new</strong> StringHolder(0) {
+<a class="jxr_linenumber" name="L1248" href="#L1248">1248</a>     assertEquals(<span class="jxr_string">"Hello World"</span>.hashCode(), <strong class="jxr_keyword">new</strong> AbstractStringHolder(0) {
 <a class="jxr_linenumber" name="L1249" href="#L1249">1249</a> 
 <a class="jxr_linenumber" name="L1250" href="#L1250">1250</a>       @Override
 <a class="jxr_linenumber" name="L1251" href="#L1251">1251</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -1261,13 +1261,13 @@
 <a class="jxr_linenumber" name="L1253" href="#L1253">1253</a>       }
 <a class="jxr_linenumber" name="L1254" href="#L1254">1254</a>     }.updateHashCode(0));
 <a class="jxr_linenumber" name="L1255" href="#L1255">1255</a> 
-<a class="jxr_linenumber" name="L1256" href="#L1256">1256</a>     assertEquals(<span class="jxr_string">"Hello World"</span>.hashCode(), StringHolder.withSupplierFixedLength(<span class="jxr_string">"Hello World"</span>
-<a class="jxr_linenumber" name="L1257" href="#L1257">1257</a>         .length(), () -&gt; <span class="jxr_string">"Hello World"</span>).updateHashCode(0));
+<a class="jxr_linenumber" name="L1256" href="#L1256">1256</a>     assertEquals(<span class="jxr_string">"Hello World"</span>.hashCode(), ((AbstractStringHolder) StringHolder
+<a class="jxr_linenumber" name="L1257" href="#L1257">1257</a>         .withSupplierFixedLength(<span class="jxr_string">"Hello World"</span>.length(), () -&gt; <span class="jxr_string">"Hello World"</span>)).updateHashCode(0));
 <a class="jxr_linenumber" name="L1258" href="#L1258">1258</a>   }
 <a class="jxr_linenumber" name="L1259" href="#L1259">1259</a> 
 <a class="jxr_linenumber" name="L1260" href="#L1260">1260</a>   @Test
 <a class="jxr_linenumber" name="L1261" href="#L1261">1261</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMarkImmutable() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L1262" href="#L1262">1262</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> StringHolder() {
+<a class="jxr_linenumber" name="L1262" href="#L1262">1262</a>     StringHolder sh = <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
 <a class="jxr_linenumber" name="L1263" href="#L1263">1263</a> 
 <a class="jxr_linenumber" name="L1264" href="#L1264">1264</a>       @Override
 <a class="jxr_linenumber" name="L1265" href="#L1265">1265</a>       <strong class="jxr_keyword">protected</strong> String getString() {
@@ -1278,7 +1278,166 @@
 <a class="jxr_linenumber" name="L1270" href="#L1270">1270</a>     sh.markEffectivelyImmutable();
 <a class="jxr_linenumber" name="L1271" href="#L1271">1271</a>     assertTrue(sh.isEffectivelyImmutable());
 <a class="jxr_linenumber" name="L1272" href="#L1272">1272</a>   }
-<a class="jxr_linenumber" name="L1273" href="#L1273">1273</a> }
+<a class="jxr_linenumber" name="L1273" href="#L1273">1273</a> 
+<a class="jxr_linenumber" name="L1274" href="#L1274">1274</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> StringHolder emptyStringHolderButNotAString(<strong class="jxr_keyword">boolean</strong> lengthKnown) {
+<a class="jxr_linenumber" name="L1275" href="#L1275">1275</a>     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> AbstractStringHolder() {
+<a class="jxr_linenumber" name="L1276" href="#L1276">1276</a> 
+<a class="jxr_linenumber" name="L1277" href="#L1277">1277</a>       @Override
+<a class="jxr_linenumber" name="L1278" href="#L1278">1278</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isLengthKnown() {
+<a class="jxr_linenumber" name="L1279" href="#L1279">1279</a>         <strong class="jxr_keyword">return</strong> lengthKnown;
+<a class="jxr_linenumber" name="L1280" href="#L1280">1280</a>       }
+<a class="jxr_linenumber" name="L1281" href="#L1281">1281</a> 
+<a class="jxr_linenumber" name="L1282" href="#L1282">1282</a>       @Override
+<a class="jxr_linenumber" name="L1283" href="#L1283">1283</a>       <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">int</strong> computeLength() {
+<a class="jxr_linenumber" name="L1284" href="#L1284">1284</a>         <strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L1285" href="#L1285">1285</a>       }
+<a class="jxr_linenumber" name="L1286" href="#L1286">1286</a> 
+<a class="jxr_linenumber" name="L1287" href="#L1287">1287</a>       @Override
+<a class="jxr_linenumber" name="L1288" href="#L1288">1288</a>       <strong class="jxr_keyword">protected</strong> String getString() {
+<a class="jxr_linenumber" name="L1289" href="#L1289">1289</a>         <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L1290" href="#L1290">1290</a>       }
+<a class="jxr_linenumber" name="L1291" href="#L1291">1291</a>     };
+<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a>   }
+<a class="jxr_linenumber" name="L1293" href="#L1293">1293</a> 
+<a class="jxr_linenumber" name="L1294" href="#L1294">1294</a>   @Test
+<a class="jxr_linenumber" name="L1295" href="#L1295">1295</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfChar() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1296" href="#L1296">1296</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf('F'));
+<a class="jxr_linenumber" name="L1297" href="#L1297">1297</a>     assertEquals(3, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(' '));
+<a class="jxr_linenumber" name="L1298" href="#L1298">1298</a>     assertEquals(6, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf('r'));
+<a class="jxr_linenumber" name="L1299" href="#L1299">1299</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf('f'));
+<a class="jxr_linenumber" name="L1300" href="#L1300">1300</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">"F"</span>).indexOf('F'));
+<a class="jxr_linenumber" name="L1301" href="#L1301">1301</a>     assertEquals(0, StringHolder.withSupplier(() -&gt; <span class="jxr_string">"F"</span>).indexOf('F'));
+<a class="jxr_linenumber" name="L1302" href="#L1302">1302</a> 
+<a class="jxr_linenumber" name="L1303" href="#L1303">1303</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">""</span>).indexOf(' '));
+<a class="jxr_linenumber" name="L1304" href="#L1304">1304</a>     assertEquals(-1, StringHolder.withContent(<strong class="jxr_keyword">new</strong> StringBuilder()).indexOf(' '));
+<a class="jxr_linenumber" name="L1305" href="#L1305">1305</a>     assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -&gt; <span class="jxr_string">""</span>).indexOf(' '));
+<a class="jxr_linenumber" name="L1306" href="#L1306">1306</a>     assertEquals(-1, emptyStringHolderButNotAString(false).indexOf(' '));
+<a class="jxr_linenumber" name="L1307" href="#L1307">1307</a>     assertEquals(-1, emptyStringHolderButNotAString(<strong class="jxr_keyword">true</strong>).indexOf(' '));
+<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a> 
+<a class="jxr_linenumber" name="L1309" href="#L1309">1309</a>     assertEquals(3, StringHolder.withSupplier(() -&gt; <span class="jxr_string">"Foo bar"</span>).indexOf(' '));
+<a class="jxr_linenumber" name="L1310" href="#L1310">1310</a>     assertEquals(3, StringHolder.newSequence().append(StringHolder.withContent(<span class="jxr_string">"Foo"</span>)).append(' ')
+<a class="jxr_linenumber" name="L1311" href="#L1311">1311</a>         .append(StringHolder.withSupplier(() -&gt; <span class="jxr_string">"bar"</span>)).indexOf(' '));
+<a class="jxr_linenumber" name="L1312" href="#L1312">1312</a>   }
+<a class="jxr_linenumber" name="L1313" href="#L1313">1313</a> 
+<a class="jxr_linenumber" name="L1314" href="#L1314">1314</a>   @Test
+<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfCharSequenceSingleChar() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1316" href="#L1316">1316</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"F"</span>));
+<a class="jxr_linenumber" name="L1317" href="#L1317">1317</a>     assertEquals(3, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1318" href="#L1318">1318</a>     assertEquals(6, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"r"</span>));
+<a class="jxr_linenumber" name="L1319" href="#L1319">1319</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"f"</span>));
+<a class="jxr_linenumber" name="L1320" href="#L1320">1320</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">"F"</span>).indexOf(<span class="jxr_string">"F"</span>));
+<a class="jxr_linenumber" name="L1321" href="#L1321">1321</a>     assertEquals(0, StringHolder.withSupplier(() -&gt; <span class="jxr_string">"F"</span>).indexOf(<span class="jxr_string">"F"</span>));
+<a class="jxr_linenumber" name="L1322" href="#L1322">1322</a> 
+<a class="jxr_linenumber" name="L1323" href="#L1323">1323</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">""</span>).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a>     assertEquals(-1, StringHolder.withContent(<strong class="jxr_keyword">new</strong> StringBuilder()).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1325" href="#L1325">1325</a>     assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -&gt; <span class="jxr_string">""</span>).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1326" href="#L1326">1326</a>     assertEquals(-1, emptyStringHolderButNotAString(false).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1327" href="#L1327">1327</a>     assertEquals(-1, emptyStringHolderButNotAString(<strong class="jxr_keyword">true</strong>).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1328" href="#L1328">1328</a> 
+<a class="jxr_linenumber" name="L1329" href="#L1329">1329</a>     assertEquals(3, StringHolder.withSupplier(() -&gt; <span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1330" href="#L1330">1330</a>     assertEquals(3, StringHolder.newSequence().append(StringHolder.withContent(<span class="jxr_string">"Foo"</span>)).append(<span class="jxr_string">" "</span>)
+<a class="jxr_linenumber" name="L1331" href="#L1331">1331</a>         .append(StringHolder.withSupplier(() -&gt; <span class="jxr_string">"bar"</span>)).indexOf(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L1332" href="#L1332">1332</a>   }
+<a class="jxr_linenumber" name="L1333" href="#L1333">1333</a> 
+<a class="jxr_linenumber" name="L1334" href="#L1334">1334</a>   @Test
+<a class="jxr_linenumber" name="L1335" href="#L1335">1335</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfEmptyCharSequence() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1336" href="#L1336">1336</a>     assertEquals(0, <span class="jxr_string">""</span>.indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1337" href="#L1337">1337</a>     assertEquals(0, <span class="jxr_string">"Foo bar"</span>.indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1338" href="#L1338">1338</a> 
+<a class="jxr_linenumber" name="L1339" href="#L1339">1339</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1340" href="#L1340">1340</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<strong class="jxr_keyword">new</strong> CharSequence() {
+<a class="jxr_linenumber" name="L1341" href="#L1341">1341</a> 
+<a class="jxr_linenumber" name="L1342" href="#L1342">1342</a>       @Override
+<a class="jxr_linenumber" name="L1343" href="#L1343">1343</a>       <strong class="jxr_keyword">public</strong> CharSequence subSequence(<strong class="jxr_keyword">int</strong> start, <strong class="jxr_keyword">int</strong> end) {
+<a class="jxr_linenumber" name="L1344" href="#L1344">1344</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L1345" href="#L1345">1345</a>       }
+<a class="jxr_linenumber" name="L1346" href="#L1346">1346</a> 
+<a class="jxr_linenumber" name="L1347" href="#L1347">1347</a>       @Override
+<a class="jxr_linenumber" name="L1348" href="#L1348">1348</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> length() {
+<a class="jxr_linenumber" name="L1349" href="#L1349">1349</a>         <strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L1350" href="#L1350">1350</a>       }
+<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a> 
+<a class="jxr_linenumber" name="L1352" href="#L1352">1352</a>       @Override
+<a class="jxr_linenumber" name="L1353" href="#L1353">1353</a>       <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">char</strong> charAt(<strong class="jxr_keyword">int</strong> index) {
+<a class="jxr_linenumber" name="L1354" href="#L1354">1354</a>         <strong class="jxr_keyword">return</strong> (<strong class="jxr_keyword">char</strong>) -1;
+<a class="jxr_linenumber" name="L1355" href="#L1355">1355</a>       }
+<a class="jxr_linenumber" name="L1356" href="#L1356">1356</a>     }));
+<a class="jxr_linenumber" name="L1357" href="#L1357">1357</a> 
+<a class="jxr_linenumber" name="L1358" href="#L1358">1358</a>     assertEquals(0, StringHolder.withContent(<span class="jxr_string">""</span>).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1359" href="#L1359">1359</a>     assertEquals(0, StringHolder.withContent(<strong class="jxr_keyword">new</strong> StringBuilder()).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a>     assertEquals(0, StringHolder.withSupplierFixedLength(0, () -&gt; <span class="jxr_string">""</span>).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1361" href="#L1361">1361</a>     assertEquals(0, emptyStringHolderButNotAString(false).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1362" href="#L1362">1362</a>     assertEquals(0, emptyStringHolderButNotAString(<strong class="jxr_keyword">true</strong>).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1363" href="#L1363">1363</a> 
+<a class="jxr_linenumber" name="L1364" href="#L1364">1364</a>     assertEquals(0, StringHolder.newSequence().indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1365" href="#L1365">1365</a>     assertEquals(0, StringHolder.newSequence().append(StringHolder.withContent(<span class="jxr_string">""</span>)).indexOf(<span class="jxr_string">""</span>));
+<a class="jxr_linenumber" name="L1366" href="#L1366">1366</a>   }
+<a class="jxr_linenumber" name="L1367" href="#L1367">1367</a> 
+<a class="jxr_linenumber" name="L1368" href="#L1368">1368</a>   @Test
+<a class="jxr_linenumber" name="L1369" href="#L1369">1369</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfMissing() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1370" href="#L1370">1370</a>     assertEquals(-1, <span class="jxr_string">""</span>.indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1371" href="#L1371">1371</a>     assertEquals(-1, <span class="jxr_string">"Foo bar"</span>.indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1372" href="#L1372">1372</a> 
+<a class="jxr_linenumber" name="L1373" href="#L1373">1373</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1374" href="#L1374">1374</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"bar Foo"</span>)));
+<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a> 
+<a class="jxr_linenumber" name="L1376" href="#L1376">1376</a>     assertEquals(-1, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1377" href="#L1377">1377</a>     assertEquals(-1, StringHolder.withContent(<strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"Foo bar"</span>)).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1378" href="#L1378">1378</a>     assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -&gt; <span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1379" href="#L1379">1379</a>     assertEquals(-1, StringHolder.withSupplierFixedLength(3, () -&gt; <span class="jxr_string">"Foo"</span>).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1380" href="#L1380">1380</a>     assertEquals(-1, StringHolder.withSupplierFixedLength(3, () -&gt; <span class="jxr_string">"Foo"</span>).indexOf(StringHolder
+<a class="jxr_linenumber" name="L1381" href="#L1381">1381</a>         .withSupplierFixedLength(7, () -&gt; <span class="jxr_string">"bar Foo"</span>)));
+<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a> 
+<a class="jxr_linenumber" name="L1383" href="#L1383">1383</a>     assertEquals(-1, StringHolder.newSequence().append(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1384" href="#L1384">1384</a>     assertEquals(-1, StringHolder.newSequence().append(StringHolder.withContent(<span class="jxr_string">"Foo"</span>)).append(<span class="jxr_string">" "</span>)
+<a class="jxr_linenumber" name="L1385" href="#L1385">1385</a>         .append(StringHolder.withSupplier(() -&gt; <span class="jxr_string">"bar"</span>)).indexOf(<span class="jxr_string">"bar Foo"</span>));
+<a class="jxr_linenumber" name="L1386" href="#L1386">1386</a>   }
+<a class="jxr_linenumber" name="L1387" href="#L1387">1387</a> 
+<a class="jxr_linenumber" name="L1388" href="#L1388">1388</a>   @Test
+<a class="jxr_linenumber" name="L1389" href="#L1389">1389</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfFound() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1390" href="#L1390">1390</a>     assertEquals(4, <span class="jxr_string">"Foo bar"</span>.indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1391" href="#L1391">1391</a> 
+<a class="jxr_linenumber" name="L1392" href="#L1392">1392</a>     assertEquals(4, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1393" href="#L1393">1393</a>     assertEquals(4, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"bar"</span>)));
+<a class="jxr_linenumber" name="L1394" href="#L1394">1394</a>     assertEquals(4, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(StringHolder
+<a class="jxr_linenumber" name="L1395" href="#L1395">1395</a>         .withSupplierFixedLength(3, () -&gt; <span class="jxr_string">"bar"</span>)));
+<a class="jxr_linenumber" name="L1396" href="#L1396">1396</a> 
+<a class="jxr_linenumber" name="L1397" href="#L1397">1397</a>     StringHolder sh = StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>);
+<a class="jxr_linenumber" name="L1398" href="#L1398">1398</a>     sh.toString();
+<a class="jxr_linenumber" name="L1399" href="#L1399">1399</a>     assertEquals(4, sh.indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1400" href="#L1400">1400</a>     assertEquals(4, sh.indexOf(StringHolder.withContent(<span class="jxr_string">"bar"</span>)));
+<a class="jxr_linenumber" name="L1401" href="#L1401">1401</a> 
+<a class="jxr_linenumber" name="L1402" href="#L1402">1402</a>     assertEquals(4, StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1403" href="#L1403">1403</a>     assertEquals(4, StringHolder.withContent(<strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"Foo bar"</span>)).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1404" href="#L1404">1404</a> 
+<a class="jxr_linenumber" name="L1405" href="#L1405">1405</a>     assertEquals(4, StringHolder.withSupplierFixedLength(7, () -&gt; <span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1406" href="#L1406">1406</a>     assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -&gt; <span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1407" href="#L1407">1407</a> 
+<a class="jxr_linenumber" name="L1408" href="#L1408">1408</a>     assertEquals(4, StringHolder.newSequence().append(<span class="jxr_string">"Foo bar"</span>).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1409" href="#L1409">1409</a>     assertEquals(4, StringHolder.newSequence().append(StringHolder.withContent(<span class="jxr_string">"Foo"</span>)).append(<span class="jxr_string">" "</span>)
+<a class="jxr_linenumber" name="L1410" href="#L1410">1410</a>         .append(StringHolder.withSupplier(() -&gt; <span class="jxr_string">"bar"</span>)).indexOf(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1411" href="#L1411">1411</a>   }
+<a class="jxr_linenumber" name="L1412" href="#L1412">1412</a> 
+<a class="jxr_linenumber" name="L1413" href="#L1413">1413</a>   @Test
+<a class="jxr_linenumber" name="L1414" href="#L1414">1414</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfSelf() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1415" href="#L1415">1415</a>     StringHolder sh;
+<a class="jxr_linenumber" name="L1416" href="#L1416">1416</a> 
+<a class="jxr_linenumber" name="L1417" href="#L1417">1417</a>     sh = StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>);
+<a class="jxr_linenumber" name="L1418" href="#L1418">1418</a>     assertEquals(0, sh.indexOf(sh));
+<a class="jxr_linenumber" name="L1419" href="#L1419">1419</a> 
+<a class="jxr_linenumber" name="L1420" href="#L1420">1420</a>     sh = StringHolder.withContent(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L1421" href="#L1421">1421</a>     assertEquals(0, sh.indexOf(sh));
+<a class="jxr_linenumber" name="L1422" href="#L1422">1422</a> 
+<a class="jxr_linenumber" name="L1423" href="#L1423">1423</a>     sh = StringHolder.withSupplier(() -&gt; <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L1424" href="#L1424">1424</a>     assertEquals(0, sh.indexOf(sh));
+<a class="jxr_linenumber" name="L1425" href="#L1425">1425</a>   }
+<a class="jxr_linenumber" name="L1426" href="#L1426">1426</a> 
+<a class="jxr_linenumber" name="L1427" href="#L1427">1427</a>   @Test
+<a class="jxr_linenumber" name="L1428" href="#L1428">1428</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testContains() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>     assertTrue(StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).contains(<span class="jxr_string">"bar"</span>));
+<a class="jxr_linenumber" name="L1430" href="#L1430">1430</a>     assertFalse(StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).contains(<span class="jxr_string">"baz"</span>));
+<a class="jxr_linenumber" name="L1431" href="#L1431">1431</a>   }
+<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014&#x2013;2023 <a href="https://www.kohlschutter.com/">Kohlschütter Search Intelligence</a>. All rights reserved.</div>

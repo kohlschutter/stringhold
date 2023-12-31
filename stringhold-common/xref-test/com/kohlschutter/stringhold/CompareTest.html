@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * stringhold</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022 Christian Kohlschütter</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2022, 2023 Christian Kohlschütter</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -215,7 +215,7 @@
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>     assertEquals(0, <strong class="jxr_keyword">new</strong> CustomEmptyStringHolder().compareTo(<strong class="jxr_keyword">new</strong> CustomEmptyStringHolder()));
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>   }
 <a class="jxr_linenumber" name="L209" href="#L209">209</a> 
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> CustomEmptyStringHolder <strong class="jxr_keyword">extends</strong> StringHolder {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> CustomEmptyStringHolder <strong class="jxr_keyword">extends</strong> AbstractStringHolder {
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>     @Override
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>     <strong class="jxr_keyword">protected</strong> String getString() {
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>       <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
@@ -477,7 +477,7 @@
 <a class="jxr_linenumber" name="L469" href="#L469">469</a>         <strong class="jxr_keyword">new</strong> CustomCharAtStringHolder(4, <span class="jxr_string">"aaaa"</span>)));
 <a class="jxr_linenumber" name="L470" href="#L470">470</a>   }
 <a class="jxr_linenumber" name="L471" href="#L471">471</a> 
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> CustomCharAtStringHolder <strong class="jxr_keyword">extends</strong> StringHolder {
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> CustomCharAtStringHolder <strong class="jxr_keyword">extends</strong> AbstractStringHolder {
 <a class="jxr_linenumber" name="L473" href="#L473">473</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> String str;
 <a class="jxr_linenumber" name="L474" href="#L474">474</a> 
 <a class="jxr_linenumber" name="L475" href="#L475">475</a>     CustomCharAtStringHolder(String s) {
