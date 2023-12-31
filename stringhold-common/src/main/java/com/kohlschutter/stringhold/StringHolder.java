@@ -20,6 +20,7 @@ package com.kohlschutter.stringhold;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.PrimitiveIterator;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -711,8 +712,106 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Deep-clones this {@link StringHolder}.
-   * 
+   *
    * @return The cloned instance.
    */
   StringHolder clone();
+
+  /**
+   * Returns the index within this string of the first occurrence of the specified character, or
+   * {@code -1} if not found.
+   *
+   * @param c The character/codepoint to look for.
+   * @return The position, or {@code -1} if not found.
+   */
+  default int indexOf(int c) {
+    if (isString()) {
+      return toString().indexOf(c);
+    } else if (isKnownEmpty()) {
+      return -1;
+    }
+
+    int i = 0;
+    for (PrimitiveIterator.OfInt it = chars().iterator(); it.hasNext(); i++) {
+      int ch = it.next();
+      if (ch == c) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * Returns the index within this StringHolder of the first occurrence of the specified
+   * CharSequence, or {@code -1} if not found.
+   *
+   * @param str The char sequence to look for.
+   * @return The position, or {@code -1} if not found.
+   */
+  @SuppressWarnings("PMD.CognitiveComplexity")
+  default int indexOf(CharSequence str) {
+    if (str == this) { // NOPMD.CompareObjectsWithEquals
+      return 0;
+    } else if (isString()) {
+      if (str instanceof String || //
+          (str instanceof StringHolder && ((StringHolder) str).isString())) {
+        return toString().indexOf(str.toString());
+      }
+    }
+
+    if (CharSequenceReleaseShim.isEmpty(str)) {
+      return 0;
+    } else if (isKnownEmpty()) {
+      return -1;
+    }
+
+    int strLen = str.length();
+    if (isLengthKnown() && length() < strLen) {
+      return -1;
+    }
+
+    char firstChar = str.charAt(0);
+    if (str.length() == 1) {
+      return indexOf(firstChar);
+    }
+
+    int max = length() - strLen;
+
+    boolean found = false;
+    loop : for (int i = 0; i <= max; i++) {
+      char myChar = charAt(i);
+      if (myChar != firstChar) {
+        // seek ahead
+        while (++i <= max) { // NOPMD.AvoidReassigningLoopVariables
+          if (charAt(i) == firstChar) {
+            found = true;
+            break;
+          }
+        }
+      } else {
+        found = true;
+      }
+      if (found) {
+        int myPos = i + 1;
+        int end = myPos + strLen - 1;
+        for (int strPos = 1; myPos < end; myPos++, strPos++) {
+          if (charAt(myPos) != str.charAt(strPos)) {
+            continue loop;
+          }
+        }
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * Checks if this {@link StringHolder} contains the given {@link CharSequence}.
+   * 
+   * @param s The char sequence to look for.
+   * @return {@code true} if found (also if the sequence is empty).
+   */
+  default boolean contains(CharSequence s) {
+    return indexOf(s) >= 0;
+  }
 }

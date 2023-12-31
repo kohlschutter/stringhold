@@ -1270,4 +1270,168 @@ public class StringHolderTest {
     sh.markEffectivelyImmutable();
     assertTrue(sh.isEffectivelyImmutable());
   }
+
+  private static StringHolder emptyStringHolderButNotAString(boolean lengthKnown) {
+    return new AbstractStringHolder() {
+
+      @Override
+      public boolean isLengthKnown() {
+        return lengthKnown;
+      }
+
+      @Override
+      protected int computeLength() {
+        return 0;
+      }
+
+      @Override
+      protected String getString() {
+        return "";
+      }
+    };
+  }
+
+  @Test
+  public void testIndexOfChar() throws Exception {
+    assertEquals(0, StringHolder.withContent("Foo bar").indexOf('F'));
+    assertEquals(3, StringHolder.withContent("Foo bar").indexOf(' '));
+    assertEquals(6, StringHolder.withContent("Foo bar").indexOf('r'));
+    assertEquals(-1, StringHolder.withContent("Foo bar").indexOf('f'));
+    assertEquals(0, StringHolder.withContent("F").indexOf('F'));
+    assertEquals(0, StringHolder.withSupplier(() -> "F").indexOf('F'));
+
+    assertEquals(-1, StringHolder.withContent("").indexOf(' '));
+    assertEquals(-1, StringHolder.withContent(new StringBuilder()).indexOf(' '));
+    assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -> "").indexOf(' '));
+    assertEquals(-1, emptyStringHolderButNotAString(false).indexOf(' '));
+    assertEquals(-1, emptyStringHolderButNotAString(true).indexOf(' '));
+
+    assertEquals(3, StringHolder.withSupplier(() -> "Foo bar").indexOf(' '));
+    assertEquals(3, StringHolder.newSequence().append(StringHolder.withContent("Foo")).append(' ')
+        .append(StringHolder.withSupplier(() -> "bar")).indexOf(' '));
+  }
+
+  @Test
+  public void testIndexOfCharSequenceSingleChar() throws Exception {
+    assertEquals(0, StringHolder.withContent("Foo bar").indexOf("F"));
+    assertEquals(3, StringHolder.withContent("Foo bar").indexOf(" "));
+    assertEquals(6, StringHolder.withContent("Foo bar").indexOf("r"));
+    assertEquals(-1, StringHolder.withContent("Foo bar").indexOf("f"));
+    assertEquals(0, StringHolder.withContent("F").indexOf("F"));
+    assertEquals(0, StringHolder.withSupplier(() -> "F").indexOf("F"));
+
+    assertEquals(-1, StringHolder.withContent("").indexOf(" "));
+    assertEquals(-1, StringHolder.withContent(new StringBuilder()).indexOf(" "));
+    assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -> "").indexOf(" "));
+    assertEquals(-1, emptyStringHolderButNotAString(false).indexOf(" "));
+    assertEquals(-1, emptyStringHolderButNotAString(true).indexOf(" "));
+
+    assertEquals(3, StringHolder.withSupplier(() -> "Foo bar").indexOf(" "));
+    assertEquals(3, StringHolder.newSequence().append(StringHolder.withContent("Foo")).append(" ")
+        .append(StringHolder.withSupplier(() -> "bar")).indexOf(" "));
+  }
+
+  @Test
+  public void testIndexOfEmptyCharSequence() throws Exception {
+    assertEquals(0, "".indexOf(""));
+    assertEquals(0, "Foo bar".indexOf(""));
+
+    assertEquals(0, StringHolder.withContent("Foo bar").indexOf(""));
+    assertEquals(0, StringHolder.withContent("Foo bar").indexOf(new CharSequence() {
+
+      @Override
+      public CharSequence subSequence(int start, int end) {
+        return this;
+      }
+
+      @Override
+      public int length() {
+        return 0;
+      }
+
+      @Override
+      public char charAt(int index) {
+        return (char) -1;
+      }
+    }));
+
+    assertEquals(0, StringHolder.withContent("").indexOf(""));
+    assertEquals(0, StringHolder.withContent(new StringBuilder()).indexOf(""));
+    assertEquals(0, StringHolder.withSupplierFixedLength(0, () -> "").indexOf(""));
+    assertEquals(0, emptyStringHolderButNotAString(false).indexOf(""));
+    assertEquals(0, emptyStringHolderButNotAString(true).indexOf(""));
+
+    assertEquals(0, StringHolder.newSequence().indexOf(""));
+    assertEquals(0, StringHolder.newSequence().append(StringHolder.withContent("")).indexOf(""));
+  }
+
+  @Test
+  public void testIndexOfMissing() throws Exception {
+    assertEquals(-1, "".indexOf("bar Foo"));
+    assertEquals(-1, "Foo bar".indexOf("bar Foo"));
+
+    assertEquals(-1, StringHolder.withContent("Foo bar").indexOf("bar Foo"));
+    assertEquals(-1, StringHolder.withContent("Foo bar").indexOf(new StringBuilder("bar Foo")));
+
+    assertEquals(-1, StringHolder.withContent("Foo bar").indexOf("bar Foo"));
+    assertEquals(-1, StringHolder.withContent(new StringBuilder("Foo bar")).indexOf("bar Foo"));
+    assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -> "Foo bar").indexOf("bar Foo"));
+    assertEquals(-1, StringHolder.withSupplierFixedLength(3, () -> "Foo").indexOf("bar Foo"));
+    assertEquals(-1, StringHolder.withSupplierFixedLength(3, () -> "Foo").indexOf(StringHolder
+        .withSupplierFixedLength(7, () -> "bar Foo")));
+
+    assertEquals(-1, StringHolder.newSequence().append("Foo bar").indexOf("bar Foo"));
+    assertEquals(-1, StringHolder.newSequence().append(StringHolder.withContent("Foo")).append(" ")
+        .append(StringHolder.withSupplier(() -> "bar")).indexOf("bar Foo"));
+  }
+
+  @Test
+  public void testIndexOfFound() throws Exception {
+    assertEquals(4, "Foo bar".indexOf("bar"));
+
+    assertEquals(4, StringHolder.withContent("Foo bar").indexOf("bar"));
+    assertEquals(4, StringHolder.withContent("Foo bar").indexOf(new StringBuilder("bar")));
+    assertEquals(4, StringHolder.withContent("Foo bar").indexOf(StringHolder
+        .withSupplierFixedLength(3, () -> "bar")));
+
+    StringHolder sh = StringHolder.withContent("Foo bar");
+    sh.toString();
+    assertEquals(4, sh.indexOf("bar"));
+    assertEquals(4, sh.indexOf(StringHolder.withContent("bar")));
+
+    assertEquals(4, StringHolder.withContent("Foo bar").indexOf("bar"));
+    assertEquals(4, StringHolder.withContent(new StringBuilder("Foo bar")).indexOf("bar"));
+
+    assertEquals(4, StringHolder.withSupplierFixedLength(7, () -> "Foo bar").indexOf("bar"));
+    assertEquals(-1, StringHolder.withSupplierFixedLength(0, () -> "Foo bar").indexOf("bar"));
+
+    assertEquals(4, StringHolder.newSequence().append("Foo bar").indexOf("bar"));
+    assertEquals(4, StringHolder.newSequence().append(StringHolder.withContent("Foo")).append(" ")
+        .append(StringHolder.withSupplier(() -> "bar")).indexOf("bar"));
+  }
+
+  @Test
+  public void testIndexOfSelf() throws Exception {
+    StringHolder sh;
+
+    sh = StringHolder.withContent("Foo bar");
+    assertEquals(0, sh.indexOf(sh));
+
+    sh = StringHolder.withContent("");
+    assertEquals(0, sh.indexOf(sh));
+
+    sh = StringHolder.withSupplier(() -> "");
+    assertEquals(0, sh.indexOf(sh));
+  }
+
+  @Test
+  public void testContains() throws Exception {
+    assertTrue(StringHolder.withContent("Foo bar").contains("bar"));
+    assertFalse(StringHolder.withContent("Foo bar").contains("baz"));
+  }
+
+  @Test
+  public void testIndexOfPartialMatch() {
+    assertEquals(4, StringHolder.withContent("Foo Fobar").indexOf(new StringBuilder("Fobar")));
+  }
 }
