@@ -742,57 +742,77 @@ public interface StringHolder extends CharSequence, HasLength, Comparable&lt;Obj
   }
 
   /**
+   * Returns the index within this StringHolder of the first occurrence of the specified
+   * CharSequence, or {@code -1} if not found.
+   *
+   * @param str The char sequence to look for.
+   * @return The position, or {@code -1} if not found.
+   */
+  @SuppressWarnings(&quot;PMD.CognitiveComplexity&quot;)
+  default int indexOf(CharSequence str) {
+<span class="fc bfc" id="L753" title="All 2 branches covered.">    if (str == this) { // NOPMD.CompareObjectsWithEquals</span>
+<span class="fc" id="L754">      return 0;</span>
+<span class="fc bfc" id="L755" title="All 2 branches covered.">    } else if (isString()) {</span>
+<span class="fc bfc" id="L756" title="All 4 branches covered.">      if (str instanceof String || //</span>
+<span class="fc bfc" id="L757" title="All 2 branches covered.">          (str instanceof StringHolder &amp;&amp; ((StringHolder) str).isString())) {</span>
+<span class="fc" id="L758">        return toString().indexOf(str.toString());</span>
+      }
+    }
+
+<span class="fc bfc" id="L762" title="All 2 branches covered.">    if (CharSequenceReleaseShim.isEmpty(str)) {</span>
+<span class="fc" id="L763">      return 0;</span>
+<span class="fc bfc" id="L764" title="All 2 branches covered.">    } else if (isKnownEmpty()) {</span>
+<span class="fc" id="L765">      return -1;</span>
+    }
+
+<span class="fc" id="L768">    int strLen = str.length();</span>
+<span class="fc bfc" id="L769" title="All 4 branches covered.">    if (isLengthKnown() &amp;&amp; length() &lt; strLen) {</span>
+<span class="fc" id="L770">      return -1;</span>
+    }
+
+<span class="fc" id="L773">    char firstChar = str.charAt(0);</span>
+<span class="fc bfc" id="L774" title="All 2 branches covered.">    if (str.length() == 1) {</span>
+<span class="fc" id="L775">      return indexOf(firstChar);</span>
+    }
+
+<span class="fc" id="L778">    int max = length() - strLen;</span>
+
+<span class="fc" id="L780">    boolean found = false;</span>
+<span class="fc bfc" id="L781" title="All 2 branches covered.">    loop : for (int i = 0; i &lt;= max; i++) {</span>
+<span class="fc" id="L782">      char myChar = charAt(i);</span>
+<span class="fc bfc" id="L783" title="All 2 branches covered.">      if (myChar != firstChar) {</span>
+        // seek ahead
+<span class="fc bfc" id="L785" title="All 2 branches covered.">        while (++i &lt;= max) { // NOPMD.AvoidReassigningLoopVariables</span>
+<span class="fc bfc" id="L786" title="All 2 branches covered.">          if (charAt(i) == firstChar) {</span>
+<span class="fc" id="L787">            found = true;</span>
+<span class="fc" id="L788">            break;</span>
+          }
+        }
+      } else {
+<span class="fc" id="L792">        found = true;</span>
+      }
+<span class="fc bfc" id="L794" title="All 2 branches covered.">      if (found) {</span>
+<span class="fc" id="L795">        int myPos = i + 1;</span>
+<span class="fc" id="L796">        int end = myPos + strLen - 1;</span>
+<span class="fc bfc" id="L797" title="All 2 branches covered.">        for (int strPos = 1; myPos &lt; end; myPos++, strPos++) {</span>
+<span class="fc bfc" id="L798" title="All 2 branches covered.">          if (charAt(myPos) != str.charAt(strPos)) {</span>
+<span class="fc" id="L799">            continue loop;</span>
+          }
+        }
+<span class="fc" id="L802">        return i;</span>
+      }
+    }
+<span class="fc" id="L805">    return -1;</span>
+  }
+
+  /**
    * Checks if this {@link StringHolder} contains the given {@link CharSequence}.
    * 
    * @param s The char sequence to look for.
    * @return {@code true} if found (also if the sequence is empty).
    */
   default boolean contains(CharSequence s) {
-<span class="fc bfc" id="L751" title="All 2 branches covered.">    return indexOf(s.toString()) &gt;= 0;</span>
-  }
-
-  /**
-   * Returns the index within this {@link StringHolder} of the first occurrence of the specified
-   * {@link CharSequence}, or {@code -1} if not found.
-   *
-   * @param str The char sequence to look for.
-   * @return The position, or {@code -1} if not found.
-   */
-  default int indexOf(CharSequence str) {
-<span class="fc bfc" id="L762" title="All 2 branches covered.">    if (str == this) { // NOPMD.CompareObjectsWithEquals</span>
-<span class="fc" id="L763">      return 0;</span>
-<span class="fc bfc" id="L764" title="All 2 branches covered.">    } else if (isString()) {</span>
-<span class="fc bfc" id="L765" title="All 4 branches covered.">      if (str instanceof String || //</span>
-<span class="fc bfc" id="L766" title="All 2 branches covered.">          (str instanceof StringHolder &amp;&amp; ((StringHolder) str).isString())) {</span>
-<span class="fc" id="L767">        return toString().indexOf(str.toString());</span>
-      }
-    }
-
-<span class="fc bfc" id="L771" title="All 2 branches covered.">    if (CharSequenceReleaseShim.isEmpty(str)) {</span>
-<span class="fc" id="L772">      return 0;</span>
-<span class="fc bfc" id="L773" title="All 2 branches covered.">    } else if (isKnownEmpty()) {</span>
-<span class="fc" id="L774">      return -1;</span>
-    }
-
-<span class="fc" id="L777">    int strLen = str.length();</span>
-<span class="fc bfc" id="L778" title="All 4 branches covered.">    if (isLengthKnown() &amp;&amp; length() &lt; strLen) {</span>
-<span class="fc" id="L779">      return -1;</span>
-    }
-
-<span class="fc" id="L782">    int stri = 0;</span>
-<span class="fc" id="L783">    int i = 0;</span>
-<span class="fc bfc" id="L784" title="All 2 branches covered.">    for (PrimitiveIterator.OfInt it = chars().iterator(); it.hasNext(); i++) {</span>
-<span class="fc" id="L785">      int c = it.next();</span>
-<span class="fc bfc" id="L786" title="All 2 branches covered.">      if (c == str.charAt(stri)) {</span>
-<span class="fc" id="L787">        stri++;</span>
-<span class="fc bfc" id="L788" title="All 2 branches covered.">        if (stri == strLen) {</span>
-<span class="fc" id="L789">          return i - strLen + 1;</span>
-        }
-      } else {
-<span class="fc" id="L792">        stri = 0;</span>
-      }
-    }
-<span class="fc" id="L795">    return -1;</span>
+<span class="fc bfc" id="L815" title="All 2 branches covered.">    return indexOf(s) &gt;= 0;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

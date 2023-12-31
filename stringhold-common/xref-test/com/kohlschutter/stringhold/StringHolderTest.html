@@ -1437,7 +1437,12 @@
 <a class="jxr_linenumber" name="L1429" href="#L1429">1429</a>     assertTrue(StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).contains(<span class="jxr_string">"bar"</span>));
 <a class="jxr_linenumber" name="L1430" href="#L1430">1430</a>     assertFalse(StringHolder.withContent(<span class="jxr_string">"Foo bar"</span>).contains(<span class="jxr_string">"baz"</span>));
 <a class="jxr_linenumber" name="L1431" href="#L1431">1431</a>   }
-<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a> }
+<a class="jxr_linenumber" name="L1432" href="#L1432">1432</a> 
+<a class="jxr_linenumber" name="L1433" href="#L1433">1433</a>   @Test
+<a class="jxr_linenumber" name="L1434" href="#L1434">1434</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testIndexOfPartialMatch() {
+<a class="jxr_linenumber" name="L1435" href="#L1435">1435</a>     assertEquals(4, StringHolder.withContent(<span class="jxr_string">"Foo Fobar"</span>).indexOf(<strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"Fobar"</span>)));
+<a class="jxr_linenumber" name="L1436" href="#L1436">1436</a>   }
+<a class="jxr_linenumber" name="L1437" href="#L1437">1437</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014&#x2013;2023 <a href="https://www.kohlschutter.com/">Kohlschütter Search Intelligence</a>. All rights reserved.</div>

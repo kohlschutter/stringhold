@@ -750,59 +750,79 @@
 <a class="jxr_linenumber" name="L742" href="#L742">742</a>   }
 <a class="jxr_linenumber" name="L743" href="#L743">743</a> 
 <a class="jxr_linenumber" name="L744" href="#L744">744</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">   * Checks if this {@link StringHolder} contains the given {@link CharSequence}.</em>
-<a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">   * @param s The char sequence to look for.</em>
-<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">   * @return {@code true} if found (also if the sequence is empty).</em>
-<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L750" href="#L750">750</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">boolean</strong> contains(CharSequence s) {
-<a class="jxr_linenumber" name="L751" href="#L751">751</a>     <strong class="jxr_keyword">return</strong> indexOf(s.toString()) &gt;= 0;
-<a class="jxr_linenumber" name="L752" href="#L752">752</a>   }
-<a class="jxr_linenumber" name="L753" href="#L753">753</a> 
-<a class="jxr_linenumber" name="L754" href="#L754">754</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L755" href="#L755">755</a> <em class="jxr_javadoccomment">   * Returns the index within this {@link StringHolder} of the first occurrence of the specified</em>
-<a class="jxr_linenumber" name="L756" href="#L756">756</a> <em class="jxr_javadoccomment">   * {@link CharSequence}, or {@code -1} if not found.</em>
-<a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">   *</em>
-<a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">   * @param str The char sequence to look for.</em>
-<a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">   * @return The position, or {@code -1} if not found.</em>
-<a class="jxr_linenumber" name="L760" href="#L760">760</a> <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L761" href="#L761">761</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">int</strong> indexOf(CharSequence str) {
-<a class="jxr_linenumber" name="L762" href="#L762">762</a>     <strong class="jxr_keyword">if</strong> (str == <strong class="jxr_keyword">this</strong>) { <em class="jxr_comment">// NOPMD.CompareObjectsWithEquals</em>
+<a class="jxr_linenumber" name="L745" href="#L745">745</a> <em class="jxr_javadoccomment">   * Returns the index within this StringHolder of the first occurrence of the specified</em>
+<a class="jxr_linenumber" name="L746" href="#L746">746</a> <em class="jxr_javadoccomment">   * CharSequence, or {@code -1} if not found.</em>
+<a class="jxr_linenumber" name="L747" href="#L747">747</a> <em class="jxr_javadoccomment">   *</em>
+<a class="jxr_linenumber" name="L748" href="#L748">748</a> <em class="jxr_javadoccomment">   * @param str The char sequence to look for.</em>
+<a class="jxr_linenumber" name="L749" href="#L749">749</a> <em class="jxr_javadoccomment">   * @return The position, or {@code -1} if not found.</em>
+<a class="jxr_linenumber" name="L750" href="#L750">750</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L751" href="#L751">751</a>   @SuppressWarnings(<span class="jxr_string">"PMD.CognitiveComplexity"</span>)
+<a class="jxr_linenumber" name="L752" href="#L752">752</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">int</strong> indexOf(CharSequence str) {
+<a class="jxr_linenumber" name="L753" href="#L753">753</a>     <strong class="jxr_keyword">if</strong> (str == <strong class="jxr_keyword">this</strong>) { <em class="jxr_comment">// NOPMD.CompareObjectsWithEquals</em>
+<a class="jxr_linenumber" name="L754" href="#L754">754</a>       <strong class="jxr_keyword">return</strong> 0;
+<a class="jxr_linenumber" name="L755" href="#L755">755</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isString()) {
+<a class="jxr_linenumber" name="L756" href="#L756">756</a>       <strong class="jxr_keyword">if</strong> (str instanceof String || <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L757" href="#L757">757</a>           (str instanceof <a name="StringHolder" href="../../../com/kohlschutter/stringhold/StringHolder.html#StringHolder">StringHolder</a> &amp;&amp; ((<a name="StringHolder" href="../../../com/kohlschutter/stringhold/StringHolder.html#StringHolder">StringHolder</a>) str).isString())) {
+<a class="jxr_linenumber" name="L758" href="#L758">758</a>         <strong class="jxr_keyword">return</strong> toString().indexOf(str.toString());
+<a class="jxr_linenumber" name="L759" href="#L759">759</a>       }
+<a class="jxr_linenumber" name="L760" href="#L760">760</a>     }
+<a class="jxr_linenumber" name="L761" href="#L761">761</a> 
+<a class="jxr_linenumber" name="L762" href="#L762">762</a>     <strong class="jxr_keyword">if</strong> (CharSequenceReleaseShim.isEmpty(str)) {
 <a class="jxr_linenumber" name="L763" href="#L763">763</a>       <strong class="jxr_keyword">return</strong> 0;
-<a class="jxr_linenumber" name="L764" href="#L764">764</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isString()) {
-<a class="jxr_linenumber" name="L765" href="#L765">765</a>       <strong class="jxr_keyword">if</strong> (str instanceof String || <em class="jxr_comment">//</em>
-<a class="jxr_linenumber" name="L766" href="#L766">766</a>           (str instanceof <a name="StringHolder" href="../../../com/kohlschutter/stringhold/StringHolder.html#StringHolder">StringHolder</a> &amp;&amp; ((<a name="StringHolder" href="../../../com/kohlschutter/stringhold/StringHolder.html#StringHolder">StringHolder</a>) str).isString())) {
-<a class="jxr_linenumber" name="L767" href="#L767">767</a>         <strong class="jxr_keyword">return</strong> toString().indexOf(str.toString());
-<a class="jxr_linenumber" name="L768" href="#L768">768</a>       }
-<a class="jxr_linenumber" name="L769" href="#L769">769</a>     }
-<a class="jxr_linenumber" name="L770" href="#L770">770</a> 
-<a class="jxr_linenumber" name="L771" href="#L771">771</a>     <strong class="jxr_keyword">if</strong> (CharSequenceReleaseShim.isEmpty(str)) {
-<a class="jxr_linenumber" name="L772" href="#L772">772</a>       <strong class="jxr_keyword">return</strong> 0;
-<a class="jxr_linenumber" name="L773" href="#L773">773</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isKnownEmpty()) {
-<a class="jxr_linenumber" name="L774" href="#L774">774</a>       <strong class="jxr_keyword">return</strong> -1;
-<a class="jxr_linenumber" name="L775" href="#L775">775</a>     }
-<a class="jxr_linenumber" name="L776" href="#L776">776</a> 
-<a class="jxr_linenumber" name="L777" href="#L777">777</a>     <strong class="jxr_keyword">int</strong> strLen = str.length();
-<a class="jxr_linenumber" name="L778" href="#L778">778</a>     <strong class="jxr_keyword">if</strong> (isLengthKnown() &amp;&amp; length() &lt; strLen) {
-<a class="jxr_linenumber" name="L779" href="#L779">779</a>       <strong class="jxr_keyword">return</strong> -1;
-<a class="jxr_linenumber" name="L780" href="#L780">780</a>     }
-<a class="jxr_linenumber" name="L781" href="#L781">781</a> 
-<a class="jxr_linenumber" name="L782" href="#L782">782</a>     <strong class="jxr_keyword">int</strong> stri = 0;
-<a class="jxr_linenumber" name="L783" href="#L783">783</a>     <strong class="jxr_keyword">int</strong> i = 0;
-<a class="jxr_linenumber" name="L784" href="#L784">784</a>     <strong class="jxr_keyword">for</strong> (PrimitiveIterator.OfInt it = chars().iterator(); it.hasNext(); i++) {
-<a class="jxr_linenumber" name="L785" href="#L785">785</a>       <strong class="jxr_keyword">int</strong> c = it.next();
-<a class="jxr_linenumber" name="L786" href="#L786">786</a>       <strong class="jxr_keyword">if</strong> (c == str.charAt(stri)) {
-<a class="jxr_linenumber" name="L787" href="#L787">787</a>         stri++;
-<a class="jxr_linenumber" name="L788" href="#L788">788</a>         <strong class="jxr_keyword">if</strong> (stri == strLen) {
-<a class="jxr_linenumber" name="L789" href="#L789">789</a>           <strong class="jxr_keyword">return</strong> i - strLen + 1;
+<a class="jxr_linenumber" name="L764" href="#L764">764</a>     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (isKnownEmpty()) {
+<a class="jxr_linenumber" name="L765" href="#L765">765</a>       <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L766" href="#L766">766</a>     }
+<a class="jxr_linenumber" name="L767" href="#L767">767</a> 
+<a class="jxr_linenumber" name="L768" href="#L768">768</a>     <strong class="jxr_keyword">int</strong> strLen = str.length();
+<a class="jxr_linenumber" name="L769" href="#L769">769</a>     <strong class="jxr_keyword">if</strong> (isLengthKnown() &amp;&amp; length() &lt; strLen) {
+<a class="jxr_linenumber" name="L770" href="#L770">770</a>       <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L771" href="#L771">771</a>     }
+<a class="jxr_linenumber" name="L772" href="#L772">772</a> 
+<a class="jxr_linenumber" name="L773" href="#L773">773</a>     <strong class="jxr_keyword">char</strong> firstChar = str.charAt(0);
+<a class="jxr_linenumber" name="L774" href="#L774">774</a>     <strong class="jxr_keyword">if</strong> (str.length() == 1) {
+<a class="jxr_linenumber" name="L775" href="#L775">775</a>       <strong class="jxr_keyword">return</strong> indexOf(firstChar);
+<a class="jxr_linenumber" name="L776" href="#L776">776</a>     }
+<a class="jxr_linenumber" name="L777" href="#L777">777</a> 
+<a class="jxr_linenumber" name="L778" href="#L778">778</a>     <strong class="jxr_keyword">int</strong> max = length() - strLen;
+<a class="jxr_linenumber" name="L779" href="#L779">779</a> 
+<a class="jxr_linenumber" name="L780" href="#L780">780</a>     <strong class="jxr_keyword">boolean</strong> found = false;
+<a class="jxr_linenumber" name="L781" href="#L781">781</a>     loop : <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt;= max; i++) {
+<a class="jxr_linenumber" name="L782" href="#L782">782</a>       <strong class="jxr_keyword">char</strong> myChar = charAt(i);
+<a class="jxr_linenumber" name="L783" href="#L783">783</a>       <strong class="jxr_keyword">if</strong> (myChar != firstChar) {
+<a class="jxr_linenumber" name="L784" href="#L784">784</a>         <em class="jxr_comment">// seek ahead</em>
+<a class="jxr_linenumber" name="L785" href="#L785">785</a>         <strong class="jxr_keyword">while</strong> (++i &lt;= max) { <em class="jxr_comment">// NOPMD.AvoidReassigningLoopVariables</em>
+<a class="jxr_linenumber" name="L786" href="#L786">786</a>           <strong class="jxr_keyword">if</strong> (charAt(i) == firstChar) {
+<a class="jxr_linenumber" name="L787" href="#L787">787</a>             found = <strong class="jxr_keyword">true</strong>;
+<a class="jxr_linenumber" name="L788" href="#L788">788</a>             <strong class="jxr_keyword">break</strong>;
+<a class="jxr_linenumber" name="L789" href="#L789">789</a>           }
 <a class="jxr_linenumber" name="L790" href="#L790">790</a>         }
 <a class="jxr_linenumber" name="L791" href="#L791">791</a>       } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L792" href="#L792">792</a>         stri = 0;
+<a class="jxr_linenumber" name="L792" href="#L792">792</a>         found = <strong class="jxr_keyword">true</strong>;
 <a class="jxr_linenumber" name="L793" href="#L793">793</a>       }
-<a class="jxr_linenumber" name="L794" href="#L794">794</a>     }
-<a class="jxr_linenumber" name="L795" href="#L795">795</a>     <strong class="jxr_keyword">return</strong> -1;
-<a class="jxr_linenumber" name="L796" href="#L796">796</a>   }
-<a class="jxr_linenumber" name="L797" href="#L797">797</a> }
+<a class="jxr_linenumber" name="L794" href="#L794">794</a>       <strong class="jxr_keyword">if</strong> (found) {
+<a class="jxr_linenumber" name="L795" href="#L795">795</a>         <strong class="jxr_keyword">int</strong> myPos = i + 1;
+<a class="jxr_linenumber" name="L796" href="#L796">796</a>         <strong class="jxr_keyword">int</strong> end = myPos + strLen - 1;
+<a class="jxr_linenumber" name="L797" href="#L797">797</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> strPos = 1; myPos &lt; end; myPos++, strPos++) {
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>           <strong class="jxr_keyword">if</strong> (charAt(myPos) != str.charAt(strPos)) {
+<a class="jxr_linenumber" name="L799" href="#L799">799</a>             <strong class="jxr_keyword">continue</strong> loop;
+<a class="jxr_linenumber" name="L800" href="#L800">800</a>           }
+<a class="jxr_linenumber" name="L801" href="#L801">801</a>         }
+<a class="jxr_linenumber" name="L802" href="#L802">802</a>         <strong class="jxr_keyword">return</strong> i;
+<a class="jxr_linenumber" name="L803" href="#L803">803</a>       }
+<a class="jxr_linenumber" name="L804" href="#L804">804</a>     }
+<a class="jxr_linenumber" name="L805" href="#L805">805</a>     <strong class="jxr_keyword">return</strong> -1;
+<a class="jxr_linenumber" name="L806" href="#L806">806</a>   }
+<a class="jxr_linenumber" name="L807" href="#L807">807</a> 
+<a class="jxr_linenumber" name="L808" href="#L808">808</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L809" href="#L809">809</a> <em class="jxr_javadoccomment">   * Checks if this {@link StringHolder} contains the given {@link CharSequence}.</em>
+<a class="jxr_linenumber" name="L810" href="#L810">810</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L811" href="#L811">811</a> <em class="jxr_javadoccomment">   * @param s The char sequence to look for.</em>
+<a class="jxr_linenumber" name="L812" href="#L812">812</a> <em class="jxr_javadoccomment">   * @return {@code true} if found (also if the sequence is empty).</em>
+<a class="jxr_linenumber" name="L813" href="#L813">813</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L814" href="#L814">814</a>   <strong class="jxr_keyword">default</strong> <strong class="jxr_keyword">boolean</strong> contains(CharSequence s) {
+<a class="jxr_linenumber" name="L815" href="#L815">815</a>     <strong class="jxr_keyword">return</strong> indexOf(s) &gt;= 0;
+<a class="jxr_linenumber" name="L816" href="#L816">816</a>   }
+<a class="jxr_linenumber" name="L817" href="#L817">817</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014&#x2013;2023 <a href="https://www.kohlschutter.com/">Kohlschütter Search Intelligence</a>. All rights reserved.</div>
