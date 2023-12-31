@@ -26,7 +26,7 @@ import liqp.TemplateParser.Builder;
 
 /**
  * Some helper methods that can be useful when working with Liqp.
- * 
+ *
  * @author Christian Kohlschütter
  */
 public final class StringholdLiqpHelper {
@@ -40,7 +40,7 @@ public final class StringholdLiqpHelper {
    * Configures the given {@link Builder}, adding {@link Conditionally} and {@link Conditional}, as
    * well as using the {@link StringHolderRenderTransformer} available through
    * {@link StringHolderRenderTransformer#getSharedCacheInstance()}..
-   * 
+   *
    * @param builder The builder to configure.
    * @return The builder.
    */
@@ -53,7 +53,7 @@ public final class StringholdLiqpHelper {
 
   /**
    * Creates a new {@link TemplateParser}, configured via {@link #configure(Builder)}.
-   * 
+   *
    * @return The configured {@link TemplateParser}.
    */
   public static TemplateParser newConfiguredTemplateParser() {
@@ -63,7 +63,7 @@ public final class StringholdLiqpHelper {
   /**
    * Creates a new {@link TemplateParser}, configured via {@link #configure(Builder)}, adding
    * additional configuration as specified.
-   * 
+   *
    * @param additionalConfiguration The additional configuration.
    * @return The new template parser.
    */

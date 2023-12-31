@@ -93,7 +93,7 @@ public final class Conditional extends Tag {
 
   /**
    * Checks if the conditional identified by the given key is set.
-   * 
+   *
    * @param envMap The environment map.
    * @param key The key, without its internal prefix.
    * @return {@code true} if set.
@@ -105,7 +105,7 @@ public final class Conditional extends Tag {
 
   /**
    * Checks if the conditional identified by the given key is set.
-   * 
+   *
    * @param envMap The environment map.
    * @param key The key, without its internal prefix.
    * @param on {@code true} if set, {@code false} if clear.
@@ -116,7 +116,7 @@ public final class Conditional extends Tag {
 
   /**
    * Checks the "supplied" state of the conditional identified by the given key.
-   * 
+   *
    * @param envMap The environment map.
    * @param key The key, without its internal prefix.
    * @return {@code false}/{@code true} for the "supply" condition once determined, or {@code null}

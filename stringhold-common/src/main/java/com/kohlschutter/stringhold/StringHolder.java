@@ -264,7 +264,7 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
-   * 
+   *
    * @return The new, empty sequence.
    */
   static StringHolderSequence newSequence() {
@@ -273,10 +273,10 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Constructs a new, empty {@link StringHolderSequence}.
-   * 
+   *
    * @param estimatedNumberOfAppends Estimated number of calls to
    *          {@link StringHolderSequence#append(Object)}, etc.
-   * 
+   *
    * @return The new, empty sequence.
    */
   static StringHolderSequence newSequence(int estimatedNumberOfAppends) {
@@ -285,10 +285,10 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Constructs a new, empty async {@link StringHolderSequence}.
-   * 
+   *
    * {@link StringHolder}s are automatically converted upon append, with appends being run
    * asynchronously, using temporary intermediate storage, if possible/necessary.
-   * 
+   *
    * @return The new, empty async sequence.
    */
   static StringHolderSequence newAsyncSequence() {
@@ -297,12 +297,12 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Constructs a new, empty async {@link StringHolderSequence}.
-   * 
+   *
    * {@link StringHolder}s are automatically converted upon append, with appends being run
    * asynchronously, using temporary intermediate storage, if possible/necessary.
-   * 
+   *
    * @param executor The executor to use.
-   * 
+   *
    * @return The new, empty async sequence.
    */
   static StringHolderSequence newAsyncSequence(Executor executor) {
@@ -311,13 +311,13 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Constructs a new, empty async {@link StringHolderSequence}.
-   * 
+   *
    * {@link StringHolder}s are automatically converted upon append, with appends being run
    * asynchronously, using temporary intermediate storage, if possible/necessary.
-   * 
+   *
    * @param estimatedNumberOfAppends Estimated number of calls to
    *          {@link StringHolderSequence#append(Object)}, etc.
-   * 
+   *
    * @return The new, empty async sequence.
    */
   static StringHolderSequence newAsyncSequence(int estimatedNumberOfAppends) {
@@ -326,14 +326,14 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Constructs a new, empty async {@link StringHolderSequence}.
-   * 
+   *
    * {@link StringHolder}s are automatically converted upon append, with appends being run
    * asynchronously, using temporary intermediate storage, if possible/necessary.
-   * 
+   *
    * @param estimatedNumberOfAppends Estimated number of calls to
    *          {@link StringHolderSequence#append(Object)}, etc.
    * @param executor The executor to use.
-   * 
+   *
    * @return The new, empty sequence.
    */
   static StringHolderSequence newAsyncSequence(int estimatedNumberOfAppends, Executor executor) {
