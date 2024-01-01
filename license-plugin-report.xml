@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1704061319104">
+<licensePluginReport goal="CHECK" timestamp="1704115893703">
     <module artifactId="stringhold" groupId="com.kohlschutter.stringhold" version="1.0.2-SNAPSHOT"/>
     <files/>
 </licensePluginReport>

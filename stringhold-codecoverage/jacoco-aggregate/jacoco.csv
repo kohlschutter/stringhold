@@ -21,7 +21,7 @@ stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,CachedIOSu
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,CommonStrings,0,366,0,18,0,40,0,13,0,4
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolderScope.new StringHolderScope() {...},0,3,0,0,0,1,0,1,0,1
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,FixedLengthSuppliedStringHolder,0,41,0,2,0,12,0,6,0,5
-stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolder,0,476,0,89,0,115,0,76,0,31
+stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringHolder,0,562,0,110,0,131,0,89,0,33
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,HasMinimumLength,0,3,0,0,0,1,0,1,0,1
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,LazyInitReader,0,108,0,4,0,25,0,19,0,17
 stringhold-codecoverage/stringhold-common,com.kohlschutter.stringhold,StringOnlySequence,0,14,0,0,0,6,0,4,0,4
