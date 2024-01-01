@@ -718,8 +718,8 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
   StringHolder clone();
 
   /**
-   * Returns the index within this string of the first occurrence of the specified character, or
-   * {@code -1} if not found.
+   * Returns the index within this string of the first occurrence of the specified
+   * character/codepoint, or {@code -1} if not found.
    *
    * @param c The character/codepoint to look for.
    * @return The position, or {@code -1} if not found.
@@ -732,7 +732,7 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
     }
 
     int i = 0;
-    for (PrimitiveIterator.OfInt it = chars().iterator(); it.hasNext(); i++) {
+    for (PrimitiveIterator.OfInt it = codePoints().iterator(); it.hasNext(); i++) {
       int ch = it.next();
       if (ch == c) {
         return i;
@@ -752,17 +752,19 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
   default int indexOf(CharSequence str) {
     if (str == this) { // NOPMD.CompareObjectsWithEquals
       return 0;
-    } else if (isString()) {
-      if (str instanceof String || //
-          (str instanceof StringHolder && ((StringHolder) str).isString())) {
-        return toString().indexOf(str.toString());
-      }
     }
 
     if (CharSequenceReleaseShim.isEmpty(str)) {
       return 0;
     } else if (isKnownEmpty()) {
       return -1;
+    }
+
+    if (isString()) {
+      if (str instanceof String || //
+          (str instanceof StringHolder && ((StringHolder) str).isString())) {
+        return toString().indexOf(str.toString());
+      }
     }
 
     int strLen = str.length();
