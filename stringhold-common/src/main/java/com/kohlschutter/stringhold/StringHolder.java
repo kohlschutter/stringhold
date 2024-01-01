@@ -725,15 +725,46 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
    * @return The position, or {@code -1} if not found.
    */
   default int indexOf(int c) {
+    return indexOf(c, 0);
+  }
+
+  /**
+   * Returns the index within this string of the first occurrence of the specified
+   * character/codepoint, starting with the given character offset, or {@code -1} if not found.
+   *
+   * @param c The character/codepoint to look for.
+   * @param start The character offset.
+   * @return The position, or {@code -1} if not found.
+   */
+  default int indexOf(int c, int start) {
     if (isString()) {
-      return toString().indexOf(c);
+      return toString().indexOf(c, start);
     } else if (isKnownEmpty()) {
       return -1;
     }
 
+    boolean isSurrogatePair = c > 0xFFFF;
+
     int i = 0;
-    for (PrimitiveIterator.OfInt it = codePoints().iterator(); it.hasNext(); i++) {
-      int ch = it.next();
+    int next = -1;
+    for (PrimitiveIterator.OfInt it = chars().skip(start).iterator(); next != -1 || it
+        .hasNext(); i++) {
+      int ch;
+      if (next != -1) {
+        ch = next;
+        next = -1;
+      } else {
+        ch = it.nextInt();
+      }
+      if (isSurrogatePair && Character.isHighSurrogate((char) ch) && it.hasNext()) {
+        char ch2 = (char) it.nextInt();
+        if (Character.isLowSurrogate(ch2)) {
+          ch = Character.toCodePoint((char) ch, ch2);
+        } else {
+          // We detected an invalid UTF-8 surrogate, restart search from here
+          next = ch2;
+        }
+      }
       if (ch == c) {
         return i;
       }
@@ -750,12 +781,23 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
    */
   @SuppressWarnings("PMD.CognitiveComplexity")
   default int indexOf(CharSequence str) {
-    if (str == this) { // NOPMD.CompareObjectsWithEquals
-      return 0;
-    }
+    return indexOf(str, 0);
+  }
 
-    if (CharSequenceReleaseShim.isEmpty(str)) {
-      return 0;
+  /**
+   * Returns the index within this StringHolder of the first occurrence of the specified
+   * CharSequence, starting with the given character offset, or {@code -1} if not found.
+   *
+   * @param str The char sequence to look for.
+   * @param start The character offset.
+   * @return The position, or {@code -1} if not found.
+   */
+  @SuppressWarnings({"PMD.CognitiveComplexity", "PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
+  default int indexOf(CharSequence str, int start) {
+    if (str == this) { // NOPMD.CompareObjectsWithEquals
+      return start == 0 || isEmpty() ? 0 : -1;
+    } else if (CharSequenceReleaseShim.isEmpty(str)) {
+      return Math.min(start, length());
     } else if (isKnownEmpty()) {
       return -1;
     }
@@ -768,19 +810,29 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
     }
 
     int strLen = str.length();
-    if (isLengthKnown() && length() < strLen) {
+    if (isLengthKnown() && length() < (strLen + start)) {
       return -1;
     }
 
-    char firstChar = str.charAt(0);
-    if (str.length() == 1) {
-      return indexOf(firstChar);
+    char firstChar = str.charAt(start);
+    switch (strLen) {
+      case 1:
+        return indexOf(firstChar);
+      case 2:
+        char secondChar = str.charAt(start + 1);
+        if (Character.isSurrogatePair(firstChar, secondChar)) {
+          return indexOf(Character.toCodePoint(firstChar, secondChar), start);
+        }
+        break;
+      default:
+        // continue below
+        break;
     }
 
-    int max = length() - strLen;
+    int max = length() - strLen - start;
 
     boolean found = false;
-    loop : for (int i = 0; i <= max; i++) {
+    loop : for (int i = start; i <= max; i++) {
       char myChar = charAt(i);
       if (myChar != firstChar) {
         // seek ahead
@@ -809,7 +861,7 @@ public interface StringHolder extends CharSequence, HasLength, Comparable<Object
 
   /**
    * Checks if this {@link StringHolder} contains the given {@link CharSequence}.
-   * 
+   *
    * @param s The char sequence to look for.
    * @return {@code true} if found (also if the sequence is empty).
    */

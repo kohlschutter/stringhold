@@ -1331,13 +1331,8 @@ public class StringHolderTest {
         .append(StringHolder.withSupplier(() -> "bar")).indexOf(" "));
   }
 
-  @Test
-  public void testIndexOfEmptyCharSequence() throws Exception {
-    assertEquals(0, "".indexOf(""));
-    assertEquals(0, "Foo bar".indexOf(""));
-
-    assertEquals(0, StringHolder.withContent("Foo bar").indexOf(""));
-    assertEquals(0, StringHolder.withContent("Foo bar").indexOf(new CharSequence() {
+  private static CharSequence newCustomEmptyCharSequence() {
+    return new CharSequence() {
 
       @Override
       public CharSequence subSequence(int start, int end) {
@@ -1353,13 +1348,30 @@ public class StringHolderTest {
       public char charAt(int index) {
         return (char) -1;
       }
-    }));
+    };
+  }
+
+  @Test
+  public void testIndexOfEmptyCharSequence() throws Exception {
+    assertEquals(0, "".indexOf(""));
+    assertEquals(0, "".indexOf("", 1));
+    assertEquals(0, "".indexOf("", 2));
+    assertEquals(0, "Foo bar".indexOf(""));
+    assertEquals(1, "Foo bar".indexOf("", 1));
+
+    assertEquals(0, StringHolder.withContent("Foo bar").indexOf(""));
+    assertEquals(1, StringHolder.withContent("Foo bar").indexOf("", 1));
+    assertEquals(0, StringHolder.withContent("Foo bar").indexOf(newCustomEmptyCharSequence()));
+    assertEquals(1, StringHolder.withContent("Foo bar").indexOf(newCustomEmptyCharSequence(), 1));
 
     assertEquals(0, StringHolder.withContent("").indexOf(""));
+    assertEquals(0, StringHolder.withContent("").indexOf("", 1));
     assertEquals(0, StringHolder.withContent(new StringBuilder()).indexOf(""));
     assertEquals(0, StringHolder.withSupplierFixedLength(0, () -> "").indexOf(""));
     assertEquals(0, emptyStringHolderButNotAString(false).indexOf(""));
     assertEquals(0, emptyStringHolderButNotAString(true).indexOf(""));
+    assertEquals(0, emptyStringHolderButNotAString(false).indexOf("", 1));
+    assertEquals(0, emptyStringHolderButNotAString(true).indexOf("", 1));
 
     assertEquals(0, StringHolder.newSequence().indexOf(""));
     assertEquals(0, StringHolder.newSequence().append(StringHolder.withContent("")).indexOf(""));
@@ -1416,9 +1428,11 @@ public class StringHolderTest {
 
     sh = StringHolder.withContent("Foo bar");
     assertEquals(0, sh.indexOf(sh));
+    assertEquals(-1, sh.indexOf(sh, 1));
 
     sh = StringHolder.withContent("");
     assertEquals(0, sh.indexOf(sh));
+    assertEquals(0, sh.indexOf(sh, 1)); // note that behavior is different for empty strings
 
     sh = StringHolder.withSupplier(() -> "");
     assertEquals(0, sh.indexOf(sh));
@@ -1433,5 +1447,173 @@ public class StringHolderTest {
   @Test
   public void testIndexOfPartialMatch() {
     assertEquals(4, StringHolder.withContent("Foo Fobar").indexOf(new StringBuilder("Fobar")));
+  }
+
+  @Test
+  public void testIndexOfSurrogatePairNative() throws Exception {
+    int cat = 0x1f408;
+    int catHigh = Character.highSurrogate(cat);
+    int catLow = Character.lowSurrogate(cat);
+    String catStr = "\ud83d\udc08";
+    String catStrInvalidReversed = "\udc08\ud83d";
+
+    String testStr;
+
+    testStr = "\ud83d\udc08";
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(0, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(0, testStr.indexOf(cat));
+    assertEquals(0, testStr.indexOf(catHigh));
+    assertEquals(1, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(-1, testStr.indexOf(cat, 1));
+    assertEquals(1, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(-1, testStr.indexOf(catLow, 2));
+
+    testStr = "c\ud83d\udc08at";
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(1, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(1, testStr.indexOf(cat));
+    assertEquals(1, testStr.indexOf(catHigh));
+    assertEquals(2, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(1, testStr.indexOf(cat, 1));
+    assertEquals(2, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(2, testStr.indexOf(catLow, 2));
+
+    testStr = "\ud83d\ud83d\udc08at";
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(1, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(1, testStr.indexOf(cat));
+    assertEquals(0, testStr.indexOf(catHigh));
+    assertEquals(1, testStr.indexOf(catHigh, 1));
+    assertEquals(2, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(1, testStr.indexOf(cat, 1));
+    assertEquals(2, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(2, testStr.indexOf(catLow, 2));
+
+    testStr = "\ud83dX\ud83d";
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(-1, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(-1, testStr.indexOf(cat));
+    assertEquals(0, testStr.indexOf(catHigh));
+    assertEquals(2, testStr.indexOf(catHigh, 1));
+    assertEquals(-1, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(-1, testStr.indexOf(cat, 1));
+    assertEquals(-1, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(2, testStr.indexOf(catHigh, 2));
+    assertEquals(-1, testStr.indexOf(catLow, 2));
+
+    testStr = "\udc08\ud83d"; // wrong order of surrogate pair
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(-1, testStr.indexOf(catStr));
+    assertEquals(0, testStr.indexOf(catStrInvalidReversed)); // 2 individual (albeit invalid) chars
+    assertEquals(-1, testStr.indexOf(cat));
+    assertEquals(1, testStr.indexOf(catHigh));
+    assertEquals(0, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(-1, testStr.indexOf(cat, 1));
+    assertEquals(-1, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(-1, testStr.indexOf(catLow, 2));
+  }
+
+  @Test
+  public void testIndexOfSurrogatePair() throws Exception {
+    int cat = 0x1f408;
+    int catHigh = Character.highSurrogate(cat);
+    int catLow = Character.lowSurrogate(cat);
+    String catStr = "\ud83d\udc08";
+    String catStrInvalidReversed = "\udc08\ud83d";
+
+    StringHolder testStr;
+
+    testStr = StringHolder.withSupplier(() -> "\ud83d\udc08");
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(0, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(0, testStr.indexOf(cat));
+    assertEquals(0, testStr.indexOf(catHigh));
+    assertEquals(1, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(-1, testStr.indexOf(cat, 1));
+    assertEquals(1, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(-1, testStr.indexOf(catLow, 2));
+
+    testStr = StringHolder.withSupplier(() -> "c\ud83d\udc08at");
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(1, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(1, testStr.indexOf(cat));
+    assertEquals(1, testStr.indexOf(catHigh));
+    assertEquals(2, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(1, testStr.indexOf(cat, 1));
+    assertEquals(2, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(2, testStr.indexOf(catLow, 2));
+
+    testStr = StringHolder.withSupplier(() -> "\ud83d\ud83d\udc08at");
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(1, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(1, testStr.indexOf(cat));
+    assertEquals(0, testStr.indexOf(catHigh));
+    assertEquals(1, testStr.indexOf(catHigh, 1));
+    assertEquals(2, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(1, testStr.indexOf(cat, 1));
+    assertEquals(2, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(2, testStr.indexOf(catLow, 2));
+
+    testStr = StringHolder.withSupplier(() -> "\ud83dX\ud83d");
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(-1, testStr.indexOf(catStr));
+    assertEquals(-1, testStr.indexOf(catStrInvalidReversed));
+    assertEquals(-1, testStr.indexOf(cat));
+    assertEquals(0, testStr.indexOf(catHigh));
+    assertEquals(2, testStr.indexOf(catHigh, 1));
+    assertEquals(-1, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(-1, testStr.indexOf(cat, 1));
+    assertEquals(-1, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(2, testStr.indexOf(catHigh, 2));
+    assertEquals(-1, testStr.indexOf(catLow, 2));
+
+    testStr = StringHolder.withSupplier(() -> "\udc08\ud83d"); // wrong order of surrogate pair
+    assertEquals(0, testStr.indexOf(testStr));
+    assertEquals(-1, testStr.indexOf(catStr));
+    assertEquals(0, testStr.indexOf(catStrInvalidReversed)); // 2 individual (albeit invalid) chars
+    testStr = StringHolder.withSupplier(() -> "\udc08\ud83d"); // fresh instance
+    assertEquals(0, testStr.indexOf(catStrInvalidReversed)); // 2 individual (albeit invalid) chars
+    assertEquals(-1, testStr.indexOf(cat));
+    assertEquals(1, testStr.indexOf(catHigh));
+    assertEquals(0, testStr.indexOf(catLow));
+    assertEquals(-1, testStr.indexOf(testStr, 1));
+    assertEquals(-1, testStr.indexOf(cat, 1));
+    assertEquals(-1, testStr.indexOf(catLow, 1));
+    assertEquals(-1, testStr.indexOf(cat, 2));
+    assertEquals(-1, testStr.indexOf(catHigh, 2));
+    assertEquals(-1, testStr.indexOf(catLow, 2));
   }
 }
