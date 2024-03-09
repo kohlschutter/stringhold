@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1704115900106">
-    <module artifactId="stringhold-common" groupId="com.kohlschutter.stringhold" version="1.0.2-SNAPSHOT"/>
+<licensePluginReport goal="CHECK" timestamp="1709982072223">
+    <module artifactId="stringhold-common" groupId="com.kohlschutter.stringhold" version="1.0.2"/>
     <files>
         <file path="src/main/java/com/kohlschutter/stringhold/AbstractStringHolder.java" result="PRESENT"/>
         <file path="src/main/java/com/kohlschutter/stringhold/AsyncStringHolderSequence.java" result="PRESENT"/>
