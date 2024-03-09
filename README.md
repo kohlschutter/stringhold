@@ -196,7 +196,7 @@ To reformat code, which simplifies pull requests and restores general sanity, us
 
 # Changelog
 
-### _(2024-XX-XX)_ **stringhold 1.0.2*
+### _(2024-03-09)_ **stringhold 1.0.2*
 
  - Add indexOf
 
@@ -210,7 +210,7 @@ To reformat code, which simplifies pull requests and restores general sanity, us
 
 # Legal Notices
 
-Copyright 2022, 2023 Christian Kohlschuetter <christian@kohlschutter.com>
+Copyright 2022-2024 Christian Kohlschuetter <christian@kohlschutter.com>
 
 SPDX-License-Identifier: Apache-2.0
 See NOTICE and LICENSE for license details.
