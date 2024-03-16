@@ -1,18 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.kohlschutter.stringhold</groupId>
     <artifactId>stringhold</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <parent>
         <groupId>com.kohlschutter</groupId>
         <artifactId>kohlschutter-parent-multirelease</artifactId>
-        <version>1.6.7</version>
-        <relativePath>../kohlschutter-parent/kohlschutter-parent-multirelease/pom.xml</relativePath>
+        <version>1.7.0-SNAPSHOT</version>
+        <relativePath>
+            ../kohlschutter-parent/kohlschutter-parent-multirelease/pom.xml</relativePath>
     </parent>
     <properties>
         <kohlschutter.project.base.directory>${project.basedir}</kohlschutter.project.base.directory>
-        <kohlschutter.project.notice.file>${kohlschutter.project.base.directory}/NOTICE</kohlschutter.project.notice.file>
+        <kohlschutter.project.notice.file>
+            ${kohlschutter.project.base.directory}/NOTICE</kohlschutter.project.notice.file>
         <kohlschutter.multirelease.java8.release>8</kohlschutter.multirelease.java8.release>
         <kohlschutter.multirelease.java.release>15</kohlschutter.multirelease.java.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -84,6 +88,20 @@
             </repositories>
         </profile>
     </profiles>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.kohlschutter.stringhold</groupId>
+                <artifactId>stringhold-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kohlschutter.stringhold</groupId>
+                <artifactId>stringhold-liqp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>com.kohlschutter</groupId>

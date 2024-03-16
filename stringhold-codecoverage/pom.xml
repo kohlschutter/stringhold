@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>stringhold-codecoverage</artifactId>
     <packaging>pom</packaging>
     <parent>
         <groupId>com.kohlschutter.stringhold</groupId>
         <artifactId>stringhold</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <name>stringhold-codecoverage</name>
@@ -59,13 +61,11 @@
         <dependency>
             <groupId>com.kohlschutter.stringhold</groupId>
             <artifactId>stringhold-common</artifactId>
-            <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.kohlschutter.stringhold</groupId>
             <artifactId>stringhold-liqp</artifactId>
-            <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

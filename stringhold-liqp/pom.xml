@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.kohlschutter.stringhold</groupId>
         <artifactId>stringhold</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <properties>
@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.kohlschutter.stringhold</groupId>
             <artifactId>stringhold-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.kohlschutter</groupId>
