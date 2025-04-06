@@ -49,6 +49,7 @@ public final class LazyInitReader extends LazyInitReaderReleaseShim {
    * @param readerSupplier The supplier supplying the Reader.
    * @return The {@link LazyInitReader}.
    */
+  @SuppressWarnings("resource")
   public static LazyInitReader withSupplier(Supplier<Reader> readerSupplier) {
     return new LazyInitReader((IOSupplier<Reader>) () -> readerSupplier.get());
   }
