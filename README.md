@@ -196,6 +196,10 @@ To reformat code, which simplifies pull requests and restores general sanity, us
 
 # Changelog
 
+### _(2025-04-06)_ **stringhold 1.0.3*
+
+ - Code cleanup
+
 ### _(2024-03-09)_ **stringhold 1.0.2*
 
  - Add indexOf
